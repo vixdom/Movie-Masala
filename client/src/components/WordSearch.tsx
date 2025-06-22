@@ -133,10 +133,10 @@ export function WordSearch({
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto px-4">
+    <div className="w-full max-w-4xl mx-auto px-2">
       <div
         ref={gridRef}
-        className="grid gap-2 p-4 select-none"
+        className="grid gap-1 p-2 select-none"
         style={{
           gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
           gridTemplateRows: `repeat(${grid.length}, 1fr)`,
@@ -154,22 +154,25 @@ export function WordSearch({
             <div
               key={`${rowIndex}-${colIndex}`}
               className={cn(
-                'flex items-center justify-center text-xl font-bold cursor-pointer transition-all duration-200 select-none rounded-xl touch-manipulation shadow-lg',
-                'hover:scale-105 active:scale-95',
+                'flex items-center justify-center text-2xl font-bold cursor-pointer transition-all duration-300 select-none rounded-2xl touch-manipulation shadow-xl',
+                'hover:scale-110 active:scale-95 hover:rotate-3 hover:shadow-2xl',
+                'bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-md border border-white/20',
+                'animate-pulse-subtle hover:animate-bounce-gentle',
                 {
                   [getWordColor(cell.wordId)]: cell.isFound,
-                  'bg-blue-400/90 text-blue-900 shadow-blue-300/50 transform scale-105': cell.isSelected && !cell.isFound,
-                  'bg-yellow-300/90 text-yellow-900 shadow-yellow-300/50': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
-                  'bg-white/80 text-gray-800 shadow-white/30 backdrop-blur-sm': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-')),
+                  'bg-gradient-to-br from-blue-400/90 to-blue-500/90 text-blue-900 shadow-blue-300/50 transform scale-110 rotate-2': cell.isSelected && !cell.isFound,
+                  'bg-gradient-to-br from-yellow-300/90 to-yellow-400/90 text-yellow-900 shadow-yellow-300/50 animate-pulse': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
                 }
               )}
               style={{
                 fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
-                fontWeight: '800',
-                letterSpacing: '0.02em',
+                fontWeight: '900',
+                letterSpacing: '0.05em',
                 aspectRatio: '1',
                 width: '100%',
-                height: '100%'
+                height: '100%',
+                textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))'
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
@@ -178,6 +181,10 @@ export function WordSearch({
               }}
               onMouseEnter={() => {
                 if (isMouseDown) {
+                  // Gentle haptic feedback for each letter
+                  if (navigator.vibrate) {
+                    navigator.vibrate(10); // Very short, gentle vibration
+                  }
                   onCellMouseEnter(rowIndex, colIndex);
                 }
               }}
