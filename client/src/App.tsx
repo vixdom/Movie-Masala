@@ -174,7 +174,7 @@ function App() {
 
       {/* Selection Bubble - word in progress */}
       {currentSelection && (
-        <div className="absolute top-60 left-1/2 transform -translate-x-1/2 z-30 bg-orange-500/95 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200">
+        <div className="absolute top-56 left-1/2 transform -translate-x-1/2 z-30 bg-orange-500/95 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200">
           <span className="text-lg font-bold tracking-widest">
             {currentSelection.split('').join(' ')}
           </span>
@@ -182,7 +182,7 @@ function App() {
       )}
 
       {/* Game Grid - positioned low for thumb accessibility */}
-      <div className="absolute bottom-4 left-2 right-2 top-72 z-10">
+      <div className="absolute bottom-4 left-2 right-2 top-64 z-10">
         <div className="w-full h-full flex items-end justify-center">
           <div className="w-full max-w-md">
             <WordSearch
