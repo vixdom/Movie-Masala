@@ -133,7 +133,7 @@ export function WordSearch({
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto px-1">
+    <div className="w-full max-w-xs mx-auto px-1">
       <div
         ref={gridRef}
         className="grid gap-0.5 p-1 select-none"
@@ -154,7 +154,7 @@ export function WordSearch({
             <div
               key={`${rowIndex}-${colIndex}`}
               className={cn(
-                'flex items-center justify-center text-lg font-black cursor-pointer transition-all duration-200 select-none rounded-lg touch-manipulation shadow-xl',
+                'flex items-center justify-center text-xs font-black cursor-pointer transition-all duration-200 select-none rounded-md touch-manipulation shadow-lg',
                 'hover:scale-105 active:scale-95',
                 'bg-white border-2 border-gray-300',
                 {
@@ -169,14 +169,11 @@ export function WordSearch({
                 fontWeight: '900',
                 letterSpacing: '0.02em',
                 aspectRatio: '1',
-                width: '100%',
-                height: '100%',
-                minWidth: '28px',
-                minHeight: '28px',
-                maxWidth: '32px',
-                maxHeight: '32px',
+                width: '22px',
+                height: '22px',
+                fontSize: '14px',
                 textShadow: '0 1px 2px rgba(0,0,0,0.5)',
-                touchAction: 'none', // Prevent default touch behaviors
+                touchAction: 'none',
                 userSelect: 'none',
               }}
               onMouseDown={(e) => {

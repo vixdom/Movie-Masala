@@ -107,71 +107,97 @@ function App() {
   const remainingWords = game.getRemainingWords();
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
-      {/* Bollywood Movie Poster Background */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200'%3E%3Cdefs%3E%3ClinearGradient id='bollywood' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff6b35;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%23f7931e;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23ffcd3c;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='1200' fill='url(%23bollywood)'/%3E%3Ctext x='400' y='300' text-anchor='middle' font-family='serif' font-size='120' font-weight='bold' fill='%23000' opacity='0.3'%3EMOVIE%3C/text%3E%3Ctext x='400' y='450' text-anchor='middle' font-family='serif' font-size='120' font-weight='bold' fill='%23000' opacity='0.3'%3EMASALA%3C/text%3E%3Ccircle cx='200' cy='800' r='150' fill='%23000' opacity='0.1'/%3E%3Ccircle cx='600' cy='900' r='120' fill='%23000' opacity='0.1'/%3E%3Cpolygon points='100,1000 200,950 150,850' fill='%23000' opacity='0.15'/%3E%3Cpolygon points='650,700 750,650 700,550' fill='%23000' opacity='0.15'/%3E%3C/svg%3E")`
-        }}
-      />
-      
-      {/* Overlay gradient - darker for better mobile readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/95 via-gray-800/95 to-gray-900/95">
-        {/* Floating MM Logo and Score */}
-        <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-          <button 
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex flex-col">
+      {/* Header - mobile optimized */}
+      <div className="flex items-center justify-between p-3 bg-gradient-to-r from-orange-500 to-red-500 shadow-lg">
+        <div className="flex gap-2">
+          <button
             onClick={startNewGame}
-            className="flex items-center space-x-1 hover:scale-105 transition-transform active:scale-95"
-            title="Click to start new game"
+            className="bg-orange-600 hover:bg-orange-700 text-white border-none font-bold px-4 py-3 rounded-lg text-xl"
           >
-            {/* Square M tiles */}
-            <div className="w-10 h-10 bg-orange-500/90 backdrop-blur-sm rounded-lg flex items-center justify-center border-2 border-orange-400 shadow-lg">
-              <div className="text-white font-black text-lg">M</div>
-            </div>
-            <div className="w-10 h-10 bg-orange-500/90 backdrop-blur-sm rounded-lg flex items-center justify-center border-2 border-orange-400 shadow-lg">
-              <div className="text-white font-black text-lg">M</div>
-            </div>
+            M
           </button>
-          
-          {/* Score Pill */}
-          <div className="bg-white text-orange-600 rounded-full px-4 py-2 text-sm font-bold shadow-lg">
-            Score: {gameState.score}
-          </div>
+          <button
+            onClick={startNewGame}
+            className="bg-orange-600 hover:bg-orange-700 text-white border-none font-bold px-4 py-3 rounded-lg text-xl"
+          >
+            M
+          </button>
         </div>
-
-        {/* Key Box - Actor Names */}
-        <div className="mt-20">
-        <WordList
-          words={currentWords}
-          foundWords={foundWords}
-          remainingWords={remainingWords}
-          allWordPlacements={gameState.words}
-          onHighlightWord={handleHighlightWord}
-        />
+        
+        <div className="text-white font-bold text-lg bg-white/20 rounded-full px-4 py-2">
+          Score: {gameState.score}
+        </div>
       </div>
 
-      {/* Main Game Grid */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4 relative">
-        {/* Selection Bubble */}
-        {currentSelection && (
-          <div className="absolute top-4 bg-orange-500 text-white px-6 py-3 rounded-full shadow-lg z-20 transition-all duration-200">
-            <span className="text-2xl font-bold tracking-widest">
-              {currentSelection.split('').join(' ')}
-            </span>
-          </div>
-        )}
+      {/* Movie background with stronger overlay */}
+      <div 
+        className="flex-1 relative overflow-hidden"
+        style={{
+          backgroundImage: 'url(/api/placeholder/400/600)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/85"></div>
         
-        <WordSearch
-          grid={gameState.grid}
-          onCellMouseDown={handleCellMouseDown}
-          onCellMouseEnter={handleCellMouseEnter}
-          onCellMouseUp={handleCellMouseUp}
-          onCellTouchStart={handleCellTouchStart}
-          onCellTouchMove={handleCellTouchMove}
-          onCellTouchEnd={handleCellTouchEnd}
-          highlightedWord={highlightedWord}
-        />
+        {/* Mobile portrait content layout */}
+        <div className="relative z-10 h-full flex flex-col">
+          {/* Word list - ultra-compact mobile layout */}
+          <div className="bg-white/95 backdrop-blur-sm rounded-b-xl p-2 shadow-lg">
+            <div className="grid grid-cols-2 gap-1 max-h-24 overflow-y-auto text-xs">
+              {currentWords.map((wordItem) => {
+                const wordPlacement = gameState.words.find(wp => wp.word === wordItem.word);
+                const isFound = wordPlacement && gameState.foundWords.has(wordPlacement.id);
+                
+                return (
+                  <div
+                    key={wordItem.word}
+                    className={cn(
+                      "flex items-center gap-1 px-2 py-1 rounded text-xs transition-all duration-200 cursor-pointer",
+                      isFound 
+                        ? "bg-green-100 text-green-700 line-through" 
+                        : "bg-blue-100 text-blue-700 hover:bg-blue-200 active:bg-blue-300"
+                    )}
+                    onClick={() => {
+                      if (wordPlacement && !isFound) {
+                        setHighlightedWord(wordPlacement.word);
+                        setTimeout(() => setHighlightedWord(null), 2000);
+                      }
+                    }}
+                  >
+                    <span className="font-medium truncate text-xs">{wordItem.word}</span>
+                    {wordItem.hint && (
+                      <button
+                        className="text-blue-600 hover:text-blue-800 text-xs flex-shrink-0"
+                        title={wordItem.hint}
+                      >
+                        👁️
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Game grid - optimized for mobile portrait */}
+          <div className="flex-1 flex items-center justify-center p-2">
+            <div className="w-full max-w-sm">
+              <WordSearch
+                grid={gameState.grid}
+                onCellMouseDown={handleCellMouseDown}
+                onCellMouseEnter={handleCellMouseEnter}
+                onCellMouseUp={handleCellMouseUp}
+                onCellTouchStart={handleCellTouchStart}
+                onCellTouchMove={handleCellTouchMove}
+                onCellTouchEnd={handleCellTouchEnd}
+                highlightedWord={highlightedWord}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
 
@@ -194,7 +220,10 @@ function App() {
         </div>
       )}
 
-      </div>
+      {/* Word found animation */}
+      {wordFoundAnimation && (
+        <WordFoundAnimation word={wordFoundAnimation} />
+      )}
     </div>
   );
 }
