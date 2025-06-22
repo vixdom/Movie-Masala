@@ -7,7 +7,6 @@ import { WordSearchGame } from './lib/wordSearchGame';
 import { getGameWords, type WordListItem } from './lib/bollywoodWords';
 import { useAudio } from './lib/stores/useAudio';
 import { cn } from './lib/utils';
-import '@fontsource/inter';
 
 function App() {
   const [game] = useState(() => new WordSearchGame());
