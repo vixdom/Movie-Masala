@@ -91,8 +91,7 @@ export const useAudio = create<AudioState>((set, get) => ({
     const { hitSound, isMuted } = get();
     if (hitSound && !isMuted) {
       try {
-        hitSound.currentTime = 0;
-        hitSound.play().catch(() => {});
+        hitSound.play();
       } catch (error) {
         console.warn('Failed to play hit sound:', error);
       }
@@ -103,8 +102,7 @@ export const useAudio = create<AudioState>((set, get) => ({
     const { successSound, isMuted } = get();
     if (successSound && !isMuted) {
       try {
-        successSound.currentTime = 0;
-        successSound.play().catch(() => {});
+        successSound.play();
       } catch (error) {
         console.warn('Failed to play success sound:', error);
       }

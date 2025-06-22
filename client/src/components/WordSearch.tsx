@@ -133,10 +133,10 @@ export function WordSearch({
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-3">
+    <div className="w-full max-w-lg mx-auto px-2">
       <div
         ref={gridRef}
-        className="grid gap-2 p-3 select-none"
+        className="grid gap-3 p-2 select-none"
         style={{
           gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
           gridTemplateRows: `repeat(${grid.length}, 1fr)`,
