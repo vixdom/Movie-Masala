@@ -3,6 +3,85 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Bollywood-inspired color scheme */
+    --background: 20 14% 4%;
+    --foreground: 60 9% 98%;
+    
+    --card: 20 14% 8%;
+    --card-foreground: 60 9% 98%;
+    
+    --popover: 20 14% 8%;
+    --popover-foreground: 60 9% 98%;
+    
+    --primary: 25 95% 53%; /* Vibrant orange */
+    --primary-foreground: 60 9% 98%;
+    
+    --secondary: 12 76% 50%; /* Deep red */
+    --secondary-foreground: 60 9% 98%;
+    
+    --muted: 25 5% 25%;
+    --muted-foreground: 60 5% 85%;
+    
+    --accent: 45 93% 58%; /* Golden yellow */
+    --accent-foreground: 20 14% 4%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 60 9% 98%;
+    
+    --border: 25 15% 20%;
+    --input: 25 15% 20%;
+    --ring: 25 95% 53%;
+    
+    --radius: 0.75rem;
+    
+    /* Custom game colors */
+    --game-grid-bg: 25 20% 15%;
+    --game-cell-bg: 35 25% 25%;
+    --game-cell-hover: 25 95% 53%;
+    --game-cell-selected: 12 76% 50%;
+    --game-word-found: 45 93% 58%;
+    --game-highlight: 330 81% 60%; /* Pink highlight */
+  }
+
+  .light {
+    --background: 43 77% 94%;
+    --foreground: 20 14% 4%;
+    
+    --card: 43 77% 98%;
+    --card-foreground: 20 14% 4%;
+    
+    --popover: 43 77% 98%;
+    --popover-foreground: 20 14% 4%;
+    
+    --primary: 25 95% 53%;
+    --primary-foreground: 60 9% 98%;
+    
+    --secondary: 12 76% 50%;
+    --secondary-foreground: 60 9% 98%;
+    
+    --muted: 60 4% 85%;
+    --muted-foreground: 25 5% 45%;
+    
+    --accent: 45 93% 58%;
+    --accent-foreground: 20 14% 4%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 60 9% 98%;
+    
+    --border: 20 5% 90%;
+    --input: 20 5% 90%;
+    --ring: 25 95% 53%;
+    
+    /* Custom game colors for light mode */
+    --game-grid-bg: 43 77% 92%;
+    --game-cell-bg: 43 77% 98%;
+    --game-cell-hover: 25 95% 53%;
+    --game-cell-selected: 12 76% 50%;
+    --game-word-found: 45 93% 58%;
+    --game-highlight: 330 81% 60%;
+  }
+
   * {
     @apply border-border;
   }
@@ -14,6 +93,7 @@
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(25 20% 8%) 100%);
   }
 }
 

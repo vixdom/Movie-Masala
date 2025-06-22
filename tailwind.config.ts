@@ -61,6 +61,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        game: {
+          grid: "hsl(var(--game-grid-bg))",
+          cell: "hsl(var(--game-cell-bg))",
+          hover: "hsl(var(--game-cell-hover))",
+          selected: "hsl(var(--game-cell-selected))",
+          found: "hsl(var(--game-word-found))",
+          highlight: "hsl(var(--game-highlight))",
+        },
       },
       keyframes: {
         "accordion-down": {

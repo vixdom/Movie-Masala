@@ -26,9 +26,11 @@ export function WordList({ words, foundWords, remainingWords, allWordPlacements,
   };
 
   return (
-    <Card className="w-full h-full flex flex-col">
-      <CardHeader className="pb-3 flex-shrink-0">
-        <CardTitle className="text-lg font-bold">Bollywood Actors</CardTitle>
+    <Card className="w-full h-full flex flex-col bg-card/90 backdrop-blur-sm border-border/50 shadow-xl">
+      <CardHeader className="pb-3 flex-shrink-0 bg-gradient-to-r from-primary/10 to-accent/10">
+        <CardTitle className="text-lg font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          🎭 Bollywood Actors
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
         <div className="space-y-1 flex-1 overflow-y-auto pr-2">
@@ -39,10 +41,10 @@ export function WordList({ words, foundWords, remainingWords, allWordPlacements,
               <div
                 key={index}
                 className={cn(
-                  'flex items-center justify-between p-2 rounded transition-all',
+                  'flex items-center justify-between p-2 rounded-lg transition-all duration-300',
                   isFound 
-                    ? 'bg-green-50 text-green-800' 
-                    : 'hover:bg-gray-50'
+                    ? 'bg-accent/20 text-accent-foreground border border-accent/30 shadow-md' 
+                    : 'hover:bg-primary/10 hover:border-primary/20 border border-transparent'
                 )}
               >
                 <div className="flex items-center space-x-2 flex-1 min-w-0">

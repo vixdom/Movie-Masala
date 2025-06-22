@@ -112,17 +112,17 @@ function App() {
   const remainingWords = game.getRemainingWords();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-card to-background p-4">
       <div className="container mx-auto max-w-7xl relative">
         {/* Top Right Progress Panel */}
-        <div className="fixed top-4 right-4 z-10 bg-white rounded-lg shadow-lg p-3 border">
+        <div className="fixed top-4 right-4 z-10 bg-card/90 backdrop-blur-sm rounded-lg shadow-xl p-3 border border-border">
           <div className="flex items-center space-x-3">
             <div className="text-center">
               <div className="text-lg font-bold text-primary">{gameState.score}</div>
               <div className="text-xs text-muted-foreground">Score</div>
             </div>
             <div className="text-center">
-              <div className="text-lg font-bold text-primary">{foundWords.length}/{currentWords.length}</div>
+              <div className="text-lg font-bold text-accent">{foundWords.length}/{currentWords.length}</div>
               <div className="text-xs text-muted-foreground">Found</div>
             </div>
             <Button
@@ -171,10 +171,10 @@ function App() {
           </div>
           
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-800 mb-1">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent mb-1">
               🎬 Movie Masala
             </h1>
-            <p className="text-gray-600 text-sm">
+            <p className="text-muted-foreground text-sm">
               Find hidden Bollywood actor names!
             </p>
           </div>
