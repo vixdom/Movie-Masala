@@ -213,8 +213,52 @@ export class WordSearchGame {
     
     console.log(`Placed ${this.gameState.words.length} out of ${words.length} words`);
     
+    // Verify and fix coordinate consistency
+    this.verifyAndFixCoordinates();
+    
     // Fill empty spaces with random letters
     this.fillEmptySpaces();
+  }
+  
+  private verifyAndFixCoordinates(): void {
+    console.log('Verifying coordinate consistency...');
+    
+    // Re-apply word placements to ensure grid matches stored positions
+    for (const wordPlacement of this.gameState.words) {
+      const { word, positions, id } = wordPlacement;
+      
+      console.log(`Verifying word: ${word} at positions:`, positions);
+      
+      // Clear any existing wordId for this word first
+      for (let row = 0; row < GRID_SIZE; row++) {
+        for (let col = 0; col < GRID_SIZE; col++) {
+          if (this.gameState.grid[row][col].wordId === id) {
+            this.gameState.grid[row][col].wordId = undefined;
+            this.gameState.grid[row][col].isPartOfWord = false;
+          }
+        }
+      }
+      
+      // Re-apply the word to the grid at its stored positions
+      for (let i = 0; i < positions.length && i < word.length; i++) {
+        const pos = positions[i];
+        if (pos.row >= 0 && pos.row < GRID_SIZE && pos.col >= 0 && pos.col < GRID_SIZE) {
+          this.gameState.grid[pos.row][pos.col].letter = word[i];
+          this.gameState.grid[pos.row][pos.col].wordId = id;
+          this.gameState.grid[pos.row][pos.col].isPartOfWord = true;
+        }
+      }
+      
+      // Verify the word can be read from the grid
+      let actualWord = '';
+      for (const pos of positions) {
+        if (pos.row >= 0 && pos.row < GRID_SIZE && pos.col >= 0 && pos.col < GRID_SIZE) {
+          actualWord += this.gameState.grid[pos.row][pos.col].letter;
+        }
+      }
+      
+      console.log(`Word: ${word}, Grid reads: ${actualWord}, Match: ${actualWord === word}`);
+    }
   }
   
   private generatePositions(wordLength: number, direction: typeof DIRECTIONS[number]): {row: number, col: number}[] {
