@@ -112,11 +112,13 @@ export function WordSearch({
     <div className="flex justify-center p-4">
       <div
         ref={gridRef}
-        className="grid gap-1 bg-gray-100 p-2 rounded-lg shadow-lg select-none"
+        className="grid gap-1 bg-gray-100 p-3 rounded-lg shadow-lg select-none"
         style={{
-          gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
-          width: 'min(90vw, 400px)',
-          height: 'min(90vw, 400px)',
+          gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))`,
+          gridTemplateRows: `repeat(${grid.length}, minmax(0, 1fr))`,
+          width: 'min(90vw, 500px)',
+          height: 'min(90vw, 500px)',
+          aspectRatio: '1 / 1',
         }}
         onTouchMove={handleTouchMove}
         onTouchEnd={() => {
@@ -129,14 +131,15 @@ export function WordSearch({
             <div
               key={`${rowIndex}-${colIndex}`}
               className={cn(
-                'aspect-square flex items-center justify-center text-lg font-bold border-2 cursor-pointer transition-all duration-200 select-none rounded-lg',
+                'w-full h-full flex items-center justify-center text-lg font-bold border-2 cursor-pointer transition-all duration-200 select-none rounded-lg',
                 'hover:bg-blue-100 active:scale-95 hover:shadow-sm',
                 {
-                  'bg-green-400 text-green-900 border-green-500 shadow-lg animate-pulse': cell.isFound,
+                  'bg-green-400 text-green-900 border-green-500 shadow-lg': cell.isFound,
                   'bg-blue-400 text-blue-900 border-blue-500 shadow-md transform scale-105': cell.isSelected && !cell.isFound,
                   'bg-white hover:bg-gray-50 border-gray-300': !cell.isSelected && !cell.isFound,
                 }
               )}
+              style={{ aspectRatio: '1' }}
               onMouseDown={(e) => {
                 e.preventDefault();
                 setIsMouseDown(true);

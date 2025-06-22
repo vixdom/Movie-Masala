@@ -12,7 +12,7 @@ export interface WordPlacement {
   word: string;
   startRow: number;
   startCol: number;
-  direction: 'horizontal' | 'vertical' | 'diagonal-down' | 'diagonal-up';
+  direction: 'horizontal' | 'horizontal-reverse' | 'vertical' | 'vertical-reverse' | 'diagonal-down' | 'diagonal-up' | 'diagonal-down-left' | 'diagonal-up-left';
   positions: { row: number; col: number }[];
   id: string;
 }
@@ -29,10 +29,14 @@ export interface GameState {
 
 const GRID_SIZE = 9;
 const DIRECTIONS = [
-  { name: 'horizontal', dr: 0, dc: 1 },
-  { name: 'vertical', dr: 1, dc: 0 },
-  { name: 'diagonal-down', dr: 1, dc: 1 },
-  { name: 'diagonal-up', dr: -1, dc: 1 }
+  { name: 'horizontal', dr: 0, dc: 1 },           // left to right
+  { name: 'horizontal-reverse', dr: 0, dc: -1 },  // right to left
+  { name: 'vertical', dr: 1, dc: 0 },             // top to bottom
+  { name: 'vertical-reverse', dr: -1, dc: 0 },    // bottom to top
+  { name: 'diagonal-down', dr: 1, dc: 1 },        // diagonal down-right
+  { name: 'diagonal-up', dr: -1, dc: 1 },         // diagonal up-right
+  { name: 'diagonal-down-left', dr: 1, dc: -1 },  // diagonal down-left
+  { name: 'diagonal-up-left', dr: -1, dc: -1 }    // diagonal up-left
 ] as const;
 
 export class WordSearchGame {
