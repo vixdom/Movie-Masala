@@ -154,14 +154,14 @@ export function WordSearch({
             <div
               key={`${rowIndex}-${colIndex}`}
               className={cn(
-                'flex items-center justify-center text-3xl md:text-2xl font-black cursor-pointer transition-all duration-200 select-none rounded-xl touch-manipulation shadow-lg',
+                'flex items-center justify-center text-4xl md:text-3xl font-black cursor-pointer transition-all duration-200 select-none rounded-lg touch-manipulation shadow-xl',
                 'hover:scale-105 active:scale-95',
-                'bg-white/95 backdrop-blur-sm border border-gray-200/50',
+                'bg-white border-2 border-gray-300',
                 {
                   [getWordColor(cell.wordId)]: cell.isFound,
-                  'bg-blue-500 text-white shadow-blue-300/50 transform scale-105': cell.isSelected && !cell.isFound,
-                  'bg-yellow-400 text-black shadow-yellow-300/50': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
-                  'text-gray-900': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-')),
+                  'bg-blue-500 text-white border-blue-300 shadow-blue-300/50 transform scale-105': cell.isSelected && !cell.isFound,
+                  'bg-yellow-400 text-black border-yellow-300 shadow-yellow-300/50': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
+                  'text-black': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-')),
                 }
               )}
               style={{
@@ -171,7 +171,7 @@ export function WordSearch({
                 aspectRatio: '1',
                 width: '100%',
                 height: '100%',
-                textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                textShadow: '0 2px 4px rgba(0,0,0,0.8)',
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
@@ -180,9 +180,9 @@ export function WordSearch({
               }}
               onMouseEnter={() => {
                 if (isMouseDown) {
-                  // Gentle haptic feedback for each letter
+                  // Enhanced haptic feedback for mobile
                   if (navigator.vibrate) {
-                    navigator.vibrate(10); // Very short, gentle vibration
+                    navigator.vibrate(20); // Slightly stronger vibration for mobile
                   }
                   onCellMouseEnter(rowIndex, colIndex);
                 }

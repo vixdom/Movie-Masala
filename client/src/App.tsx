@@ -116,8 +116,8 @@ function App() {
         }}
       />
       
-      {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/80 via-blue-800/85 to-blue-900/80">
+      {/* Overlay gradient - darker for better mobile readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/95 via-gray-800/95 to-gray-900/95">
         {/* Floating MM Logo and Score */}
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
           <button 
