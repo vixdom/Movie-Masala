@@ -133,10 +133,10 @@ export function WordSearch({
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto px-2">
+    <div className="w-full max-w-md mx-auto px-2">
       <div
         ref={gridRef}
-        className="grid gap-3 p-2 select-none"
+        className="grid gap-1 p-2 select-none"
         style={{
           gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
           gridTemplateRows: `repeat(${grid.length}, 1fr)`,
@@ -154,7 +154,7 @@ export function WordSearch({
             <div
               key={`${rowIndex}-${colIndex}`}
               className={cn(
-                'flex items-center justify-center text-4xl md:text-3xl font-black cursor-pointer transition-all duration-200 select-none rounded-lg touch-manipulation shadow-xl',
+                'flex items-center justify-center text-lg font-black cursor-pointer transition-all duration-200 select-none rounded-lg touch-manipulation shadow-xl',
                 'hover:scale-105 active:scale-95',
                 'bg-white border-2 border-gray-300',
                 {
@@ -171,7 +171,9 @@ export function WordSearch({
                 aspectRatio: '1',
                 width: '100%',
                 height: '100%',
-                textShadow: '0 2px 4px rgba(0,0,0,0.8)',
+                minWidth: '30px',
+                minHeight: '30px',
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
