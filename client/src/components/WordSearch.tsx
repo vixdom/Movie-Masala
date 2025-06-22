@@ -111,13 +111,15 @@ export function WordSearch({
   }, [isMouseDown, handleMouseMove, onCellMouseUp]);
 
   return (
-    <div className="flex justify-center w-full h-full">
+    <div className="flex justify-center p-4">
       <div
         ref={gridRef}
-        className="grid gap-1 bg-game-grid p-3 rounded-2xl shadow-2xl select-none border border-border/50 w-full h-full max-w-lg max-h-lg"
+        className="grid gap-1 bg-gray-100 p-3 rounded-lg shadow-lg select-none"
         style={{
           gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))`,
           gridTemplateRows: `repeat(${grid.length}, minmax(0, 1fr))`,
+          width: 'min(90vw, 500px)',
+          height: 'min(90vw, 500px)',
           aspectRatio: '1 / 1',
         }}
         onTouchMove={handleTouchMove}
@@ -131,13 +133,13 @@ export function WordSearch({
             <div
               key={`${rowIndex}-${colIndex}`}
               className={cn(
-                'w-full h-full flex items-center justify-center text-lg font-bold border-2 cursor-pointer transition-all duration-300 select-none rounded-lg backdrop-blur-sm',
-                'hover:bg-game-hover hover:text-primary-foreground active:scale-95 hover:shadow-lg hover:border-primary/50',
+                'w-full h-full flex items-center justify-center text-lg font-bold border-2 cursor-pointer transition-all duration-200 select-none rounded-lg',
+                'hover:bg-blue-100 active:scale-95 hover:shadow-sm',
                 {
-                  'bg-game-found text-accent-foreground border-accent shadow-xl scale-105': cell.isFound,
-                  'bg-game-selected text-secondary-foreground border-secondary shadow-lg transform scale-105': cell.isSelected && !cell.isFound,
-                  'bg-game-highlight border-game-highlight border-4 text-foreground shadow-md': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
-                  'bg-game-cell/80 hover:bg-game-cell border-border text-foreground': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-')),
+                  'bg-green-400 text-green-900 border-green-500 shadow-lg': cell.isFound,
+                  'bg-blue-400 text-blue-900 border-blue-500 shadow-md transform scale-105': cell.isSelected && !cell.isFound,
+                  'bg-yellow-200 border-yellow-400 border-4': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
+                  'bg-white hover:bg-gray-50 border-gray-300': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-')),
                 }
               )}
               style={{ aspectRatio: '1' }}
