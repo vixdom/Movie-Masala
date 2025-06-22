@@ -90,10 +90,11 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+- June 22, 2025: **CHECKPOINT v0.1** - Stable release with verified straight-line word placement and mobile-optimized layout
 - June 22, 2025: **VERIFIED** - All actor names confirmed in perfect straight lines with mathematical precision
 - June 22, 2025: Successfully implemented mobile-first layout matching reference design with orange header and horizontal word list
 - June 22, 2025: Fixed font visibility issues and restored clean, readable styling
-- June 22, 2025: **CHECKPOINT** - Perfect straight-line word placement algorithm with enhanced validation
+- June 22, 2025: Perfect straight-line word placement algorithm with enhanced validation
 - June 22, 2025: Fixed diagonal word placement to ensure all words form true straight lines (horizontal, vertical, diagonal)
 - June 22, 2025: Added comprehensive line validation system that verifies each word follows consistent direction patterns
 - June 22, 2025: Validated all 8 directions work correctly: horizontal, horizontal-reverse, vertical, vertical-reverse, and 4 diagonal directions

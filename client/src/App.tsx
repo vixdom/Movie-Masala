@@ -103,29 +103,31 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900 flex flex-col">
-      {/* Top Header - Orange Banner */}
+      {/* Top Header - MM Movie Reels */}
       <div className="bg-orange-500 text-white px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-white hover:bg-orange-600 px-2 py-1"
-          >
-            ← 133 ✂️
-          </Button>
+        <div className="flex items-center space-x-1">
+          {/* Movie Reel M tiles */}
+          <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center border-2 border-gray-600 relative">
+            <div className="text-white font-bold text-sm">M</div>
+            {/* Reel holes */}
+            <div className="absolute top-1 left-1 w-1 h-1 bg-orange-500 rounded-full"></div>
+            <div className="absolute top-1 right-1 w-1 h-1 bg-orange-500 rounded-full"></div>
+            <div className="absolute bottom-1 left-1 w-1 h-1 bg-orange-500 rounded-full"></div>
+            <div className="absolute bottom-1 right-1 w-1 h-1 bg-orange-500 rounded-full"></div>
+          </div>
+          <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center border-2 border-gray-600 relative">
+            <div className="text-white font-bold text-sm">M</div>
+            {/* Reel holes */}
+            <div className="absolute top-1 left-1 w-1 h-1 bg-orange-500 rounded-full"></div>
+            <div className="absolute top-1 right-1 w-1 h-1 bg-orange-500 rounded-full"></div>
+            <div className="absolute bottom-1 left-1 w-1 h-1 bg-orange-500 rounded-full"></div>
+            <div className="absolute bottom-1 right-1 w-1 h-1 bg-orange-500 rounded-full"></div>
+          </div>
         </div>
         
-        <h1 className="text-lg font-bold text-center">
-          MOVIE MASALA
-        </h1>
-        
-        <div className="flex items-center space-x-2">
-          <div className="bg-orange-600 rounded-full px-2 py-1 text-sm font-bold">
-            100 🏆
-          </div>
-          <div className="bg-orange-600 rounded-full px-2 py-1 text-sm font-bold">
-            50 💰
-          </div>
+        {/* Score Pill */}
+        <div className="bg-white text-orange-600 rounded-full px-4 py-1 text-sm font-bold shadow-md">
+          Score: {gameState.score}
         </div>
       </div>
 
