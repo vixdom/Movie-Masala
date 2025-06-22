@@ -183,7 +183,7 @@ function App() {
         </div>
 
         {/* Game Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           {/* Word Search Grid */}
           <div className="flex justify-center">
             <div className="w-full max-w-lg">
