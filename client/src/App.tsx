@@ -136,8 +136,8 @@ function App() {
         Score: {gameState.score}
       </div>
 
-      {/* Floating Word Pills - no background container */}
-      <div className="absolute top-20 left-4 right-4 z-20 flex flex-wrap gap-2 justify-center max-h-20 overflow-hidden">
+      {/* Floating Word Pills - with generous breathing space */}
+      <div className="absolute top-20 left-4 right-4 z-20 flex flex-wrap gap-3 justify-center max-h-32">
         {currentWords.map((wordItem) => {
           const wordPlacement = gameState.words.find(wp => wp.word === wordItem.word);
           const isFound = wordPlacement && gameState.foundWords.has(wordPlacement.id);
@@ -146,7 +146,7 @@ function App() {
             <div
               key={wordItem.word}
               className={cn(
-                "flex items-center gap-1 px-3 py-1 rounded-full text-xs transition-all duration-200 cursor-pointer backdrop-blur-sm shadow-lg",
+                "flex items-center gap-1 px-4 py-2 rounded-full text-sm transition-all duration-200 cursor-pointer backdrop-blur-sm shadow-lg mb-2",
                 isFound 
                   ? "bg-green-500/90 text-white line-through" 
                   : "bg-white/90 text-gray-800 hover:bg-white active:bg-gray-100"
@@ -161,7 +161,7 @@ function App() {
               <span className="font-medium">{wordItem.word}</span>
               {wordItem.hint && (
                 <button
-                  className="text-blue-600 hover:text-blue-800 text-xs"
+                  className="text-blue-600 hover:text-blue-800 text-sm"
                   title={wordItem.hint}
                 >
                   👁️
@@ -174,26 +174,28 @@ function App() {
 
       {/* Selection Bubble - word in progress */}
       {currentSelection && (
-        <div className="absolute top-44 left-1/2 transform -translate-x-1/2 z-30 bg-orange-500/95 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200">
+        <div className="absolute top-60 left-1/2 transform -translate-x-1/2 z-30 bg-orange-500/95 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200">
           <span className="text-lg font-bold tracking-widest">
             {currentSelection.split('').join(' ')}
           </span>
         </div>
       )}
 
-      {/* Full-screen Game Grid - moved down with ample spacing */}
-      <div className="absolute inset-0 flex items-center justify-center pt-56 pb-8 px-2 z-10">
-        <div className="w-full h-full max-w-lg max-h-lg">
-          <WordSearch
-            grid={gameState.grid}
-            onCellMouseDown={handleCellMouseDown}
-            onCellMouseEnter={handleCellMouseEnter}
-            onCellMouseUp={handleCellMouseUp}
-            onCellTouchStart={handleCellTouchStart}
-            onCellTouchMove={handleCellTouchMove}
-            onCellTouchEnd={handleCellTouchEnd}
-            highlightedWord={highlightedWord}
-          />
+      {/* Game Grid - positioned low for thumb accessibility */}
+      <div className="absolute bottom-4 left-2 right-2 top-72 z-10">
+        <div className="w-full h-full flex items-end justify-center">
+          <div className="w-full max-w-md">
+            <WordSearch
+              grid={gameState.grid}
+              onCellMouseDown={handleCellMouseDown}
+              onCellMouseEnter={handleCellMouseEnter}
+              onCellMouseUp={handleCellMouseUp}
+              onCellTouchStart={handleCellTouchStart}
+              onCellTouchMove={handleCellTouchMove}
+              onCellTouchEnd={handleCellTouchEnd}
+              highlightedWord={highlightedWord}
+            />
+          </div>
         </div>
       </div>
 
