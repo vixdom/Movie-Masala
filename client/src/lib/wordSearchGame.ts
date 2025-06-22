@@ -239,24 +239,46 @@ export class WordSearchGame {
   
   private getBalancedDirections(words: string[]): typeof DIRECTIONS[number][][] {
     const assignments: typeof DIRECTIONS[number][][] = [];
-    const directionCounts = new Map<string, number>();
     
-    // Initialize direction counts
-    DIRECTIONS.forEach(dir => directionCounts.set(dir.name, 0));
+    // Define direction categories for guaranteed variety
+    const horizontalDirs = DIRECTIONS.filter(d => d.name.includes('horizontal'));
+    const verticalDirs = DIRECTIONS.filter(d => d.name.includes('vertical'));
+    const diagonalDirs = DIRECTIONS.filter(d => d.name.includes('diagonal'));
     
-    for (const word of words) {
-      // Find the least used directions
-      const sortedDirections = [...DIRECTIONS].sort((a, b) => 
-        (directionCounts.get(a.name) || 0) - (directionCounts.get(b.name) || 0)
-      );
+    // Ensure we have at least 2-3 diagonal words out of 10 total words
+    const minDiagonals = Math.max(2, Math.floor(words.length * 0.25)); // At least 25% diagonal
+    const minHorizontals = Math.max(2, Math.floor(words.length * 0.3)); // At least 30% horizontal
+    const minVerticals = Math.max(2, Math.floor(words.length * 0.25)); // At least 25% vertical
+    
+    let diagonalCount = 0;
+    let horizontalCount = 0;
+    let verticalCount = 0;
+    
+    for (let i = 0; i < words.length; i++) {
+      let preferredDirections: typeof DIRECTIONS[number][] = [];
       
-      // Assign top 3 least used directions to this word
-      const wordDirections = sortedDirections.slice(0, 3);
-      assignments.push(wordDirections);
+      // Force diagonal placement for first few words to guarantee diagonal variety
+      if (diagonalCount < minDiagonals) {
+        preferredDirections = [...diagonalDirs, ...horizontalDirs, ...verticalDirs];
+        diagonalCount++;
+      }
+      // Force horizontal placement
+      else if (horizontalCount < minHorizontals) {
+        preferredDirections = [...horizontalDirs, ...verticalDirs, ...diagonalDirs];
+        horizontalCount++;
+      }
+      // Force vertical placement
+      else if (verticalCount < minVerticals) {
+        preferredDirections = [...verticalDirs, ...horizontalDirs, ...diagonalDirs];
+        verticalCount++;
+      }
+      // For remaining words, use balanced approach
+      else {
+        // Shuffle all directions for variety
+        preferredDirections = [...DIRECTIONS].sort(() => Math.random() - 0.5);
+      }
       
-      // Increment count for the first assigned direction
-      const firstDir = wordDirections[0].name;
-      directionCounts.set(firstDir, (directionCounts.get(firstDir) || 0) + 1);
+      assignments.push(preferredDirections);
     }
     
     return assignments;

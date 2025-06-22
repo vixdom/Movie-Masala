@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { WordSearch } from './components/WordSearch';
 import { WordList } from './components/WordList';
 import { GameStats } from './components/GameStats';
-import { FoundWordsDisplay } from './components/FoundWordsDisplay';
+
 import { WordFoundAnimation } from './components/WordFoundAnimation';
 import { Button } from './components/ui/button';
 import { WordSearchGame } from './lib/wordSearchGame';
@@ -225,12 +225,6 @@ function App() {
             )}
           </div>
         </div>
-
-        {/* Found Words Display */}
-        <FoundWordsDisplay 
-          foundWords={foundWords}
-          allWords={currentWords}
-        />
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-gray-500">
