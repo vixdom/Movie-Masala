@@ -24,7 +24,7 @@ function App() {
 
   // Start a new game
   const startNewGame = useCallback(() => {
-    const words = getGameWords(8); // Get 8 random words for 9x9 grid
+    const words = getGameWords(6); // Get 6 words for 9x9 grid with longer names
     const wordStrings = words.map(w => w.word);
     
     game.resetGame();
@@ -108,12 +108,6 @@ function App() {
           </p>
         </div>
 
-        {/* Found Words Display */}
-        <FoundWordsDisplay 
-          foundWords={foundWords}
-          allWords={currentWords}
-        />
-
         {/* Game Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Word Search Grid */}
@@ -158,6 +152,12 @@ function App() {
             />
           </div>
         </div>
+
+        {/* Found Words Display */}
+        <FoundWordsDisplay 
+          foundWords={foundWords}
+          allWords={currentWords}
+        />
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-gray-500">
