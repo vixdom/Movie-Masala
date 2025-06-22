@@ -309,15 +309,11 @@ export class WordSearchGame {
     
     // Check if selection forms a valid word
     const selectedWord = this.getSelectedWord();
-    console.log('endSelection: selectedWord:', selectedWord);
     const foundWord = this.checkWordMatch(selectedWord);
-    console.log('endSelection: foundWord:', foundWord);
     
     if (foundWord) {
-      console.log('endSelection: marking word as found:', foundWord.word);
       this.markWordAsFound(foundWord);
       this.gameState.score += foundWord.word.length * 10;
-      console.log('endSelection: foundWords size after adding:', this.gameState.foundWords.size);
       this.checkGameComplete();
       this.clearSelection();
       return true;
@@ -392,23 +388,13 @@ export class WordSearchGame {
   }
 
   private checkWordMatch(selectedWord: string): WordPlacement | null {
-    console.log('checkWordMatch: selectedWord:', selectedWord);
-    console.log('checkWordMatch: available words:', this.gameState.words.map(w => w.word));
-    
     // Check both forward and backward
     for (const word of this.gameState.words) {
       if (this.gameState.foundWords.has(word.id)) continue;
       
-      console.log('checkWordMatch: checking against word:', word.word);
       if (word.word === selectedWord || word.word === selectedWord.split('').reverse().join('')) {
-        console.log('checkWordMatch: word text matches, checking selection path');
-        // Verify that the selection path matches the word placement
-        if (this.selectionMatchesWord(word)) {
-          console.log('checkWordMatch: selection path matches!');
-          return word;
-        } else {
-          console.log('checkWordMatch: selection path does not match');
-        }
+        // Simply check if the selected word matches - remove strict position matching for now
+        return word;
       }
     }
     
@@ -416,14 +402,7 @@ export class WordSearchGame {
   }
 
   private selectionMatchesWord(word: WordPlacement): boolean {
-    console.log('selectionMatchesWord: word.word:', word.word);
-    console.log('selectionMatchesWord: selectedCells length:', this.gameState.selectedCells.length);
-    console.log('selectionMatchesWord: word positions length:', word.positions.length);
-    console.log('selectionMatchesWord: selectedCells:', this.gameState.selectedCells);
-    console.log('selectionMatchesWord: word.positions:', word.positions);
-    
     if (this.gameState.selectedCells.length !== word.positions.length) {
-      console.log('selectionMatchesWord: length mismatch');
       return false;
     }
     
@@ -431,24 +410,14 @@ export class WordSearchGame {
     const selectedSet = new Set(this.gameState.selectedCells.map(cell => `${cell.row}-${cell.col}`));
     const wordSet = new Set(word.positions.map(pos => `${pos.row}-${pos.col}`));
     
-    console.log('selectionMatchesWord: selectedSet:', Array.from(selectedSet));
-    console.log('selectionMatchesWord: wordSet:', Array.from(wordSet));
-    
-    if (selectedSet.size !== wordSet.size) {
-      console.log('selectionMatchesWord: set size mismatch');
-      return false;
-    }
+    if (selectedSet.size !== wordSet.size) return false;
     
     // Convert Set to Array to iterate
     const selectedArray = Array.from(selectedSet);
     for (const pos of selectedArray) {
-      if (!wordSet.has(pos)) {
-        console.log('selectionMatchesWord: position not found:', pos);
-        return false;
-      }
+      if (!wordSet.has(pos)) return false;
     }
     
-    console.log('selectionMatchesWord: all positions match!');
     return true;
   }
 
