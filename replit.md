@@ -91,16 +91,18 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
+- June 22, 2025: **CHECKPOINT v0.2** - Mobile-optimized floating UI with thumb-friendly layout and ASMR audio
+- June 22, 2025: **MOBILE OPTIMIZED** - Complete redesign for iPhone 15 Plus portrait mode with floating elements
+- June 22, 2025: Implemented floating MM logo (top-left) and score pill (top-right) with no title bar
+- June 22, 2025: Created floating word pills with generous spacing and no background container
+- June 22, 2025: Positioned grid at bottom for thumb accessibility with ASMR audio (220Hz-180Hz gentle tones)
+- June 22, 2025: Added enhanced haptic feedback: gentle bumps (15ms) while tracing, clap pattern (80-40-80ms) on word completion
+- June 22, 2025: Implemented Web Audio API for mobile-compatible sound with lowpass filtering
+- June 22, 2025: Grid optimized for full-screen usage with 16px font and proper touch targets
+- June 22, 2025: Selection bubble positioned between word pills and grid for clear visibility
 - June 22, 2025: **CHECKPOINT v0.1** - Stable release with verified straight-line word placement and mobile-optimized layout
 - June 22, 2025: **VERIFIED** - All actor names confirmed in perfect straight lines with mathematical precision
-- June 22, 2025: Successfully implemented mobile-first layout matching reference design with orange header and horizontal word list
-- June 22, 2025: Fixed font visibility issues and restored clean, readable styling
 - June 22, 2025: Perfect straight-line word placement algorithm with enhanced validation
-- June 22, 2025: Fixed diagonal word placement to ensure all words form true straight lines (horizontal, vertical, diagonal)
-- June 22, 2025: Added comprehensive line validation system that verifies each word follows consistent direction patterns
-- June 22, 2025: Validated all 8 directions work correctly: horizontal, horizontal-reverse, vertical, vertical-reverse, and 4 diagonal directions
-- June 22, 2025: Console logging confirms all words now placed in mathematically perfect straight lines
-- June 22, 2025: Previous features maintained: word selection, crossing off, eye icon clue system, clean layout design
 
 ## Changelog
 
