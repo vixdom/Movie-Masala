@@ -5,18 +5,6 @@ export interface WordListItem {
 }
 
 export const bollywoodWords: WordListItem[] = [
-  // Popular Movies
-  { word: 'SHOLAY', category: 'movie', hint: 'Classic 1975 action film' },
-  { word: 'DANGAL', category: 'movie', hint: 'Wrestling biographical drama' },
-  { word: 'LAGAAN', category: 'movie', hint: 'Cricket in colonial India' },
-  { word: 'QUEEN', category: 'movie', hint: 'Solo honeymoon adventure' },
-  { word: 'PINK', category: 'movie', hint: 'Social thriller with Big B' },
-  { word: 'SULTAN', category: 'movie', hint: 'Salman Khan wrestling drama' },
-  { word: 'ANAND', category: 'movie', hint: 'Rajesh Khanna classic' },
-  { word: 'MASAAN', category: 'movie', hint: 'Independent cinema gem' },
-  { word: 'TUMHARI', category: 'movie', hint: 'Your beloved' },
-  { word: 'JHANKAAR', category: 'movie', hint: 'Musical resonance' },
-  
   // Legendary Actors
   { word: 'AMITABHBACHCHAN', category: 'actor', hint: 'Big B of Bollywood' },
   { word: 'SHAHRUKHKHAN', category: 'actor', hint: 'King Khan' },
@@ -28,38 +16,16 @@ export const bollywoodWords: WordListItem[] = [
   { word: 'RANVEERSINGH', category: 'actor', hint: 'Energy powerhouse' },
   { word: 'RAJESHKHANNA', category: 'actor', hint: 'First superstar' },
   { word: 'DILIPKUMAR', category: 'actor', hint: 'Tragedy King' },
-  
-  // Legendary Actresses
-  { word: 'DEEPIKAPADUKONE', category: 'actress', hint: 'Padmaavat queen' },
-  { word: 'PRIYANKACHOPRA', category: 'actress', hint: 'Global icon' },
-  { word: 'KAREENAKAPOOR', category: 'actress', hint: 'Bebo of Bollywood' },
-  { word: 'KATRINAKAIF', category: 'actress', hint: 'British beauty' },
-  { word: 'ALIABHATT', category: 'actress', hint: 'Young powerhouse' },
-  { word: 'MADHURIDIXIR', category: 'actress', hint: 'Dancing queen' },
-  { word: 'SRIDEVI', category: 'actress', hint: 'First female superstar' },
-  { word: 'KAJOL', category: 'actress', hint: 'DDLJ heroine' },
-  { word: 'AISHWARYARAI', category: 'actress', hint: 'Former Miss World' },
-  { word: 'REKHA', category: 'actress', hint: 'Eternal beauty' },
-  
-  // Famous Directors
-  { word: 'YASHCHOPRA', category: 'director', hint: 'Chopra patriarch' },
-  { word: 'KARANJOHAR', category: 'director', hint: 'Dharma Productions head' },
-  { word: 'SANJAYBHANSALI', category: 'director', hint: 'Visionary filmmaker' },
-  { word: 'RAJKUMARHIRANI', category: 'director', hint: 'Comedy master' },
-  { word: 'ZOYAAKHTAR', category: 'director', hint: 'Modern storyteller' },
-  { word: 'ROHITSHETTY', category: 'director', hint: 'Action king' },
-  { word: 'IMTIAZALI', category: 'director', hint: 'Romance master' },
-  { word: 'ANURAGKASHYAP', category: 'director', hint: 'Indie filmmaker' },
-  
-  // Popular Songs/Terms
-  { word: 'TAAL', category: 'song', hint: 'Rhythm and beat' },
-  { word: 'ISHQ', category: 'song', hint: 'Love in Urdu' },
-  { word: 'PYAAR', category: 'song', hint: 'Love in Hindi' },
-  { word: 'DOST', category: 'song', hint: 'Friend' },
-  { word: 'SAPNA', category: 'song', hint: 'Dream' },
-  { word: 'KHUSHI', category: 'song', hint: 'Happiness' },
-  { word: 'GHAM', category: 'song', hint: 'Sorrow' },
-  { word: 'MOHABBAT', category: 'song', hint: 'Deep love' }
+  { word: 'RANBIRKAPPOR', category: 'actor', hint: 'Young talent' },
+  { word: 'AYUSHMANNKHURRANA', category: 'actor', hint: 'Versatile performer' },
+  { word: 'IRRFANKHAN', category: 'actor', hint: 'Method actor' },
+  { word: 'NAWAZUDDINSIDDIQUI', category: 'actor', hint: 'Character actor' },
+  { word: 'MANOTEJSINGH', category: 'actor', hint: 'Punjabi star' },
+  { word: 'VIKRMASHER', category: 'actor', hint: 'Action hero' },
+  { word: 'ARJUNKAPOOR', category: 'actor', hint: 'Second generation' },
+  { word: 'VARUNDHAWAN', category: 'actor', hint: 'Comedy specialist' },
+  { word: 'SIDDHARTHMALHOTRA', category: 'actor', hint: 'Student of the year' },
+  { word: 'RAJKUMMARRAO', category: 'actor', hint: 'Character specialist' }
 ];
 
 // Function to get a random subset of words for the game

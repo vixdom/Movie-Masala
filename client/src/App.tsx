@@ -15,6 +15,7 @@ function App() {
   const [gameState, setGameState] = useState(() => game.getGameState());
   const [currentWords, setCurrentWords] = useState<WordListItem[]>([]);
   const [wordFoundAnimation, setWordFoundAnimation] = useState<string | null>(null);
+  const [highlightedWord, setHighlightedWord] = useState<string | null>(null);
   const { playHit, playSuccess, toggleMute, isMuted, initializeAudio } = useAudio();
 
   // Initialize audio
