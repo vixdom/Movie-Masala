@@ -171,9 +171,13 @@ export function WordSearch({
                 aspectRatio: '1',
                 width: '100%',
                 height: '100%',
-                minWidth: '30px',
-                minHeight: '30px',
-                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                minWidth: '28px',
+                minHeight: '28px',
+                maxWidth: '32px',
+                maxHeight: '32px',
+                textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                touchAction: 'none', // Prevent default touch behaviors
+                userSelect: 'none',
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
@@ -192,6 +196,10 @@ export function WordSearch({
               onTouchStart={(e) => {
                 e.preventDefault();
                 setIsTouching(true);
+                // Gentle haptic bump on touch start
+                if (navigator.vibrate) {
+                  navigator.vibrate(15);
+                }
                 onCellTouchStart(rowIndex, colIndex);
               }}
             >
