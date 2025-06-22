@@ -211,7 +211,10 @@ export class WordSearchGame {
     // Use the best result
     this.gameState.words = bestResult.placedWords;
     
-    console.log(`Placed ${this.gameState.words.length} out of ${words.length} words`);
+    // Only log in development for better mobile performance
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Placed ${this.gameState.words.length} out of ${words.length} words`);
+    }
     
     // Verify and fix coordinate consistency
     this.verifyAndFixCoordinates();
@@ -221,7 +224,10 @@ export class WordSearchGame {
   }
   
   private verifyAndFixCoordinates(): void {
-    console.log('Verifying coordinate consistency and line straightness...');
+    // Only log in development for better mobile performance
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying coordinate consistency and line straightness...');
+    }
     
     // Re-apply word placements to ensure grid matches stored positions
     for (const wordPlacement of this.gameState.words) {
@@ -230,7 +236,10 @@ export class WordSearchGame {
       // Verify this is a proper straight line
       this.validateStraightLine(word, positions, direction);
       
-      console.log(`Verifying word: ${word} in ${direction} direction at positions:`, positions);
+      // Only log in development for better mobile performance
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Verifying word: ${word} in ${direction} direction at positions:`, positions);
+      }
       
       // Clear any existing wordId for this word first
       for (let row = 0; row < GRID_SIZE; row++) {
@@ -260,7 +269,10 @@ export class WordSearchGame {
         }
       }
       
-      console.log(`Word: ${word}, Grid reads: ${actualWord}, Match: ${actualWord === word}, Straight line: ${this.isStraightLine(positions)}`);
+      // Only log in development for better mobile performance
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Word: ${word}, Grid reads: ${actualWord}, Match: ${actualWord === word}, Straight line: ${this.isStraightLine(positions)}`);
+      }
     }
   }
   
