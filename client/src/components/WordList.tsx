@@ -26,12 +26,12 @@ export function WordList({ words, foundWords, remainingWords, allWordPlacements,
   };
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="pb-3">
+    <Card className="w-full h-full flex flex-col">
+      <CardHeader className="pb-3 flex-shrink-0">
         <CardTitle className="text-lg font-bold">Bollywood Actors</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-1 max-h-80 overflow-y-auto">
+      <CardContent className="flex-1 flex flex-col">
+        <div className="space-y-1 flex-1 overflow-y-auto pr-2">
           {words.map((wordItem, index) => {
             const isFound = foundWordsSet.has(wordItem.word);
             

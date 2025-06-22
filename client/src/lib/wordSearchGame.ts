@@ -146,20 +146,39 @@ export class WordSearchGame {
     // Sort words by length (longest first) for better placement success
     const sortedWords = [...words].sort((a, b) => b.length - a.length);
     
+    // Track used directions to ensure variety
+    const usedDirections: string[] = [];
+    const minDirectionUse = Math.floor(words.length / DIRECTIONS.length);
+    
     // Place each word
     for (const word of sortedWords) {
       let placed = false;
       let attempts = 0;
-      const maxAttempts = 200; // Increased attempts for better placement
+      const maxAttempts = 300; // Increased attempts for better placement
+      
+      // Create a shuffled direction list, prioritizing unused directions
+      const availableDirections = [...DIRECTIONS];
+      const underusedDirections = availableDirections.filter(dir => 
+        usedDirections.filter(used => used === dir.name).length < minDirectionUse
+      );
+      
+      const prioritizedDirections = underusedDirections.length > 0 
+        ? [...underusedDirections, ...availableDirections]
+        : availableDirections;
       
       while (!placed && attempts < maxAttempts) {
-        const direction = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
+        const directionIndex = attempts < 100 
+          ? attempts % prioritizedDirections.length 
+          : Math.floor(Math.random() * DIRECTIONS.length);
+        const direction = prioritizedDirections[directionIndex] || DIRECTIONS[directionIndex % DIRECTIONS.length];
+        
         const startRow = Math.floor(Math.random() * GRID_SIZE);
         const startCol = Math.floor(Math.random() * GRID_SIZE);
         
         if (this.canPlaceWord(word, startRow, startCol, direction)) {
           const placement = this.placeWord(word, startRow, startCol, direction);
           this.gameState.words.push(placement);
+          usedDirections.push(direction.name);
           placed = true;
         }
         

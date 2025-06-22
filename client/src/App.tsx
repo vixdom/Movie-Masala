@@ -151,17 +151,39 @@ function App() {
         </div>
 
         {/* Header */}
-        <div className="text-center mb-6">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            🎬 Movie Masala
-          </h1>
-          <p className="text-gray-600">
-            Find hidden words from the world of Indian cinema!
-          </p>
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center space-x-4">
+            <Button 
+              onClick={startNewGame}
+              variant={gameState.isComplete ? "default" : "outline"}
+              size="sm"
+            >
+              {gameState.isComplete ? (
+                <>
+                  🎉 Play Again
+                </>
+              ) : (
+                <>
+                  🔄 New Game
+                </>
+              )}
+            </Button>
+          </div>
+          
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-800 mb-1">
+              🎬 Movie Masala
+            </h1>
+            <p className="text-gray-600 text-sm">
+              Find hidden Bollywood actor names!
+            </p>
+          </div>
+          
+          <div className="w-24"></div> {/* Spacer for balance */}
         </div>
 
         {/* Game Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           {/* Word Search Grid */}
           <div className="flex justify-center">
             <div className="w-full max-w-lg">
@@ -178,40 +200,22 @@ function App() {
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Word List */}
-            <WordList
-              words={currentWords}
-              foundWords={foundWords}
-              remainingWords={remainingWords}
-              allWordPlacements={gameState.words}
-              onHighlightWord={handleHighlightWord}
-            />
-
-            {/* New Game Button */}
-            <div className="flex justify-center">
-              <Button 
-                onClick={startNewGame}
-                className="w-full max-w-md"
-                variant={gameState.isComplete ? "default" : "outline"}
-                size="lg"
-              >
-                {gameState.isComplete ? (
-                  <>
-                    🎉 Play Again
-                  </>
-                ) : (
-                  <>
-                    🔄 New Game
-                  </>
-                )}
-              </Button>
+          {/* Sidebar - Aligned with grid height */}
+          <div className="flex flex-col" style={{ height: 'min(90vw, 500px)' }}>
+            {/* Word List - Takes available height */}
+            <div className="flex-1">
+              <WordList
+                words={currentWords}
+                foundWords={foundWords}
+                remainingWords={remainingWords}
+                allWordPlacements={gameState.words}
+                onHighlightWord={handleHighlightWord}
+              />
             </div>
 
             {gameState.isComplete && (
-              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200 max-w-md mx-auto">
-                <div className="text-green-800 font-bold text-lg mb-2">
+              <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200 mt-4">
+                <div className="text-green-800 font-bold text-base mb-1">
                   🎉 Congratulations!
                 </div>
                 <div className="text-green-700 text-sm">
