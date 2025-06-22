@@ -146,7 +146,7 @@ function App() {
             <div
               key={wordItem.word}
               className={cn(
-                "flex items-center gap-1 px-4 py-2 rounded-full text-sm transition-all duration-200 cursor-pointer backdrop-blur-sm shadow-lg mb-2",
+                "flex items-center gap-1 px-2 py-1 rounded-full text-sm transition-all duration-200 cursor-pointer backdrop-blur-sm shadow-lg mb-2",
                 isFound 
                   ? "bg-green-500/90 text-white line-through" 
                   : "bg-white/90 text-gray-800 hover:bg-white active:bg-gray-100"
