@@ -87,6 +87,7 @@ The application follows a full-stack architecture with clear separation between 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
