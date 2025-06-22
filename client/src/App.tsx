@@ -137,7 +137,7 @@ function App() {
       </div>
 
       {/* Floating Word Pills - no background container */}
-      <div className="absolute top-20 left-4 right-4 z-20 flex flex-wrap gap-2 justify-center">
+      <div className="absolute top-20 left-4 right-4 z-20 flex flex-wrap gap-2 justify-center max-h-20 overflow-hidden">
         {currentWords.map((wordItem) => {
           const wordPlacement = gameState.words.find(wp => wp.word === wordItem.word);
           const isFound = wordPlacement && gameState.foundWords.has(wordPlacement.id);
@@ -174,15 +174,15 @@ function App() {
 
       {/* Selection Bubble - word in progress */}
       {currentSelection && (
-        <div className="absolute top-32 left-1/2 transform -translate-x-1/2 z-30 bg-orange-500/95 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200">
+        <div className="absolute top-44 left-1/2 transform -translate-x-1/2 z-30 bg-orange-500/95 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200">
           <span className="text-lg font-bold tracking-widest">
             {currentSelection.split('').join(' ')}
           </span>
         </div>
       )}
 
-      {/* Full-screen Game Grid */}
-      <div className="absolute inset-0 flex items-center justify-center pt-32 pb-4 px-2 z-10">
+      {/* Full-screen Game Grid - moved down with ample spacing */}
+      <div className="absolute inset-0 flex items-center justify-center pt-56 pb-8 px-2 z-10">
         <div className="w-full h-full max-w-lg max-h-lg">
           <WordSearch
             grid={gameState.grid}
