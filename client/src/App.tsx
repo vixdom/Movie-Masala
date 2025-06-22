@@ -156,47 +156,7 @@ function App() {
         />
       </div>
 
-      {/* Bottom UI - Score and Controls */}
-      <div className="bg-black/50 backdrop-blur-sm text-white px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-            🎭
-          </div>
-          <div className="text-sm">
-            Score: {gameState.score}
-          </div>
-        </div>
-        
-        <div className="flex items-center space-x-4">
-          <div className="bg-gray-800 rounded-full px-3 py-1 text-sm">
-            {foundWords.length}/{currentWords.length}
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={startNewGame}
-            className="text-white hover:bg-white/20 text-sm"
-          >
-            New Game
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              toggleMute();
-              if (isMuted) {
-                setTimeout(() => playHit(), 200);
-              }
-            }}
-            className="text-white hover:bg-white/20 w-8 h-8 p-0"
-          >
-            {isMuted ? '🔇' : '🔊'}
-          </Button>
-          <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-            🏆
-          </div>
-        </div>
-      </div>
+
 
       {/* Completion Message */}
       {gameState.isComplete && (
