@@ -95,9 +95,13 @@ function App() {
   }, [handleCellMouseUp]);
 
   const handleHighlightWord = useCallback((wordPlacement: any) => {
+    console.log('Highlighting word:', wordPlacement.word);
     setHighlightedWord(wordPlacement.word);
     // Clear highlight after 1 second
-    setTimeout(() => setHighlightedWord(null), 1000);
+    setTimeout(() => {
+      console.log('Clearing highlight');
+      setHighlightedWord(null);
+    }, 1000);
   }, []);
 
   const foundWords = game.getFoundWords();
