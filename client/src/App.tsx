@@ -95,9 +95,12 @@ function App() {
   }, [handleCellMouseUp]);
 
   const handleHighlightWord = useCallback((wordPlacement: any) => {
+    console.log('Debug: App received placement:', wordPlacement);
+    console.log('Debug: Setting highlighted word to:', wordPlacement.word);
     setHighlightedWord(wordPlacement.word);
     // Clear highlight after 1 second
     setTimeout(() => {
+      console.log('Debug: Clearing highlighted word');
       setHighlightedWord(null);
     }, 1000);
   }, []);
