@@ -122,7 +122,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   const renderedGrid = useMemo(() => {
     return grid.map((row, rowIndex) =>
       row.map((cell, colIndex) => (
-        <GridCell
+        <OptimizedGridCell
           key={`${rowIndex}-${colIndex}`}
           cell={cell}
           rowIndex={rowIndex}

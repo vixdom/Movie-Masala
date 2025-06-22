@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { MobileOptimizedWordSearch as WordSearch } from './components/MobileOptimizedWordSearch';
+import { WordSearch } from './components/WordSearch';
 import { WordList } from './components/WordList';
 import { WordFoundAnimation } from './components/WordFoundAnimation';
 import { Button } from './components/ui/button';
