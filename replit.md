@@ -88,6 +88,13 @@ The application follows a full-stack architecture with clear separation between 
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes
+
+- June 22, 2025: Fixed layout positioning - actors list now displays on the right side of the grid
+- June 22, 2025: Successfully implemented and tested clue system (eye icon functionality) - highlights word positions for 1 second when clicked
+- June 22, 2025: Confirmed 12x12 grid system accommodates all 10 Bollywood actor names with proper directional variety
+- June 22, 2025: Layout structure: New Game button (top-left), word search grid (center-left), actors list with eye icons (right side)
+
 ## Changelog
 
 Changelog:
