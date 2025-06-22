@@ -5,33 +5,34 @@ export interface WordListItem {
 }
 
 export const bollywoodWords: WordListItem[] = [
-  // Legendary Actors (longer names)
-  { word: 'AMITABH', category: 'actor', hint: 'Big B of Bollywood' },
-  { word: 'SHAHRUKH', category: 'actor', hint: 'King Khan' },
-  { word: 'SALMAN', category: 'actor', hint: 'Bhai of Bollywood' },
-  { word: 'AAMIR', category: 'actor', hint: 'Mr. Perfectionist' },
-  { word: 'AKSHAY', category: 'actor', hint: 'Khiladi Kumar' },
-  { word: 'HRITHIK', category: 'actor', hint: 'Greek God of Bollywood' },
-  { word: 'RANBIR', category: 'actor', hint: 'Kapoor family heir' },
-  { word: 'RANVEER', category: 'actor', hint: 'Energy powerhouse' },
-  { word: 'RAJESH', category: 'actor', hint: 'First superstar' },
-  { word: 'DILIP', category: 'actor', hint: 'Tragedy King' },
-  { word: 'AYUSHMANN', category: 'actor', hint: 'Versatile performer' },
-  { word: 'IRRFAN', category: 'actor', hint: 'Method actor' },
-  { word: 'NAWAZ', category: 'actor', hint: 'Character actor' },
-  { word: 'ARJUN', category: 'actor', hint: 'Second generation' },
-  { word: 'VARUN', category: 'actor', hint: 'Comedy specialist' },
-  { word: 'SIDDHARTH', category: 'actor', hint: 'Student of the year' },
-  { word: 'RAJKUMMAR', category: 'actor', hint: 'Character specialist' },
-  { word: 'TIGER', category: 'actor', hint: 'Action star' },
-  { word: 'VICKY', category: 'actor', hint: 'Uri actor' },
-  { word: 'KARTIK', category: 'actor', hint: 'Comedy king' }
+  // Bollywood Actors - Authentic Full Names (correctly spelled)
+  { word: 'SHAHRUKHKHAN', category: 'actor', hint: 'King Khan' },
+  { word: 'SALMANKHAN', category: 'actor', hint: 'Bhai of Bollywood' },
+  { word: 'AAMIRKHAN', category: 'actor', hint: 'Mr. Perfectionist' },
+  { word: 'AMITABHBACH', category: 'actor', hint: 'Big B of Bollywood' },
+  { word: 'AKSHAYKUMAR', category: 'actor', hint: 'Khiladi Kumar' },
+  { word: 'RANBIRKAPOOR', category: 'actor', hint: 'Kapoor family heir' },
+  { word: 'RANVEERSINGH', category: 'actor', hint: 'Energy powerhouse' },
+  { word: 'RAJESHKHANNA', category: 'actor', hint: 'First superstar' },
+  { word: 'DILIPKUMAR', category: 'actor', hint: 'Tragedy King' },
+  { word: 'IRRFANKHAN', category: 'actor', hint: 'Method actor' },
+  { word: 'ARJUNKAPOOR', category: 'actor', hint: 'Second generation' },
+  { word: 'VARUNDHAWAN', category: 'actor', hint: 'Comedy specialist' },
+  { word: 'TIGERSHROFF', category: 'actor', hint: 'Action star' },
+  { word: 'VICKYKAUSHAL', category: 'actor', hint: 'Uri actor' },
+  { word: 'KARTIKAARYAN', category: 'actor', hint: 'Comedy king' },
+  { word: 'RAJKUMMARRAO', category: 'actor', hint: 'Character specialist' },
+  { word: 'SHAHIDKAPOOR', category: 'actor', hint: 'Chocolate boy' },
+  { word: 'RISHIKAPOOR', category: 'actor', hint: 'Veteran actor' },
+  { word: 'SUNILSHETTY', category: 'actor', hint: 'Action hero' },
+  { word: 'HRITHIKROSH', category: 'actor', hint: 'Greek God of Bollywood' }
 ];
 
 // Function to get a random subset of words for the game
 export function getGameWords(count: number = 15): WordListItem[] {
-  // Filter words that can fit in a 10x10 grid (max 10 characters)
-  const fittableWords = bollywoodWords.filter(word => word.word.length <= 10);
+  // For 10x10 grid, we can accommodate words up to 10 characters in straight lines
+  // and up to √(10²+10²) ≈ 14 characters diagonally, but keep it simple at 12 for reliability
+  const fittableWords = bollywoodWords.filter(word => word.word.length <= 12);
   const shuffled = [...fittableWords].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
 }
