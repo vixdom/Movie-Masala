@@ -17,6 +17,8 @@ interface WordListProps {
 export function WordList({ words, foundWords, remainingWords, allWordPlacements, onHighlightWord }: WordListProps) {
   
   const foundWordsSet = new Set(foundWords.map(w => w.word));
+  console.log('WordList: foundWords count:', foundWords.length);
+  console.log('WordList: foundWordsSet:', Array.from(foundWordsSet));
   
   const handleHighlightWord = (word: string) => {
     const placement = allWordPlacements.find(wp => wp.word === word);
