@@ -15,6 +15,7 @@ function App() {
   const [currentWords, setCurrentWords] = useState<WordListItem[]>([]);
   const [wordFoundAnimation, setWordFoundAnimation] = useState<string | null>(null);
   const [highlightedWord, setHighlightedWord] = useState<string | null>(null);
+  const [currentSelection, setCurrentSelection] = useState<string>('');
   const { playHit, playSuccess, toggleMute, isMuted, initializeAudio } = useAudio();
 
   // Initialize audio
@@ -52,18 +53,23 @@ function App() {
 
   const handleCellMouseEnter = useCallback((row: number, col: number) => {
     game.updateSelection(row, col);
-    setGameState({ ...game.getGameState() });
+    const newGameState = game.getGameState();
+    setGameState(newGameState);
+    setCurrentSelection(game.getCurrentSelectionWord());
   }, [game]);
 
   const handleCellMouseUp = useCallback(() => {
     const wordFound = game.endSelection();
     const newGameState = game.getGameState();
     setGameState(newGameState);
+    setCurrentSelection('');
     
     if (wordFound) {
       playSuccess();
-      setWordFoundAnimation(game.getFoundWords().slice(-1)[0]?.word || null);
-      setTimeout(() => setWordFoundAnimation(null), 2000);
+      // Gentle vibration for word found
+      if (navigator.vibrate) {
+        navigator.vibrate(50); // Short gentle vibration
+      }
     } else {
       playHit();
     }
@@ -143,7 +149,16 @@ function App() {
       </div>
 
       {/* Main Game Grid */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 relative">
+        {/* Selection Bubble */}
+        {currentSelection && (
+          <div className="absolute top-4 bg-orange-500 text-white px-6 py-3 rounded-full shadow-lg z-20 transition-all duration-200">
+            <span className="text-2xl font-bold tracking-widest">
+              {currentSelection.split('').join(' ')}
+            </span>
+          </div>
+        )}
+        
         <WordSearch
           grid={gameState.grid}
           onCellMouseDown={handleCellMouseDown}
@@ -176,8 +191,7 @@ function App() {
         </div>
       )}
 
-      {/* Word Found Animation */}
-      <WordFoundAnimation word={wordFoundAnimation} />
+
     </div>
   );
 }

@@ -110,6 +110,28 @@ export function WordSearch({
     };
   }, [isMouseDown, handleMouseMove, onCellMouseUp]);
 
+  // Define unique colors for each word
+  const wordColors = [
+    'bg-red-400/90 text-red-900 shadow-red-300/50',
+    'bg-blue-400/90 text-blue-900 shadow-blue-300/50', 
+    'bg-green-400/90 text-green-900 shadow-green-300/50',
+    'bg-purple-400/90 text-purple-900 shadow-purple-300/50',
+    'bg-pink-400/90 text-pink-900 shadow-pink-300/50',
+    'bg-indigo-400/90 text-indigo-900 shadow-indigo-300/50',
+    'bg-teal-400/90 text-teal-900 shadow-teal-300/50',
+    'bg-orange-400/90 text-orange-900 shadow-orange-300/50',
+    'bg-cyan-400/90 text-cyan-900 shadow-cyan-300/50',
+    'bg-emerald-400/90 text-emerald-900 shadow-emerald-300/50'
+  ];
+
+  // Get color for a specific word
+  const getWordColor = (wordId: string | undefined) => {
+    if (!wordId) return '';
+    const wordName = wordId.split('-')[0];
+    const hash = wordName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return wordColors[hash % wordColors.length];
+  };
+
   return (
     <div className="w-full max-w-xl mx-auto px-4">
       <div
@@ -135,7 +157,7 @@ export function WordSearch({
                 'flex items-center justify-center text-xl font-bold cursor-pointer transition-all duration-200 select-none rounded-xl touch-manipulation shadow-lg',
                 'hover:scale-105 active:scale-95',
                 {
-                  'bg-green-400/90 text-green-900 shadow-green-300/50': cell.isFound,
+                  [getWordColor(cell.wordId)]: cell.isFound,
                   'bg-blue-400/90 text-blue-900 shadow-blue-300/50 transform scale-105': cell.isSelected && !cell.isFound,
                   'bg-yellow-300/90 text-yellow-900 shadow-yellow-300/50': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
                   'bg-white/80 text-gray-800 shadow-white/30 backdrop-blur-sm': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-')),
