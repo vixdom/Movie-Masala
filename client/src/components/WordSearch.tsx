@@ -111,13 +111,13 @@ export function WordSearch({
   }, [isMouseDown, handleMouseMove, onCellMouseUp]);
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4">
+    <div className="w-full max-w-xl mx-auto px-4">
       <div
         ref={gridRef}
-        className="grid gap-2 p-6 select-none"
+        className="grid gap-2 p-4 select-none"
         style={{
-          gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))`,
-          gridTemplateRows: `repeat(${grid.length}, minmax(0, 1fr))`,
+          gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
+          gridTemplateRows: `repeat(${grid.length}, 1fr)`,
           width: '100%',
           aspectRatio: '1 / 1',
         }}
@@ -132,11 +132,11 @@ export function WordSearch({
             <div
               key={`${rowIndex}-${colIndex}`}
               className={cn(
-                'w-full h-full flex items-center justify-center text-3xl font-bold cursor-pointer transition-all duration-200 select-none rounded-xl min-h-[4rem] touch-manipulation shadow-lg',
-                'hover:scale-110 active:scale-95',
+                'flex items-center justify-center text-xl font-bold cursor-pointer transition-all duration-200 select-none rounded-xl touch-manipulation shadow-lg',
+                'hover:scale-105 active:scale-95',
                 {
                   'bg-green-400/90 text-green-900 shadow-green-300/50': cell.isFound,
-                  'bg-blue-400/90 text-blue-900 shadow-blue-300/50 transform scale-110': cell.isSelected && !cell.isFound,
+                  'bg-blue-400/90 text-blue-900 shadow-blue-300/50 transform scale-105': cell.isSelected && !cell.isFound,
                   'bg-yellow-300/90 text-yellow-900 shadow-yellow-300/50': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
                   'bg-white/80 text-gray-800 shadow-white/30 backdrop-blur-sm': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-')),
                 }
@@ -145,7 +145,9 @@ export function WordSearch({
                 fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
                 fontWeight: '800',
                 letterSpacing: '0.02em',
-                aspectRatio: '1'
+                aspectRatio: '1',
+                width: '100%',
+                height: '100%'
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
