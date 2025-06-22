@@ -37,8 +37,8 @@ export const mobileOptimizations = {
   optimizeTouchEvents: (element: HTMLElement) => {
     element.style.touchAction = 'manipulation';
     element.style.userSelect = 'none';
-    element.style.webkitUserSelect = 'none';
-    element.style.webkitTouchCallout = 'none';
+    (element.style as any).webkitUserSelect = 'none';
+    (element.style as any).webkitTouchCallout = 'none';
   },
 
   // Preload critical resources

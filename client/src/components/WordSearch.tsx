@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { GridCell } from '@/lib/wordSearchGame';
 
