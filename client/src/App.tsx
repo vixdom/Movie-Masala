@@ -28,7 +28,7 @@ function App() {
 
   // Start a new game
   const startNewGame = useCallback(() => {
-    const words = getGameWords(12); // Get 12 random words
+    const words = getGameWords(8); // Get 8 random words for 9x9 grid
     const wordStrings = words.map(w => w.word);
     
     game.resetGame();
@@ -101,10 +101,10 @@ function App() {
         </div>
 
         {/* Game Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Word Search Grid */}
-          <div className="lg:col-span-2 flex justify-center">
-            <div className="w-full max-w-2xl">
+          <div className="flex justify-center">
+            <div className="w-full max-w-lg">
               <WordSearch
                 grid={gameState.grid}
                 onCellMouseDown={handleCellMouseDown}

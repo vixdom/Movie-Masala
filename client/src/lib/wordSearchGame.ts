@@ -27,7 +27,7 @@ export interface GameState {
   isSelecting: boolean;
 }
 
-const GRID_SIZE = 15;
+const GRID_SIZE = 9;
 const DIRECTIONS = [
   { name: 'horizontal', dr: 0, dc: 1 },
   { name: 'vertical', dr: 1, dc: 0 },
@@ -295,7 +295,9 @@ export class WordSearchGame {
     
     if (selectedSet.size !== wordSet.size) return false;
     
-    for (const pos of selectedSet) {
+    // Convert Set to Array to iterate
+    const selectedArray = Array.from(selectedSet);
+    for (const pos of selectedArray) {
       if (!wordSet.has(pos)) return false;
     }
     
