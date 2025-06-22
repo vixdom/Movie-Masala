@@ -30,11 +30,17 @@ export const bollywoodWords: WordListItem[] = [
 
 // Function to get a random subset of words for the game
 export function getGameWords(count: number = 15): WordListItem[] {
-  // For 10x10 grid, we can accommodate words up to 10 characters in straight lines
-  // and up to √(10²+10²) ≈ 14 characters diagonally, but keep it simple at 12 for reliability
-  const fittableWords = bollywoodWords.filter(word => word.word.length <= 12);
-  const shuffled = [...fittableWords].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  // Prioritize shorter words for better grid placement success
+  // Sort by length and mix short and medium length words
+  const shortWords = bollywoodWords.filter(word => word.word.length <= 10);
+  const mediumWords = bollywoodWords.filter(word => word.word.length > 10 && word.word.length <= 12);
+  
+  // Get more short words than medium words for better placement odds
+  const selectedShort = shortWords.sort(() => Math.random() - 0.5).slice(0, Math.max(1, Math.floor(count * 0.7)));
+  const selectedMedium = mediumWords.sort(() => Math.random() - 0.5).slice(0, Math.max(1, count - selectedShort.length));
+  
+  const combined = [...selectedShort, ...selectedMedium];
+  return combined.sort(() => Math.random() - 0.5).slice(0, count);
 }
 
 // Function to get words by category

@@ -19,15 +19,9 @@ export function WordList({ words, foundWords, remainingWords, allWordPlacements,
   const foundWordsSet = new Set(foundWords.map(w => w.word));
   
   const handleHighlightWord = (word: string) => {
-    console.log('Debug: Eye clicked for word:', word);
-    console.log('Debug: All placements:', allWordPlacements);
     const placement = allWordPlacements.find(wp => wp.word === word);
-    console.log('Debug: Found placement:', placement);
     if (placement) {
-      console.log('Debug: Calling onHighlightWord');
       onHighlightWord(placement);
-    } else {
-      console.log('Debug: No placement found for word:', word);
     }
   };
 

@@ -31,8 +31,14 @@ function App() {
     
     game.resetGame();
     game.generateGrid(wordStrings);
-    setCurrentWords(words);
-    setGameState(game.getGameState());
+    const newGameState = game.getGameState();
+    
+    // Only show words that were actually placed in the grid
+    const placedWords = newGameState.words.map(wp => wp.word);
+    const filteredWords = words.filter(w => placedWords.includes(w.word));
+    
+    setCurrentWords(filteredWords);
+    setGameState(newGameState);
   }, [game]);
 
   // Initialize the first game
@@ -95,12 +101,9 @@ function App() {
   }, [handleCellMouseUp]);
 
   const handleHighlightWord = useCallback((wordPlacement: any) => {
-    console.log('Debug: App received placement:', wordPlacement);
-    console.log('Debug: Setting highlighted word to:', wordPlacement.word);
     setHighlightedWord(wordPlacement.word);
     // Clear highlight after 1 second
     setTimeout(() => {
-      console.log('Debug: Clearing highlighted word');
       setHighlightedWord(null);
     }, 1000);
   }, []);
