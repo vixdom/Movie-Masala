@@ -133,10 +133,10 @@ export function WordSearch({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto px-2">
+    <div className="w-full max-w-sm mx-auto px-1">
       <div
         ref={gridRef}
-        className="grid gap-1 p-2 select-none"
+        className="grid gap-0.5 p-1 select-none"
         style={{
           gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
           gridTemplateRows: `repeat(${grid.length}, 1fr)`,
@@ -182,9 +182,9 @@ export function WordSearch({
               }}
               onMouseEnter={() => {
                 if (isMouseDown) {
-                  // Enhanced haptic feedback for mobile
+                  // Gentle haptic bump while gliding through letters
                   if (navigator.vibrate) {
-                    navigator.vibrate(20); // Slightly stronger vibration for mobile
+                    navigator.vibrate(15); // Gentle bump for ASMR-like experience
                   }
                   onCellMouseEnter(rowIndex, colIndex);
                 }

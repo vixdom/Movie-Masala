@@ -37,7 +37,8 @@ export const useAudio = create<AudioState>((set, get) => ({
       if (AudioContext) {
         const audioContext = new AudioContext();
         
-        const createBeep = (frequency: number, duration: number) => ({
+        // Gentle 'bup' sound in ASMR frequency range
+        const createASMRHitSound = () => ({
           play: () => {
             try {
               if (audioContext.state === 'suspended') {
@@ -46,43 +47,99 @@ export const useAudio = create<AudioState>((set, get) => ({
               
               const oscillator = audioContext.createOscillator();
               const gainNode = audioContext.createGain();
+              const filterNode = audioContext.createBiquadFilter();
               
-              oscillator.connect(gainNode);
+              oscillator.connect(filterNode);
+              filterNode.connect(gainNode);
               gainNode.connect(audioContext.destination);
               
-              oscillator.frequency.value = frequency;
+              // Soft ASMR tone in 200Hz range
+              oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+              oscillator.frequency.exponentialRampToValueAtTime(180, audioContext.currentTime + 0.06);
               oscillator.type = 'sine';
               
-              gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-              gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+              // Soft low-pass filter for gentle sound
+              filterNode.type = 'lowpass';
+              filterNode.frequency.setValueAtTime(600, audioContext.currentTime);
+              
+              // Very gentle volume for ASMR effect
+              gainNode.gain.setValueAtTime(0.12, audioContext.currentTime);
+              gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.06);
               
               oscillator.start();
-              oscillator.stop(audioContext.currentTime + duration);
-            } catch (e) {
-              // Fallback to vibration only
+              oscillator.stop(audioContext.currentTime + 0.06);
+              
+              // Gentle haptic bump
               if (navigator.vibrate) {
-                navigator.vibrate(50);
+                navigator.vibrate(15);
+              }
+            } catch (e) {
+              if (navigator.vibrate) {
+                navigator.vibrate(15);
+              }
+            }
+          }
+        });
+
+        // Pleasant chime for word completion
+        const createChimeSound = () => ({
+          play: () => {
+            try {
+              if (audioContext.state === 'suspended') {
+                audioContext.resume();
+              }
+              
+              // Create multiple oscillators for rich chime sound
+              const createChimeNote = (freq: number, delay: number) => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(freq, audioContext.currentTime + delay);
+                oscillator.type = 'triangle';
+                
+                gainNode.gain.setValueAtTime(0.18, audioContext.currentTime + delay);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + delay + 0.35);
+                
+                oscillator.start(audioContext.currentTime + delay);
+                oscillator.stop(audioContext.currentTime + delay + 0.35);
+              };
+              
+              // Pleasant chord progression: C5-E5-G5
+              createChimeNote(523, 0);    // C5
+              createChimeNote(659, 0.08); // E5
+              createChimeNote(784, 0.16); // G5
+              
+              // 'Clap' haptic pattern
+              if (navigator.vibrate) {
+                navigator.vibrate([80, 40, 80]);
+              }
+            } catch (e) {
+              if (navigator.vibrate) {
+                navigator.vibrate([80, 40, 80]);
               }
             }
           }
         });
         
         set({ 
-          hitSound: createBeep(800, 0.1),
-          successSound: createBeep(600, 0.3)
+          hitSound: createASMRHitSound(),
+          successSound: createChimeSound()
         });
       } else {
-        // Fallback: vibration only
+        // Fallback: enhanced vibration only
         set({ 
-          hitSound: { play: () => navigator.vibrate && navigator.vibrate(50) },
-          successSound: { play: () => navigator.vibrate && navigator.vibrate([100, 50, 100]) }
+          hitSound: { play: () => navigator.vibrate && navigator.vibrate(15) },
+          successSound: { play: () => navigator.vibrate && navigator.vibrate([80, 40, 80]) }
         });
       }
     } catch (error) {
-      // Final fallback
+      // Final fallback with enhanced haptics
       set({ 
-        hitSound: { play: () => navigator.vibrate && navigator.vibrate(50) },
-        successSound: { play: () => navigator.vibrate && navigator.vibrate([100, 50, 100]) }
+        hitSound: { play: () => navigator.vibrate && navigator.vibrate(15) },
+        successSound: { play: () => navigator.vibrate && navigator.vibrate([80, 40, 80]) }
       });
     }
   },
