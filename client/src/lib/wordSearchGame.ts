@@ -561,4 +561,15 @@ export class WordSearchGame {
   public resetGame(): void {
     this.gameState = this.initializeGame();
   }
+
+  public getCurrentSelectionWord(): string {
+    if (!this.gameState.isSelecting || this.gameState.selectedCells.length === 0) {
+      return '';
+    }
+    
+    // Get the letters from selected cells in order
+    return this.gameState.selectedCells
+      .map(cell => this.gameState.grid[cell.row][cell.col].letter)
+      .join('');
+  }
 }

@@ -15,6 +15,7 @@ function App() {
   const [currentWords, setCurrentWords] = useState<WordListItem[]>([]);
   const [wordFoundAnimation, setWordFoundAnimation] = useState<string | null>(null);
   const [highlightedWord, setHighlightedWord] = useState<string | null>(null);
+  const [currentSelection, setCurrentSelection] = useState<string>('');
   const { playHit, playSuccess, toggleMute, isMuted, initializeAudio } = useAudio();
 
   // Initialize audio
@@ -47,18 +48,23 @@ function App() {
   // Handle mouse/touch events
   const handleCellMouseDown = useCallback((row: number, col: number) => {
     game.startSelection(row, col);
-    setGameState({ ...game.getGameState() });
+    const newGameState = game.getGameState();
+    setGameState({ ...newGameState });
+    setCurrentSelection(game.getCurrentSelectionWord());
   }, [game]);
 
   const handleCellMouseEnter = useCallback((row: number, col: number) => {
     game.updateSelection(row, col);
-    setGameState({ ...game.getGameState() });
+    const newGameState = game.getGameState();
+    setGameState({ ...newGameState });
+    setCurrentSelection(game.getCurrentSelectionWord());
   }, [game]);
 
   const handleCellMouseUp = useCallback(() => {
     const wordFound = game.endSelection();
     const newGameState = game.getGameState();
     setGameState(newGameState);
+    setCurrentSelection(''); // Clear selection bubble
     
     if (wordFound) {
       playSuccess();
@@ -194,7 +200,14 @@ function App() {
       </div>
 
       {/* Main Game Grid - Takes remaining space */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex items-center justify-center p-4 relative">
+        {/* Selection Bubble */}
+        {currentSelection && (
+          <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20 bg-primary/90 backdrop-blur-sm text-primary-foreground px-4 py-2 rounded-full shadow-lg border border-primary/30 transition-all duration-200">
+            <span className="font-bold text-lg tracking-wider">{currentSelection}</span>
+          </div>
+        )}
+        
         <WordSearch
           grid={gameState.grid}
           onCellMouseDown={handleCellMouseDown}
