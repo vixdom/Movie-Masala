@@ -27,7 +27,7 @@ export interface GameState {
   isSelecting: boolean;
 }
 
-const GRID_SIZE = 10;
+const GRID_SIZE = 12;
 const DIRECTIONS = [
   { name: 'horizontal', dr: 0, dc: 1 },           // left to right
   { name: 'horizontal-reverse', dr: 0, dc: -1 },  // right to left
@@ -143,14 +143,14 @@ export class WordSearchGame {
     // Reset game state
     this.gameState = this.initializeGame();
     
-    // Shuffle words to randomize placement
-    const shuffledWords = [...words].sort(() => Math.random() - 0.5);
+    // Sort words by length (longest first) for better placement success
+    const sortedWords = [...words].sort((a, b) => b.length - a.length);
     
     // Place each word
-    for (const word of shuffledWords) {
+    for (const word of sortedWords) {
       let placed = false;
       let attempts = 0;
-      const maxAttempts = 100;
+      const maxAttempts = 200; // Increased attempts for better placement
       
       while (!placed && attempts < maxAttempts) {
         const direction = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
@@ -164,6 +164,11 @@ export class WordSearchGame {
         }
         
         attempts++;
+      }
+      
+      // If word couldn't be placed after max attempts, continue with next word
+      if (!placed) {
+        console.warn(`Could not place word: ${word} (${word.length} chars)`);
       }
     }
     

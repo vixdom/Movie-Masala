@@ -26,7 +26,7 @@ function App() {
 
   // Start a new game
   const startNewGame = useCallback(() => {
-    const words = getGameWords(8); // Get 8 words for 10x10 grid
+    const words = getGameWords(10); // Get all 10 selected actors for 12x12 grid
     const wordStrings = words.map(w => w.word);
     
     game.resetGame();

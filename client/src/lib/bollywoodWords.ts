@@ -4,43 +4,26 @@ export interface WordListItem {
   hint?: string;
 }
 
-export const bollywoodWords: WordListItem[] = [
-  // Bollywood Actors - Authentic Full Names (correctly spelled)
-  { word: 'SHAHRUKHKHAN', category: 'actor', hint: 'King Khan' },
-  { word: 'SALMANKHAN', category: 'actor', hint: 'Bhai of Bollywood' },
-  { word: 'AAMIRKHAN', category: 'actor', hint: 'Mr. Perfectionist' },
-  { word: 'AMITABHBACH', category: 'actor', hint: 'Big B of Bollywood' },
-  { word: 'AKSHAYKUMAR', category: 'actor', hint: 'Khiladi Kumar' },
-  { word: 'RANBIRKAPOOR', category: 'actor', hint: 'Kapoor family heir' },
-  { word: 'RANVEERSINGH', category: 'actor', hint: 'Energy powerhouse' },
-  { word: 'RAJESHKHANNA', category: 'actor', hint: 'First superstar' },
-  { word: 'DILIPKUMAR', category: 'actor', hint: 'Tragedy King' },
-  { word: 'IRRFANKHAN', category: 'actor', hint: 'Method actor' },
-  { word: 'ARJUNKAPOOR', category: 'actor', hint: 'Second generation' },
-  { word: 'VARUNDHAWAN', category: 'actor', hint: 'Comedy specialist' },
-  { word: 'TIGERSHROFF', category: 'actor', hint: 'Action star' },
-  { word: 'VICKYKAUSHAL', category: 'actor', hint: 'Uri actor' },
-  { word: 'KARTIKAARYAN', category: 'actor', hint: 'Comedy king' },
-  { word: 'RAJKUMMARRAO', category: 'actor', hint: 'Character specialist' },
-  { word: 'SHAHIDKAPOOR', category: 'actor', hint: 'Chocolate boy' },
-  { word: 'RISHIKAPOOR', category: 'actor', hint: 'Veteran actor' },
-  { word: 'SUNILSHETTY', category: 'actor', hint: 'Action hero' },
-  { word: 'HRITHIKROSH', category: 'actor', hint: 'Greek God of Bollywood' }
+// Selected 10 Bollywood Actor Names with authentic spellings
+const selectedActors: WordListItem[] = [
+  { word: 'SHAHRUKHKHAN', category: 'actor', hint: 'King Khan' },           // 12 chars
+  { word: 'AMITABHBACHCHAN', category: 'actor', hint: 'Big B' },            // 15 chars
+  { word: 'SALMANKHAN', category: 'actor', hint: 'Bhai of Bollywood' },     // 10 chars
+  { word: 'AAMIRKHAN', category: 'actor', hint: 'Mr. Perfectionist' },      // 9 chars
+  { word: 'AKSHAYKUMAR', category: 'actor', hint: 'Khiladi Kumar' },        // 11 chars
+  { word: 'RANBIRKAPOOR', category: 'actor', hint: 'Kapoor heir' },         // 12 chars
+  { word: 'HRITHIKROSHAN', category: 'actor', hint: 'Greek God' },          // 13 chars
+  { word: 'RANVEERSINGH', category: 'actor', hint: 'Energy powerhouse' },   // 12 chars
+  { word: 'RAJESHKHANNA', category: 'actor', hint: 'First superstar' },     // 12 chars
+  { word: 'DILIPKUMAR', category: 'actor', hint: 'Tragedy King' }           // 10 chars
 ];
 
-// Function to get a random subset of words for the game
-export function getGameWords(count: number = 15): WordListItem[] {
-  // Prioritize shorter words for better grid placement success
-  // Sort by length and mix short and medium length words
-  const shortWords = bollywoodWords.filter(word => word.word.length <= 10);
-  const mediumWords = bollywoodWords.filter(word => word.word.length > 10 && word.word.length <= 12);
-  
-  // Get more short words than medium words for better placement odds
-  const selectedShort = shortWords.sort(() => Math.random() - 0.5).slice(0, Math.max(1, Math.floor(count * 0.7)));
-  const selectedMedium = mediumWords.sort(() => Math.random() - 0.5).slice(0, Math.max(1, count - selectedShort.length));
-  
-  const combined = [...selectedShort, ...selectedMedium];
-  return combined.sort(() => Math.random() - 0.5).slice(0, count);
+export const bollywoodWords: WordListItem[] = selectedActors;
+
+// Function to get all selected actors for the game
+export function getGameWords(count: number = 10): WordListItem[] {
+  // Return all 10 selected actors - no randomization needed
+  return selectedActors.slice(0, count);
 }
 
 // Function to get words by category
