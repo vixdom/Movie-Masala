@@ -183,7 +183,16 @@ function App() {
           </div>
 
           {/* Game grid - optimized for mobile portrait */}
-          <div className="flex-1 flex items-center justify-center p-2">
+          <div className="flex-1 flex flex-col items-center justify-center p-2 relative">
+            {/* Selection Bubble - word in progress */}
+            {currentSelection && (
+              <div className="absolute top-4 bg-orange-500 text-white px-4 py-2 rounded-full shadow-lg z-20 transition-all duration-200">
+                <span className="text-lg font-bold tracking-widest">
+                  {currentSelection.split('').join(' ')}
+                </span>
+              </div>
+            )}
+            
             <div className="w-full max-w-sm">
               <WordSearch
                 grid={gameState.grid}
