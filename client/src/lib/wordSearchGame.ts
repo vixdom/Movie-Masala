@@ -392,14 +392,22 @@ export class WordSearchGame {
   }
 
   private checkWordMatch(selectedWord: string): WordPlacement | null {
+    console.log('checkWordMatch: selectedWord:', selectedWord);
+    console.log('checkWordMatch: available words:', this.gameState.words.map(w => w.word));
+    
     // Check both forward and backward
     for (const word of this.gameState.words) {
       if (this.gameState.foundWords.has(word.id)) continue;
       
+      console.log('checkWordMatch: checking against word:', word.word);
       if (word.word === selectedWord || word.word === selectedWord.split('').reverse().join('')) {
+        console.log('checkWordMatch: word text matches, checking selection path');
         // Verify that the selection path matches the word placement
         if (this.selectionMatchesWord(word)) {
+          console.log('checkWordMatch: selection path matches!');
           return word;
+        } else {
+          console.log('checkWordMatch: selection path does not match');
         }
       }
     }
