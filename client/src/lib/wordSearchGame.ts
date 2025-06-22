@@ -292,12 +292,28 @@ export class WordSearchGame {
     const deltaRow = positions[1].row - positions[0].row;
     const deltaCol = positions[1].col - positions[0].col;
     
-    // Check if all movements are consistent
-    for (let i = 2; i < positions.length; i++) {
-      const currentDeltaRow = positions[i].row - positions[i-1].row;
-      const currentDeltaCol = positions[i].col - positions[i-1].col;
+    // Validate that delta values are consistent with expected direction patterns
+    // Only allow: (0,1), (0,-1), (1,0), (-1,0), (1,1), (1,-1), (-1,1), (-1,-1)
+    const validDirections = [
+      [0, 1], [0, -1],    // horizontal
+      [1, 0], [-1, 0],    // vertical  
+      [1, 1], [1, -1],    // diagonal down
+      [-1, 1], [-1, -1]   // diagonal up
+    ];
+    
+    const isValidDirection = validDirections.some(([dr, dc]) => dr === deltaRow && dc === deltaCol);
+    if (!isValidDirection) {
+      console.error(`Invalid direction pattern: deltaRow=${deltaRow}, deltaCol=${deltaCol}`);
+      return false;
+    }
+    
+    // Check if all movements are consistent with this direction
+    for (let i = 1; i < positions.length; i++) {
+      const expectedRow = positions[0].row + (deltaRow * i);
+      const expectedCol = positions[0].col + (deltaCol * i);
       
-      if (currentDeltaRow !== deltaRow || currentDeltaCol !== deltaCol) {
+      if (positions[i].row !== expectedRow || positions[i].col !== expectedCol) {
+        console.error(`Position ${i} deviation: expected (${expectedRow}, ${expectedCol}), got (${positions[i].row}, ${positions[i].col})`);
         return false;
       }
     }
