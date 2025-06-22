@@ -1,10 +1,9 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { WordListItem } from '@/lib/bollywoodWords';
-import { WordPlacement } from '@/lib/wordSearchGame';
-import { cn } from '@/lib/utils';
+import { Button } from './ui/button';
+import { cn } from '../lib/utils';
 import { Eye } from 'lucide-react';
+import type { WordListItem } from '../lib/bollywoodWords';
+import type { WordPlacement } from '../lib/wordSearchGame';
 
 interface WordListProps {
   words: WordListItem[];
@@ -26,56 +25,47 @@ export function WordList({ words, foundWords, remainingWords, allWordPlacements,
   };
 
   return (
-    <Card className="w-full h-full flex flex-col bg-card/90 backdrop-blur-sm border-border/50 shadow-xl">
-      <CardHeader className="pb-3 flex-shrink-0 bg-gradient-to-r from-primary/10 to-accent/10">
-        <CardTitle className="text-lg font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          🎭 Bollywood Actors
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex-1 flex flex-col">
-        <div className="space-y-1 flex-1 overflow-y-auto pr-2">
-          {words.map((wordItem, index) => {
-            const isFound = foundWordsSet.has(wordItem.word);
-            
-            return (
-              <div
-                key={index}
+    <div className="px-4 py-3">
+      {/* Horizontal scrollable word list */}
+      <div className="flex overflow-x-auto space-x-2 pb-2">
+        {words.map((wordItem, index) => {
+          const isFound = foundWordsSet.has(wordItem.word);
+          
+          return (
+            <div
+              key={index}
+              className={cn(
+                'flex items-center space-x-2 px-3 py-2 rounded-lg whitespace-nowrap border-2 transition-all duration-200 flex-shrink-0',
+                isFound 
+                  ? 'bg-gray-200 text-gray-500 border-gray-300' 
+                  : 'bg-white text-gray-900 border-gray-300 hover:border-blue-400 hover:bg-blue-50'
+              )}
+            >
+              <span
                 className={cn(
-                  'flex items-center justify-between p-2 rounded-lg transition-all duration-300',
-                  isFound 
-                    ? 'bg-accent/20 text-accent-foreground border border-accent/30 shadow-md' 
-                    : 'hover:bg-primary/10 hover:border-primary/20 border border-transparent'
+                  'text-sm font-medium',
+                  isFound && 'line-through'
                 )}
               >
-                <div className="flex items-center space-x-2 flex-1 min-w-0">
-                  <span className="text-sm">🎭</span>
-                  <div className={cn(
-                    'text-sm font-medium truncate',
-                    isFound && 'line-through'
-                  )}>
-                    {wordItem.word}
-                  </div>
-                </div>
-                <div className="flex items-center space-x-1">
-                  {!isFound && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleHighlightWord(wordItem.word)}
-                      className="h-6 w-6 p-0"
-                    >
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                  )}
-                  {isFound && (
-                    <span className="text-xs text-green-600">✓</span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+                {wordItem.word}
+              </span>
+              {!isFound && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleHighlightWord(wordItem.word)}
+                  className="h-5 w-5 p-0 hover:bg-blue-100"
+                >
+                  <Eye className="h-3 w-3 text-blue-600" />
+                </Button>
+              )}
+              {isFound && (
+                <span className="text-xs text-green-600">✓</span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }

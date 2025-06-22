@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { WordSearch } from './components/WordSearch';
 import { WordList } from './components/WordList';
-import { GameStats } from './components/GameStats';
-
 import { WordFoundAnimation } from './components/WordFoundAnimation';
 import { Button } from './components/ui/button';
 import { WordSearchGame } from './lib/wordSearchGame';
@@ -104,125 +102,117 @@ function App() {
   const remainingWords = game.getRemainingWords();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 p-4">
-      <div className="container mx-auto max-w-7xl relative">
-        {/* Top Right Progress Panel */}
-        <div className="fixed top-4 right-4 z-10 bg-white rounded-lg shadow-lg p-3 border">
-          <div className="flex items-center space-x-3">
-            <div className="text-center">
-              <div className="text-lg font-bold text-primary">{gameState.score}</div>
-              <div className="text-xs text-muted-foreground">Score</div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-bold text-primary">{foundWords.length}/{currentWords.length}</div>
-              <div className="text-xs text-muted-foreground">Found</div>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                toggleMute();
-                if (isMuted) {
-                  setTimeout(() => playHit(), 200);
-                }
-              }}
-              className="h-7 w-7 p-0"
-            >
-              {isMuted ? (
-                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                </svg>
-              ) : (
-                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                </svg>
-              )}
-            </Button>
-          </div>
+    <div className="min-h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900 flex flex-col">
+      {/* Top Header - Orange Banner */}
+      <div className="bg-orange-500 text-white px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-orange-600 px-2 py-1"
+          >
+            ← 133 ✂️
+          </Button>
         </div>
-
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center space-x-4">
-            <Button 
-              onClick={startNewGame}
-              variant={gameState.isComplete ? "default" : "outline"}
-              size="sm"
-            >
-              {gameState.isComplete ? (
-                <>
-                  🎉 Play Again
-                </>
-              ) : (
-                <>
-                  🔄 New Game
-                </>
-              )}
-            </Button>
+        
+        <h1 className="text-lg font-bold text-center">
+          MOVIE MASALA
+        </h1>
+        
+        <div className="flex items-center space-x-2">
+          <div className="bg-orange-600 rounded-full px-2 py-1 text-sm font-bold">
+            100 🏆
           </div>
-          
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-800 mb-1">
-              🎬 Movie Masala
-            </h1>
-            <p className="text-gray-600 text-sm">
-              Find hidden Bollywood actor names!
-            </p>
+          <div className="bg-orange-600 rounded-full px-2 py-1 text-sm font-bold">
+            50 💰
           </div>
-          
-          <div className="w-24"></div> {/* Spacer for balance */}
-        </div>
-
-        {/* Game Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {/* Word Search Grid */}
-          <div className="flex justify-center">
-            <div className="w-full max-w-lg">
-              <WordSearch
-                grid={gameState.grid}
-                onCellMouseDown={handleCellMouseDown}
-                onCellMouseEnter={handleCellMouseEnter}
-                onCellMouseUp={handleCellMouseUp}
-                onCellTouchStart={handleCellTouchStart}
-                onCellTouchMove={handleCellTouchMove}
-                onCellTouchEnd={handleCellTouchEnd}
-                highlightedWord={highlightedWord}
-              />
-            </div>
-          </div>
-
-          {/* Sidebar - Aligned with grid height */}
-          <div className="flex flex-col" style={{ height: 'min(90vw, 500px)' }}>
-            {/* Word List - Takes available height */}
-            <div className="flex-1">
-              <WordList
-                words={currentWords}
-                foundWords={foundWords}
-                remainingWords={remainingWords}
-                allWordPlacements={gameState.words}
-                onHighlightWord={handleHighlightWord}
-              />
-            </div>
-
-            {gameState.isComplete && (
-              <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200 mt-4">
-                <div className="text-green-800 font-bold text-base mb-1">
-                  🎉 Congratulations!
-                </div>
-                <div className="text-green-700 text-sm">
-                  You found all the Bollywood actors!
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-8 text-sm text-gray-500">
-          <p>Celebrating the magic of Indian cinema • Made with love</p>
         </div>
       </div>
+
+      {/* Word List - Horizontal Scrollable */}
+      <div className="bg-white border-b border-gray-200">
+        <WordList
+          words={currentWords}
+          foundWords={foundWords}
+          remainingWords={remainingWords}
+          allWordPlacements={gameState.words}
+          onHighlightWord={handleHighlightWord}
+        />
+      </div>
+
+      {/* Main Game Grid */}
+      <div className="flex-1 flex items-center justify-center p-4">
+        <WordSearch
+          grid={gameState.grid}
+          onCellMouseDown={handleCellMouseDown}
+          onCellMouseEnter={handleCellMouseEnter}
+          onCellMouseUp={handleCellMouseUp}
+          onCellTouchStart={handleCellTouchStart}
+          onCellTouchMove={handleCellTouchMove}
+          onCellTouchEnd={handleCellTouchEnd}
+          highlightedWord={highlightedWord}
+        />
+      </div>
+
+      {/* Bottom UI - Score and Controls */}
+      <div className="bg-black/50 backdrop-blur-sm text-white px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+            🎭
+          </div>
+          <div className="text-sm">
+            Score: {gameState.score}
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <div className="bg-gray-800 rounded-full px-3 py-1 text-sm">
+            {foundWords.length}/{currentWords.length}
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={startNewGame}
+            className="text-white hover:bg-white/20 text-sm"
+          >
+            New Game
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              toggleMute();
+              if (isMuted) {
+                setTimeout(() => playHit(), 200);
+              }
+            }}
+            className="text-white hover:bg-white/20 w-8 h-8 p-0"
+          >
+            {isMuted ? '🔇' : '🔊'}
+          </Button>
+          <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+            🏆
+          </div>
+        </div>
+      </div>
+
+      {/* Completion Message */}
+      {gameState.isComplete && (
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 text-center max-w-sm mx-4">
+            <div className="text-2xl mb-2">🎉</div>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">
+              Congratulations!
+            </h2>
+            <p className="text-gray-600 mb-4">
+              You found all the Bollywood actors!
+            </p>
+            <Button onClick={startNewGame} className="w-full">
+              Play Again
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Word Found Animation */}
       <WordFoundAnimation word={wordFoundAnimation} />
