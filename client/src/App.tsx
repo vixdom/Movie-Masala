@@ -131,8 +131,8 @@ function App() {
         </div>
       </div>
 
-      {/* Word List - Vertical Layout */}
-      <div className="bg-white border-b border-gray-200 mt-20">
+      {/* Key Box - Actor Names */}
+      <div className="mt-20">
         <WordList
           words={currentWords}
           foundWords={foundWords}
