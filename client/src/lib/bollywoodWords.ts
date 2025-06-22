@@ -5,32 +5,34 @@ export interface WordListItem {
 }
 
 export const bollywoodWords: WordListItem[] = [
-  // Legendary Actors
-  { word: 'AMITABHBACHCHAN', category: 'actor', hint: 'Big B of Bollywood' },
-  { word: 'SHAHRUKHKHAN', category: 'actor', hint: 'King Khan' },
-  { word: 'SALMANKHAN', category: 'actor', hint: 'Bhai of Bollywood' },
-  { word: 'AAMIRKHAN', category: 'actor', hint: 'Mr. Perfectionist' },
-  { word: 'AKSHAYKUMAR', category: 'actor', hint: 'Khiladi Kumar' },
-  { word: 'HRITHIKROSHAN', category: 'actor', hint: 'Greek God of Bollywood' },
-  { word: 'RANBIRKAPOOR', category: 'actor', hint: 'Kapoor family heir' },
-  { word: 'RANVEERSINGH', category: 'actor', hint: 'Energy powerhouse' },
-  { word: 'RAJESHKHANNA', category: 'actor', hint: 'First superstar' },
-  { word: 'DILIPKUMAR', category: 'actor', hint: 'Tragedy King' },
-  { word: 'RANBIRKAPPOR', category: 'actor', hint: 'Young talent' },
-  { word: 'AYUSHMANNKHURRANA', category: 'actor', hint: 'Versatile performer' },
-  { word: 'IRRFANKHAN', category: 'actor', hint: 'Method actor' },
-  { word: 'NAWAZUDDINSIDDIQUI', category: 'actor', hint: 'Character actor' },
-  { word: 'MANOTEJSINGH', category: 'actor', hint: 'Punjabi star' },
-  { word: 'VIKRMASHER', category: 'actor', hint: 'Action hero' },
-  { word: 'ARJUNKAPOOR', category: 'actor', hint: 'Second generation' },
-  { word: 'VARUNDHAWAN', category: 'actor', hint: 'Comedy specialist' },
-  { word: 'SIDDHARTHMALHOTRA', category: 'actor', hint: 'Student of the year' },
-  { word: 'RAJKUMMARRAO', category: 'actor', hint: 'Character specialist' }
+  // Legendary Actors (longer names)
+  { word: 'AMITABH', category: 'actor', hint: 'Big B of Bollywood' },
+  { word: 'SHAHRUKH', category: 'actor', hint: 'King Khan' },
+  { word: 'SALMAN', category: 'actor', hint: 'Bhai of Bollywood' },
+  { word: 'AAMIR', category: 'actor', hint: 'Mr. Perfectionist' },
+  { word: 'AKSHAY', category: 'actor', hint: 'Khiladi Kumar' },
+  { word: 'HRITHIK', category: 'actor', hint: 'Greek God of Bollywood' },
+  { word: 'RANBIR', category: 'actor', hint: 'Kapoor family heir' },
+  { word: 'RANVEER', category: 'actor', hint: 'Energy powerhouse' },
+  { word: 'RAJESH', category: 'actor', hint: 'First superstar' },
+  { word: 'DILIP', category: 'actor', hint: 'Tragedy King' },
+  { word: 'AYUSHMANN', category: 'actor', hint: 'Versatile performer' },
+  { word: 'IRRFAN', category: 'actor', hint: 'Method actor' },
+  { word: 'NAWAZ', category: 'actor', hint: 'Character actor' },
+  { word: 'ARJUN', category: 'actor', hint: 'Second generation' },
+  { word: 'VARUN', category: 'actor', hint: 'Comedy specialist' },
+  { word: 'SIDDHARTH', category: 'actor', hint: 'Student of the year' },
+  { word: 'RAJKUMMAR', category: 'actor', hint: 'Character specialist' },
+  { word: 'TIGER', category: 'actor', hint: 'Action star' },
+  { word: 'VICKY', category: 'actor', hint: 'Uri actor' },
+  { word: 'KARTIK', category: 'actor', hint: 'Comedy king' }
 ];
 
 // Function to get a random subset of words for the game
 export function getGameWords(count: number = 15): WordListItem[] {
-  const shuffled = [...bollywoodWords].sort(() => Math.random() - 0.5);
+  // Filter words that can fit in a 10x10 grid (max 10 characters)
+  const fittableWords = bollywoodWords.filter(word => word.word.length <= 10);
+  const shuffled = [...fittableWords].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
 }
 
