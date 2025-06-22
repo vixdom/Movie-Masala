@@ -24,7 +24,7 @@ function App() {
 
   // Start a new game
   const startNewGame = useCallback(() => {
-    const words = getGameWords(6); // Get 6 words for 9x9 grid with longer names
+    const words = getGameWords(8); // Get 8 words for 10x10 grid with longer names
     const wordStrings = words.map(w => w.word);
     
     game.resetGame();
@@ -127,6 +127,14 @@ function App() {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Word List */}
+            <WordList
+              words={currentWords}
+              foundWords={foundWords}
+              remainingWords={remainingWords}
+              allWordPlacements={gameState.words}
+            />
+
             {/* Game Stats */}
             <GameStats
               score={gameState.score}
@@ -142,13 +150,6 @@ function App() {
                 }
               }}
               isSoundMuted={isMuted}
-            />
-
-            {/* Word List */}
-            <WordList
-              words={currentWords}
-              foundWords={foundWords}
-              remainingWords={remainingWords}
             />
           </div>
         </div>

@@ -27,7 +27,7 @@ export interface GameState {
   isSelecting: boolean;
 }
 
-const GRID_SIZE = 9;
+const GRID_SIZE = 10;
 const DIRECTIONS = [
   { name: 'horizontal', dr: 0, dc: 1 },           // left to right
   { name: 'horizontal-reverse', dr: 0, dc: -1 },  // right to left

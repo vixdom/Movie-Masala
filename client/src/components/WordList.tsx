@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { WordListItem } from '@/lib/bollywoodWords';
 import { WordPlacement } from '@/lib/wordSearchGame';
 import { cn } from '@/lib/utils';
+import { Eye, EyeOff } from 'lucide-react';
 
 interface WordListProps {
   words: WordListItem[];
   foundWords: WordPlacement[];
   remainingWords: WordPlacement[];
+  allWordPlacements: WordPlacement[];
 }
 
-export function WordList({ words, foundWords, remainingWords }: WordListProps) {
+export function WordList({ words, foundWords, remainingWords, allWordPlacements }: WordListProps) {
+  const [showAnswers, setShowAnswers] = useState(false);
+  
   const getCategoryColor = (category: WordListItem['category']) => {
     switch (category) {
       case 'movie': return 'bg-purple-100 text-purple-800';
@@ -39,11 +44,25 @@ export function WordList({ words, foundWords, remainingWords }: WordListProps) {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-center">
-          Bollywood Words
-          <div className="text-sm font-normal text-muted-foreground mt-1">
-            {foundWords.length} of {words.length} found
+        <CardTitle className="flex items-center justify-between">
+          <div className="text-center flex-1">
+            Bollywood Words
+            <div className="text-sm font-normal text-muted-foreground mt-1">
+              {foundWords.length} of {words.length} found
+            </div>
           </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowAnswers(!showAnswers)}
+            className="h-8 w-8 p-0"
+          >
+            {showAnswers ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </Button>
         </CardTitle>
       </CardHeader>
       <CardContent>
