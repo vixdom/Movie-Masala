@@ -19,7 +19,9 @@ export function WordList({ words, foundWords, remainingWords, allWordPlacements,
   const foundWordsSet = new Set(foundWords.map(w => w.word));
   
   const handleHighlightWord = (word: string) => {
+    console.log('Eye clicked for word:', word);
     const placement = allWordPlacements.find(wp => wp.word === word);
+    console.log('Found placement:', placement);
     if (placement) {
       onHighlightWord(placement);
     }

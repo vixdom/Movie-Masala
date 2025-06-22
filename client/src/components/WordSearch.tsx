@@ -138,8 +138,8 @@ export function WordSearch({
                 {
                   'bg-green-400 text-green-900 border-green-500 shadow-lg': cell.isFound,
                   'bg-blue-400 text-blue-900 border-blue-500 shadow-md transform scale-105': cell.isSelected && !cell.isFound,
-                  'bg-yellow-200 border-yellow-400 border-4': highlightedWord && cell.wordId === highlightedWord && !cell.isFound,
-                  'bg-white hover:bg-gray-50 border-gray-300': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId === highlightedWord),
+                  'bg-yellow-200 border-yellow-400 border-4': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
+                  'bg-white hover:bg-gray-50 border-gray-300': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-')),
                 }
               )}
               style={{ aspectRatio: '1' }}
