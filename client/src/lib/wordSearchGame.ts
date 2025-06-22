@@ -416,7 +416,14 @@ export class WordSearchGame {
   }
 
   private selectionMatchesWord(word: WordPlacement): boolean {
+    console.log('selectionMatchesWord: word.word:', word.word);
+    console.log('selectionMatchesWord: selectedCells length:', this.gameState.selectedCells.length);
+    console.log('selectionMatchesWord: word positions length:', word.positions.length);
+    console.log('selectionMatchesWord: selectedCells:', this.gameState.selectedCells);
+    console.log('selectionMatchesWord: word.positions:', word.positions);
+    
     if (this.gameState.selectedCells.length !== word.positions.length) {
+      console.log('selectionMatchesWord: length mismatch');
       return false;
     }
     
@@ -424,14 +431,24 @@ export class WordSearchGame {
     const selectedSet = new Set(this.gameState.selectedCells.map(cell => `${cell.row}-${cell.col}`));
     const wordSet = new Set(word.positions.map(pos => `${pos.row}-${pos.col}`));
     
-    if (selectedSet.size !== wordSet.size) return false;
+    console.log('selectionMatchesWord: selectedSet:', Array.from(selectedSet));
+    console.log('selectionMatchesWord: wordSet:', Array.from(wordSet));
+    
+    if (selectedSet.size !== wordSet.size) {
+      console.log('selectionMatchesWord: set size mismatch');
+      return false;
+    }
     
     // Convert Set to Array to iterate
     const selectedArray = Array.from(selectedSet);
     for (const pos of selectedArray) {
-      if (!wordSet.has(pos)) return false;
+      if (!wordSet.has(pos)) {
+        console.log('selectionMatchesWord: position not found:', pos);
+        return false;
+      }
     }
     
+    console.log('selectionMatchesWord: all positions match!');
     return true;
   }
 
