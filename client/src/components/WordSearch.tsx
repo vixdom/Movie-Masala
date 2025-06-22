@@ -111,7 +111,7 @@ export function WordSearch({
   }, [isMouseDown, handleMouseMove, onCellMouseUp]);
 
   return (
-    <div className="flex justify-center p-4">
+    <div className="flex justify-center">
       <div
         ref={gridRef}
         className="grid gap-1 bg-game-grid p-4 rounded-xl shadow-2xl select-none border border-border/50"
