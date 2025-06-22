@@ -101,9 +101,11 @@ function App() {
   }, [handleCellMouseUp]);
 
   const handleHighlightWord = useCallback((wordPlacement: any) => {
+    console.log('App: Highlighting word:', wordPlacement.word);
     setHighlightedWord(wordPlacement.word);
     // Clear highlight after 1 second
     setTimeout(() => {
+      console.log('App: Clearing highlight');
       setHighlightedWord(null);
     }, 1000);
   }, []);
@@ -184,22 +186,6 @@ function App() {
 
         {/* Game Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-          {/* Word Search Grid */}
-          <div className="flex justify-center">
-            <div className="w-full max-w-lg">
-              <WordSearch
-                grid={gameState.grid}
-                onCellMouseDown={handleCellMouseDown}
-                onCellMouseEnter={handleCellMouseEnter}
-                onCellMouseUp={handleCellMouseUp}
-                onCellTouchStart={handleCellTouchStart}
-                onCellTouchMove={handleCellTouchMove}
-                onCellTouchEnd={handleCellTouchEnd}
-                highlightedWord={highlightedWord}
-              />
-            </div>
-          </div>
-
           {/* Sidebar - Aligned with grid height */}
           <div className="flex flex-col" style={{ height: 'min(90vw, 500px)' }}>
             {/* Word List - Takes available height */}
@@ -223,6 +209,22 @@ function App() {
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Word Search Grid */}
+          <div className="flex justify-center">
+            <div className="w-full max-w-lg">
+              <WordSearch
+                grid={gameState.grid}
+                onCellMouseDown={handleCellMouseDown}
+                onCellMouseEnter={handleCellMouseEnter}
+                onCellMouseUp={handleCellMouseUp}
+                onCellTouchStart={handleCellTouchStart}
+                onCellTouchMove={handleCellTouchMove}
+                onCellTouchEnd={handleCellTouchEnd}
+                highlightedWord={highlightedWord}
+              />
+            </div>
           </div>
         </div>
 

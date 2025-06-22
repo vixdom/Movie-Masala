@@ -23,6 +23,8 @@ export function WordSearch({
   onCellTouchEnd,
   highlightedWord
 }: WordSearchProps) {
+  
+  console.log('WordSearch: highlightedWord is:', highlightedWord);
   const gridRef = useRef<HTMLDivElement>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isTouching, setIsTouching] = useState(false);
