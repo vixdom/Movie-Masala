@@ -40,6 +40,14 @@ export function WordList({ words, foundWords, remainingWords, allWordPlacements 
   };
 
   const foundWordsSet = new Set(foundWords.map(w => w.word));
+  
+  const getWordPlacement = (word: string) => {
+    return allWordPlacements.find(wp => wp.word === word);
+  };
+  
+  const formatDirection = (direction: string) => {
+    return direction.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
 
   return (
     <Card className="w-full max-w-md">
@@ -94,6 +102,14 @@ export function WordList({ words, foundWords, remainingWords, allWordPlacements 
                         {wordItem.hint}
                       </div>
                     )}
+                    {showAnswers && !isFound && (() => {
+                      const placement = getWordPlacement(wordItem.word);
+                      return placement ? (
+                        <div className="text-xs text-red-600 font-mono">
+                          ({placement.startRow},{placement.startCol}) {formatDirection(placement.direction)}
+                        </div>
+                      ) : null;
+                    })()}
                   </div>
                 </div>
                 <div className="flex flex-col items-end space-y-1">

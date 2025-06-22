@@ -27,61 +27,55 @@ export function GameStats({
 
   return (
     <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center justify-between text-lg">
           <span className="flex items-center space-x-2">
-            <Trophy className="h-5 w-5 text-yellow-500" />
-            <span>Game Stats</span>
+            <Trophy className="h-4 w-4 text-yellow-500" />
+            <span>Stats</span>
           </span>
           <Button
             variant="ghost"
             size="sm"
             onClick={onToggleSound}
-            className="h-8 w-8 p-0"
+            className="h-7 w-7 p-0"
           >
             {isSoundMuted ? (
-              <VolumeX className="h-4 w-4" />
+              <VolumeX className="h-3 w-3" />
             ) : (
-              <Volume2 className="h-4 w-4" />
+              <Volume2 className="h-3 w-3" />
             )}
           </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Score */}
-        <div className="text-center">
-          <div className="text-3xl font-bold text-primary">{score}</div>
-          <div className="text-sm text-muted-foreground">Score</div>
-        </div>
-
-        {/* Progress */}
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span>Progress</span>
-            <span>{foundWordsCount}/{totalWordsCount}</span>
+      <CardContent className="space-y-3 pt-0">
+        {/* Score & Progress */}
+        <div className="flex justify-between items-center">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-primary">{score}</div>
+            <div className="text-xs text-muted-foreground">Score</div>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-primary h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <div className="text-center text-sm text-muted-foreground">
-            {progress.toFixed(0)}% Complete
+          <div className="flex-1 ml-4">
+            <div className="flex justify-between text-xs mb-1">
+              <span>Progress</span>
+              <span>{foundWordsCount}/{totalWordsCount}</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-1.5">
+              <div 
+                className="bg-primary h-1.5 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
         </div>
 
         {/* Game Status */}
         {isComplete && (
-          <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-            <div className="text-green-800 font-bold text-lg mb-2">
-              🎉 Congratulations!
+          <div className="text-center p-2 bg-green-50 rounded border border-green-200">
+            <div className="text-green-800 font-bold text-sm mb-1">
+              Congratulations!
             </div>
-            <div className="text-green-700 text-sm">
-              You found all the Bollywood words!
-            </div>
-            <Badge className="mt-2 bg-green-100 text-green-800">
-              Game Complete
+            <Badge className="bg-green-100 text-green-800 text-xs">
+              Complete
             </Badge>
           </div>
         )}
@@ -89,29 +83,22 @@ export function GameStats({
         {/* New Game Button */}
         <Button 
           onClick={onNewGame}
-          className="w-full"
+          className="w-full h-8"
           variant={isComplete ? "default" : "outline"}
+          size="sm"
         >
           {isComplete ? (
             <>
-              <Play className="mr-2 h-4 w-4" />
+              <Play className="mr-1 h-3 w-3" />
               Play Again
             </>
           ) : (
             <>
-              <RotateCcw className="mr-2 h-4 w-4" />
+              <RotateCcw className="mr-1 h-3 w-3" />
               New Game
             </>
           )}
         </Button>
-
-        {/* Instructions */}
-        <div className="text-xs text-muted-foreground space-y-1">
-          <p><strong>How to play:</strong></p>
-          <p>• Click and drag to select words</p>
-          <p>• Words can be horizontal, vertical, or diagonal</p>
-          <p>• Find all Bollywood-themed words to win!</p>
-        </div>
       </CardContent>
     </Card>
   );
