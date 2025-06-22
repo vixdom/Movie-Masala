@@ -93,6 +93,12 @@ function App() {
     handleCellMouseUp();
   }, [handleCellMouseUp]);
 
+  const handleHighlightWord = useCallback((wordPlacement: any) => {
+    setHighlightedWord(wordPlacement.word);
+    // Clear highlight after 1 second
+    setTimeout(() => setHighlightedWord(null), 1000);
+  }, []);
+
   const foundWords = game.getFoundWords();
   const remainingWords = game.getRemainingWords();
 
@@ -122,6 +128,7 @@ function App() {
                 onCellTouchStart={handleCellTouchStart}
                 onCellTouchMove={handleCellTouchMove}
                 onCellTouchEnd={handleCellTouchEnd}
+                highlightedWord={highlightedWord}
               />
             </div>
           </div>
@@ -134,6 +141,7 @@ function App() {
               foundWords={foundWords}
               remainingWords={remainingWords}
               allWordPlacements={gameState.words}
+              onHighlightWord={handleHighlightWord}
             />
 
             {/* Game Stats */}

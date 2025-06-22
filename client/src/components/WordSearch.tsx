@@ -10,6 +10,7 @@ interface WordSearchProps {
   onCellTouchStart: (row: number, col: number) => void;
   onCellTouchMove: (event: React.TouchEvent) => void;
   onCellTouchEnd: () => void;
+  highlightedWord?: string | null;
 }
 
 export function WordSearch({
@@ -19,7 +20,8 @@ export function WordSearch({
   onCellMouseUp,
   onCellTouchStart,
   onCellTouchMove,
-  onCellTouchEnd
+  onCellTouchEnd,
+  highlightedWord
 }: WordSearchProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -136,7 +138,8 @@ export function WordSearch({
                 {
                   'bg-green-400 text-green-900 border-green-500 shadow-lg': cell.isFound,
                   'bg-blue-400 text-blue-900 border-blue-500 shadow-md transform scale-105': cell.isSelected && !cell.isFound,
-                  'bg-white hover:bg-gray-50 border-gray-300': !cell.isSelected && !cell.isFound,
+                  'bg-yellow-200 border-yellow-400 border-4': highlightedWord && cell.wordId === highlightedWord && !cell.isFound,
+                  'bg-white hover:bg-gray-50 border-gray-300': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId === highlightedWord),
                 }
               )}
               style={{ aspectRatio: '1' }}
