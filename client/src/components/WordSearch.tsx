@@ -129,12 +129,12 @@ export function WordSearch({
             <div
               key={`${rowIndex}-${colIndex}`}
               className={cn(
-                'aspect-square flex items-center justify-center text-lg font-bold border border-gray-300 cursor-pointer transition-all duration-200 select-none rounded-md',
-                'hover:bg-blue-100 active:scale-95',
+                'aspect-square flex items-center justify-center text-lg font-bold border-2 cursor-pointer transition-all duration-200 select-none rounded-lg',
+                'hover:bg-blue-100 active:scale-95 hover:shadow-sm',
                 {
-                  'bg-green-300 text-green-900 border-green-400 shadow-md': cell.isFound,
-                  'bg-blue-300 text-blue-900 border-blue-400 shadow-sm': cell.isSelected && !cell.isFound,
-                  'bg-white hover:bg-gray-50': !cell.isSelected && !cell.isFound,
+                  'bg-green-400 text-green-900 border-green-500 shadow-lg animate-pulse': cell.isFound,
+                  'bg-blue-400 text-blue-900 border-blue-500 shadow-md transform scale-105': cell.isSelected && !cell.isFound,
+                  'bg-white hover:bg-gray-50 border-gray-300': !cell.isSelected && !cell.isFound,
                 }
               )}
               onMouseDown={(e) => {

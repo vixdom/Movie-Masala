@@ -3,6 +3,7 @@ import { WordSearch } from './components/WordSearch';
 import { WordList } from './components/WordList';
 import { GameStats } from './components/GameStats';
 import { FoundWordsDisplay } from './components/FoundWordsDisplay';
+import { WordFoundAnimation } from './components/WordFoundAnimation';
 import { WordSearchGame } from './lib/wordSearchGame';
 import { getGameWords, type WordListItem } from './lib/bollywoodWords';
 import { useAudio } from './lib/stores/useAudio';
@@ -13,19 +14,13 @@ function App() {
   const [game] = useState(() => new WordSearchGame());
   const [gameState, setGameState] = useState(() => game.getGameState());
   const [currentWords, setCurrentWords] = useState<WordListItem[]>([]);
-  const { playHit, playSuccess, toggleMute, isMuted } = useAudio();
+  const [wordFoundAnimation, setWordFoundAnimation] = useState<string | null>(null);
+  const { playHit, playSuccess, toggleMute, isMuted, initializeAudio } = useAudio();
 
   // Initialize audio
   useEffect(() => {
-    const hitAudio = new Audio('/sounds/hit.mp3');
-    const successAudio = new Audio('/sounds/success.mp3');
-    
-    hitAudio.volume = 0.3;
-    successAudio.volume = 0.5;
-    
-    // Set the audio in the store (if needed for other components)
-    // This is optional since we're calling the functions directly
-  }, []);
+    initializeAudio();
+  }, [initializeAudio]);
 
   // Start a new game
   const startNewGame = useCallback(() => {
@@ -60,8 +55,18 @@ function App() {
     setGameState(newGameState);
     
     if (wordFound) {
-      // Play success sound with slight delay for better feedback
-      setTimeout(() => playSuccess(), 100);
+      // Get the found word from the game state
+      const foundWords = game.getFoundWords();
+      const lastFoundWord = foundWords[foundWords.length - 1];
+      
+      if (lastFoundWord) {
+        // Show animation for found word
+        setWordFoundAnimation(lastFoundWord.word);
+        setTimeout(() => setWordFoundAnimation(null), 2000);
+      }
+      
+      // Play success sound
+      playSuccess();
       
       // Check if game is complete
       if (newGameState.isComplete) {
@@ -71,7 +76,7 @@ function App() {
       }
     } else {
       // Play hit sound for failed selection
-      setTimeout(() => playHit(), 50);
+      playHit();
     }
   }, [game, playSuccess, playHit]);
 
@@ -135,7 +140,13 @@ function App() {
               totalWordsCount={currentWords.length}
               isComplete={gameState.isComplete}
               onNewGame={startNewGame}
-              onToggleSound={toggleMute}
+              onToggleSound={() => {
+                toggleMute();
+                // Play a quick preview sound when unmuting
+                if (isMuted) {
+                  setTimeout(() => playHit(), 200);
+                }
+              }}
               isSoundMuted={isMuted}
             />
 
@@ -150,9 +161,12 @@ function App() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-gray-500">
-          <p>Celebrating the magic of Indian cinema • Made with ❤️</p>
+          <p>Celebrating the magic of Indian cinema • Made with love</p>
         </div>
       </div>
+
+      {/* Word Found Animation */}
+      <WordFoundAnimation word={wordFoundAnimation} />
     </div>
   );
 }
