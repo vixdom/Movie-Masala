@@ -221,13 +221,16 @@ export class WordSearchGame {
   }
   
   private verifyAndFixCoordinates(): void {
-    console.log('Verifying coordinate consistency...');
+    console.log('Verifying coordinate consistency and line straightness...');
     
     // Re-apply word placements to ensure grid matches stored positions
     for (const wordPlacement of this.gameState.words) {
-      const { word, positions, id } = wordPlacement;
+      const { word, positions, id, direction } = wordPlacement;
       
-      console.log(`Verifying word: ${word} at positions:`, positions);
+      // Verify this is a proper straight line
+      this.validateStraightLine(word, positions, direction);
+      
+      console.log(`Verifying word: ${word} in ${direction} direction at positions:`, positions);
       
       // Clear any existing wordId for this word first
       for (let row = 0; row < GRID_SIZE; row++) {
@@ -257,8 +260,49 @@ export class WordSearchGame {
         }
       }
       
-      console.log(`Word: ${word}, Grid reads: ${actualWord}, Match: ${actualWord === word}`);
+      console.log(`Word: ${word}, Grid reads: ${actualWord}, Match: ${actualWord === word}, Straight line: ${this.isStraightLine(positions)}`);
     }
+  }
+  
+  private validateStraightLine(word: string, positions: {row: number, col: number}[], direction: string): boolean {
+    if (positions.length < 2) return true;
+    
+    const firstPos = positions[0];
+    const secondPos = positions[1];
+    const deltaRow = secondPos.row - firstPos.row;
+    const deltaCol = secondPos.col - firstPos.col;
+    
+    // Check if all subsequent positions follow the same pattern
+    for (let i = 2; i < positions.length; i++) {
+      const expectedRow = firstPos.row + (deltaRow * i);
+      const expectedCol = firstPos.col + (deltaCol * i);
+      
+      if (positions[i].row !== expectedRow || positions[i].col !== expectedCol) {
+        console.error(`Line validation failed for ${word}: position ${i} should be (${expectedRow}, ${expectedCol}) but got (${positions[i].row}, ${positions[i].col})`);
+        return false;
+      }
+    }
+    
+    return true;
+  }
+  
+  private isStraightLine(positions: {row: number, col: number}[]): boolean {
+    if (positions.length < 2) return true;
+    
+    const deltaRow = positions[1].row - positions[0].row;
+    const deltaCol = positions[1].col - positions[0].col;
+    
+    // Check if all movements are consistent
+    for (let i = 2; i < positions.length; i++) {
+      const currentDeltaRow = positions[i].row - positions[i-1].row;
+      const currentDeltaCol = positions[i].col - positions[i-1].col;
+      
+      if (currentDeltaRow !== deltaRow || currentDeltaCol !== deltaCol) {
+        return false;
+      }
+    }
+    
+    return true;
   }
   
   private generatePositions(wordLength: number, direction: typeof DIRECTIONS[number]): {row: number, col: number}[] {

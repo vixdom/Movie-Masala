@@ -90,10 +90,12 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
-- June 22, 2025: Fixed layout positioning - actors list now displays on the right side of the grid
-- June 22, 2025: Successfully implemented and tested clue system (eye icon functionality) - highlights word positions for 1 second when clicked
-- June 22, 2025: Confirmed 12x12 grid system accommodates all 10 Bollywood actor names with proper directional variety
-- June 22, 2025: Layout structure: New Game button (top-left), word search grid (center-left), actors list with eye icons (right side)
+- June 22, 2025: **CHECKPOINT** - Fully functional Bollywood word search game with complete feature set
+- June 22, 2025: Implemented coordinate verification system - ensures visual display matches internal word storage
+- June 22, 2025: Fixed word selection and crossing off functionality - words properly mark as found with strikethrough and checkmarks
+- June 22, 2025: Enhanced directional variety algorithm - guarantees minimum 25% diagonal, 30% horizontal, 25% vertical word placement
+- June 22, 2025: Removed "Found words" display box for cleaner interface
+- June 22, 2025: Fixed layout positioning - actors list displays on right side of grid with eye icon clue system working correctly
 
 ## Changelog
 
