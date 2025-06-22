@@ -107,105 +107,93 @@ function App() {
   const remainingWords = game.getRemainingWords();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex flex-col">
-      {/* Header - mobile optimized */}
-      <div className="flex items-center justify-between p-3 bg-gradient-to-r from-orange-500 to-red-500 shadow-lg">
-        <div className="flex gap-2">
-          <button
-            onClick={startNewGame}
-            className="bg-orange-600 hover:bg-orange-700 text-white border-none font-bold px-4 py-3 rounded-lg text-xl"
-          >
-            M
-          </button>
-          <button
-            onClick={startNewGame}
-            className="bg-orange-600 hover:bg-orange-700 text-white border-none font-bold px-4 py-3 rounded-lg text-xl"
-          >
-            M
-          </button>
-        </div>
-        
-        <div className="text-white font-bold text-lg bg-white/20 rounded-full px-4 py-2">
-          Score: {gameState.score}
-        </div>
-      </div>
-
-      {/* Movie background with stronger overlay */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+      {/* Movie background */}
       <div 
-        className="flex-1 relative overflow-hidden"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
         style={{
           backgroundImage: 'url(/api/placeholder/400/600)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
         }}
+      />
+      <div className="absolute inset-0 bg-black/70" />
+      
+      {/* Floating MM Logo - top left */}
+      <button 
+        onClick={startNewGame}
+        className="absolute top-4 left-4 z-30 flex items-center space-x-1 hover:scale-105 transition-transform active:scale-95"
+        title="Click to start new game"
       >
-        <div className="absolute inset-0 bg-black/85"></div>
-        
-        {/* Mobile portrait content layout */}
-        <div className="relative z-10 h-full flex flex-col">
-          {/* Word list - ultra-compact mobile layout */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-b-xl p-2 shadow-lg">
-            <div className="grid grid-cols-2 gap-1 max-h-24 overflow-y-auto text-xs">
-              {currentWords.map((wordItem) => {
-                const wordPlacement = gameState.words.find(wp => wp.word === wordItem.word);
-                const isFound = wordPlacement && gameState.foundWords.has(wordPlacement.id);
-                
-                return (
-                  <div
-                    key={wordItem.word}
-                    className={cn(
-                      "flex items-center gap-1 px-2 py-1 rounded text-xs transition-all duration-200 cursor-pointer",
-                      isFound 
-                        ? "bg-green-100 text-green-700 line-through" 
-                        : "bg-blue-100 text-blue-700 hover:bg-blue-200 active:bg-blue-300"
-                    )}
-                    onClick={() => {
-                      if (wordPlacement && !isFound) {
-                        setHighlightedWord(wordPlacement.word);
-                        setTimeout(() => setHighlightedWord(null), 2000);
-                      }
-                    }}
-                  >
-                    <span className="font-medium truncate text-xs">{wordItem.word}</span>
-                    {wordItem.hint && (
-                      <button
-                        className="text-blue-600 hover:text-blue-800 text-xs flex-shrink-0"
-                        title={wordItem.hint}
-                      >
-                        👁️
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+        <div className="w-10 h-10 bg-orange-500/90 backdrop-blur-sm rounded-lg flex items-center justify-center border-2 border-orange-400 shadow-lg">
+          <div className="text-white font-black text-lg">M</div>
+        </div>
+        <div className="w-10 h-10 bg-orange-500/90 backdrop-blur-sm rounded-lg flex items-center justify-center border-2 border-orange-400 shadow-lg">
+          <div className="text-white font-black text-lg">M</div>
+        </div>
+      </button>
+      
+      {/* Floating Score Pill - top right */}
+      <div className="absolute top-4 right-4 z-30 bg-white/90 backdrop-blur-sm text-orange-600 rounded-full px-4 py-2 text-sm font-bold shadow-lg">
+        Score: {gameState.score}
+      </div>
 
-          {/* Game grid - optimized for mobile portrait */}
-          <div className="flex-1 flex flex-col items-center justify-center p-2 relative">
-            {/* Selection Bubble - word in progress */}
-            {currentSelection && (
-              <div className="absolute top-4 bg-orange-500 text-white px-4 py-2 rounded-full shadow-lg z-20 transition-all duration-200">
-                <span className="text-lg font-bold tracking-widest">
-                  {currentSelection.split('').join(' ')}
-                </span>
-              </div>
-            )}
-            
-            <div className="w-full max-w-sm">
-              <WordSearch
-                grid={gameState.grid}
-                onCellMouseDown={handleCellMouseDown}
-                onCellMouseEnter={handleCellMouseEnter}
-                onCellMouseUp={handleCellMouseUp}
-                onCellTouchStart={handleCellTouchStart}
-                onCellTouchMove={handleCellTouchMove}
-                onCellTouchEnd={handleCellTouchEnd}
-                highlightedWord={highlightedWord}
-              />
+      {/* Floating Word Pills - no background container */}
+      <div className="absolute top-20 left-4 right-4 z-20 flex flex-wrap gap-2 justify-center">
+        {currentWords.map((wordItem) => {
+          const wordPlacement = gameState.words.find(wp => wp.word === wordItem.word);
+          const isFound = wordPlacement && gameState.foundWords.has(wordPlacement.id);
+          
+          return (
+            <div
+              key={wordItem.word}
+              className={cn(
+                "flex items-center gap-1 px-3 py-1 rounded-full text-xs transition-all duration-200 cursor-pointer backdrop-blur-sm shadow-lg",
+                isFound 
+                  ? "bg-green-500/90 text-white line-through" 
+                  : "bg-white/90 text-gray-800 hover:bg-white active:bg-gray-100"
+              )}
+              onClick={() => {
+                if (wordPlacement && !isFound) {
+                  setHighlightedWord(wordPlacement.word);
+                  setTimeout(() => setHighlightedWord(null), 2000);
+                }
+              }}
+            >
+              <span className="font-medium">{wordItem.word}</span>
+              {wordItem.hint && (
+                <button
+                  className="text-blue-600 hover:text-blue-800 text-xs"
+                  title={wordItem.hint}
+                >
+                  👁️
+                </button>
+              )}
             </div>
-          </div>
+          );
+        })}
+      </div>
+
+      {/* Selection Bubble - word in progress */}
+      {currentSelection && (
+        <div className="absolute top-32 left-1/2 transform -translate-x-1/2 z-30 bg-orange-500/95 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200">
+          <span className="text-lg font-bold tracking-widest">
+            {currentSelection.split('').join(' ')}
+          </span>
+        </div>
+      )}
+
+      {/* Full-screen Game Grid */}
+      <div className="absolute inset-0 flex items-center justify-center pt-32 pb-4 px-2 z-10">
+        <div className="w-full h-full max-w-lg max-h-lg">
+          <WordSearch
+            grid={gameState.grid}
+            onCellMouseDown={handleCellMouseDown}
+            onCellMouseEnter={handleCellMouseEnter}
+            onCellMouseUp={handleCellMouseUp}
+            onCellTouchStart={handleCellTouchStart}
+            onCellTouchMove={handleCellTouchMove}
+            onCellTouchEnd={handleCellTouchEnd}
+            highlightedWord={highlightedWord}
+          />
         </div>
       </div>
 

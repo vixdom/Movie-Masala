@@ -133,10 +133,10 @@ export function WordSearch({
   };
 
   return (
-    <div className="w-full max-w-xs mx-auto px-1">
+    <div className="w-full mx-auto">
       <div
         ref={gridRef}
-        className="grid gap-0.5 p-1 select-none"
+        className="grid gap-1 select-none"
         style={{
           gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
           gridTemplateRows: `repeat(${grid.length}, 1fr)`,
@@ -169,10 +169,10 @@ export function WordSearch({
                 fontWeight: '900',
                 letterSpacing: '0.02em',
                 aspectRatio: '1',
-                width: '22px',
-                height: '22px',
-                fontSize: '14px',
-                textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                width: '100%',
+                height: '100%',
+                fontSize: '16px',
+                textShadow: '0 1px 3px rgba(0,0,0,0.8)',
                 touchAction: 'none',
                 userSelect: 'none',
               }}
