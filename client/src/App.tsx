@@ -110,6 +110,10 @@ function App() {
 
   const foundWords = game.getFoundWords();
   const remainingWords = game.getRemainingWords();
+  
+  // Debug logs
+  console.log('App: gameState.foundWords size:', gameState.foundWords.size);
+  console.log('App: foundWords from game:', foundWords.length);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 p-4">

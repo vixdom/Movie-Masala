@@ -309,11 +309,15 @@ export class WordSearchGame {
     
     // Check if selection forms a valid word
     const selectedWord = this.getSelectedWord();
+    console.log('endSelection: selectedWord:', selectedWord);
     const foundWord = this.checkWordMatch(selectedWord);
+    console.log('endSelection: foundWord:', foundWord);
     
     if (foundWord) {
+      console.log('endSelection: marking word as found:', foundWord.word);
       this.markWordAsFound(foundWord);
       this.gameState.score += foundWord.word.length * 10;
+      console.log('endSelection: foundWords size after adding:', this.gameState.foundWords.size);
       this.checkGameComplete();
       this.clearSelection();
       return true;
@@ -442,7 +446,10 @@ export class WordSearchGame {
   }
 
   public getGameState(): GameState {
-    return { ...this.gameState };
+    return { 
+      ...this.gameState,
+      foundWords: new Set(this.gameState.foundWords) // Deep copy the Set
+    };
   }
 
   public getFoundWords(): WordPlacement[] {
