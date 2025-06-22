@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { WordSearch } from './components/WordSearch';
 import { WordList } from './components/WordList';
 import { GameStats } from './components/GameStats';
+import { FoundWordsDisplay } from './components/FoundWordsDisplay';
 import { WordSearchGame } from './lib/wordSearchGame';
 import { getGameWords, type WordListItem } from './lib/bollywoodWords';
 import { useAudio } from './lib/stores/useAudio';
@@ -55,20 +56,22 @@ function App() {
 
   const handleCellMouseUp = useCallback(() => {
     const wordFound = game.endSelection();
-    setGameState(game.getGameState());
+    const newGameState = game.getGameState();
+    setGameState(newGameState);
     
     if (wordFound) {
-      playSuccess();
+      // Play success sound with slight delay for better feedback
+      setTimeout(() => playSuccess(), 100);
       
       // Check if game is complete
-      const newGameState = game.getGameState();
       if (newGameState.isComplete) {
         setTimeout(() => {
           playSuccess();
-        }, 500);
+        }, 800);
       }
     } else {
-      playHit();
+      // Play hit sound for failed selection
+      setTimeout(() => playHit(), 50);
     }
   }, [game, playSuccess, playHit]);
 
@@ -99,6 +102,12 @@ function App() {
             Find hidden words from the world of Indian cinema!
           </p>
         </div>
+
+        {/* Found Words Display */}
+        <FoundWordsDisplay 
+          foundWords={foundWords}
+          allWords={currentWords}
+        />
 
         {/* Game Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

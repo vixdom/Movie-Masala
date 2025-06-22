@@ -15,6 +15,7 @@ interface AudioState {
   toggleMute: () => void;
   playHit: () => void;
   playSuccess: () => void;
+  initializeAudio: () => void;
 }
 
 export const useAudio = create<AudioState>((set, get) => ({
@@ -38,37 +39,44 @@ export const useAudio = create<AudioState>((set, get) => ({
     console.log(`Sound ${newMutedState ? 'muted' : 'unmuted'}`);
   },
   
-  playHit: () => {
-    const { hitSound, isMuted } = get();
-    if (hitSound) {
-      // If sound is muted, don't play anything
-      if (isMuted) {
-        console.log("Hit sound skipped (muted)");
-        return;
-      }
+  initializeAudio: () => {
+    try {
+      const hitAudio = new Audio('/sounds/hit.mp3');
+      const successAudio = new Audio('/sounds/success.mp3');
       
-      // Clone the sound to allow overlapping playback
-      const soundClone = hitSound.cloneNode() as HTMLAudioElement;
-      soundClone.volume = 0.3;
-      soundClone.play().catch(error => {
-        console.log("Hit sound play prevented:", error);
+      hitAudio.volume = 0.4;
+      successAudio.volume = 0.6;
+      
+      set({ 
+        hitSound: hitAudio,
+        successSound: successAudio 
       });
+    } catch (error) {
+      console.warn('Audio initialization failed:', error);
     }
   },
-  
+
+  playHit: () => {
+    const { hitSound, isMuted } = get();
+    if (hitSound && !isMuted) {
+      try {
+        hitSound.currentTime = 0;
+        hitSound.play().catch(() => {});
+      } catch (error) {
+        console.warn('Failed to play hit sound:', error);
+      }
+    }
+  },
+
   playSuccess: () => {
     const { successSound, isMuted } = get();
-    if (successSound) {
-      // If sound is muted, don't play anything
-      if (isMuted) {
-        console.log("Success sound skipped (muted)");
-        return;
+    if (successSound && !isMuted) {
+      try {
+        successSound.currentTime = 0;
+        successSound.play().catch(() => {});
+      } catch (error) {
+        console.warn('Failed to play success sound:', error);
       }
-      
-      successSound.currentTime = 0;
-      successSound.play().catch(error => {
-        console.log("Success sound play prevented:", error);
-      });
     }
   }
 }));
