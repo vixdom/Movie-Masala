@@ -133,10 +133,10 @@ export function WordSearch({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-2">
+    <div className="w-full max-w-3xl mx-auto px-3">
       <div
         ref={gridRef}
-        className="grid gap-1 p-2 select-none"
+        className="grid gap-2 p-3 select-none"
         style={{
           gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
           gridTemplateRows: `repeat(${grid.length}, 1fr)`,
@@ -154,25 +154,24 @@ export function WordSearch({
             <div
               key={`${rowIndex}-${colIndex}`}
               className={cn(
-                'flex items-center justify-center text-2xl font-bold cursor-pointer transition-all duration-300 select-none rounded-2xl touch-manipulation shadow-xl',
-                'hover:scale-110 active:scale-95 hover:rotate-3 hover:shadow-2xl',
-                'bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-md border border-white/20',
-                'animate-pulse-subtle hover:animate-bounce-gentle',
+                'flex items-center justify-center text-3xl md:text-2xl font-black cursor-pointer transition-all duration-200 select-none rounded-xl touch-manipulation shadow-lg',
+                'hover:scale-105 active:scale-95',
+                'bg-white/95 backdrop-blur-sm border border-gray-200/50',
                 {
                   [getWordColor(cell.wordId)]: cell.isFound,
-                  'bg-gradient-to-br from-blue-400/90 to-blue-500/90 text-blue-900 shadow-blue-300/50 transform scale-110 rotate-2': cell.isSelected && !cell.isFound,
-                  'bg-gradient-to-br from-yellow-300/90 to-yellow-400/90 text-yellow-900 shadow-yellow-300/50 animate-pulse': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
+                  'bg-blue-500 text-white shadow-blue-300/50 transform scale-105': cell.isSelected && !cell.isFound,
+                  'bg-yellow-400 text-black shadow-yellow-300/50': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
+                  'text-gray-900': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-')),
                 }
               )}
               style={{
                 fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
                 fontWeight: '900',
-                letterSpacing: '0.05em',
+                letterSpacing: '0.02em',
                 aspectRatio: '1',
                 width: '100%',
                 height: '100%',
-                textShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))'
+                textShadow: '0 1px 2px rgba(0,0,0,0.5)',
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
