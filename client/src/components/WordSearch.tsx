@@ -111,15 +111,13 @@ export function WordSearch({
   }, [isMouseDown, handleMouseMove, onCellMouseUp]);
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center w-full h-full">
       <div
         ref={gridRef}
-        className="grid gap-1 bg-game-grid p-4 rounded-xl shadow-2xl select-none border border-border/50"
+        className="grid gap-1 bg-game-grid p-3 rounded-2xl shadow-2xl select-none border border-border/50 w-full h-full max-w-lg max-h-lg"
         style={{
           gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))`,
           gridTemplateRows: `repeat(${grid.length}, minmax(0, 1fr))`,
-          width: 'min(90vw, 500px)',
-          height: 'min(90vw, 500px)',
           aspectRatio: '1 / 1',
         }}
         onTouchMove={handleTouchMove}
