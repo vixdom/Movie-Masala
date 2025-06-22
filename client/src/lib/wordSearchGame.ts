@@ -106,8 +106,6 @@ export class WordSearchGame {
     const positions: { row: number; col: number }[] = [];
     const wordId = `${word}-${Date.now()}-${Math.random()}`;
     
-    console.log(`Placing word "${word}" at startRow: ${startRow}, startCol: ${startCol}, direction: ${direction.name}`);
-    
     for (let i = 0; i < word.length; i++) {
       const row = startRow + i * dr;
       const col = startCol + i * dc;
@@ -117,7 +115,6 @@ export class WordSearchGame {
       this.gameState.grid[row][col].wordId = wordId;
       
       positions.push({ row, col });
-      console.log(`  Letter "${word[i]}" placed at row: ${row}, col: ${col}`);
     }
     
     return {
