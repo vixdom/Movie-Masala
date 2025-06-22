@@ -107,37 +107,41 @@ function App() {
   const remainingWords = game.getRemainingWords();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900 flex flex-col relative">
-      {/* Floating MM Logo and Score */}
-      <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-        <div className="flex items-center space-x-1">
-          {/* Movie Reel M tiles */}
-          <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center border-2 border-gray-600 relative shadow-lg">
-            <div className="text-white font-bold text-base">M</div>
-            {/* Reel holes */}
-            <div className="absolute top-1.5 left-1.5 w-1 h-1 bg-orange-500 rounded-full"></div>
-            <div className="absolute top-1.5 right-1.5 w-1 h-1 bg-orange-500 rounded-full"></div>
-            <div className="absolute bottom-1.5 left-1.5 w-1 h-1 bg-orange-500 rounded-full"></div>
-            <div className="absolute bottom-1.5 right-1.5 w-1 h-1 bg-orange-500 rounded-full"></div>
-          </div>
-          <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center border-2 border-gray-600 relative shadow-lg">
-            <div className="text-white font-bold text-base">M</div>
-            {/* Reel holes */}
-            <div className="absolute top-1.5 left-1.5 w-1 h-1 bg-orange-500 rounded-full"></div>
-            <div className="absolute top-1.5 right-1.5 w-1 h-1 bg-orange-500 rounded-full"></div>
-            <div className="absolute bottom-1.5 left-1.5 w-1 h-1 bg-orange-500 rounded-full"></div>
-            <div className="absolute bottom-1.5 right-1.5 w-1 h-1 bg-orange-500 rounded-full"></div>
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Bollywood Movie Poster Background */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200'%3E%3Cdefs%3E%3ClinearGradient id='bollywood' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff6b35;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%23f7931e;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23ffcd3c;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='1200' fill='url(%23bollywood)'/%3E%3Ctext x='400' y='300' text-anchor='middle' font-family='serif' font-size='120' font-weight='bold' fill='%23000' opacity='0.3'%3EMOVIE%3C/text%3E%3Ctext x='400' y='450' text-anchor='middle' font-family='serif' font-size='120' font-weight='bold' fill='%23000' opacity='0.3'%3EMASALA%3C/text%3E%3Ccircle cx='200' cy='800' r='150' fill='%23000' opacity='0.1'/%3E%3Ccircle cx='600' cy='900' r='120' fill='%23000' opacity='0.1'/%3E%3Cpolygon points='100,1000 200,950 150,850' fill='%23000' opacity='0.15'/%3E%3Cpolygon points='650,700 750,650 700,550' fill='%23000' opacity='0.15'/%3E%3C/svg%3E")`
+        }}
+      />
+      
+      {/* Overlay gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/80 via-blue-800/85 to-blue-900/80">
+        {/* Floating MM Logo and Score */}
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+          <button 
+            onClick={startNewGame}
+            className="flex items-center space-x-1 hover:scale-105 transition-transform active:scale-95"
+            title="Click to start new game"
+          >
+            {/* Square M tiles */}
+            <div className="w-10 h-10 bg-orange-500/90 backdrop-blur-sm rounded-lg flex items-center justify-center border-2 border-orange-400 shadow-lg">
+              <div className="text-white font-black text-lg">M</div>
+            </div>
+            <div className="w-10 h-10 bg-orange-500/90 backdrop-blur-sm rounded-lg flex items-center justify-center border-2 border-orange-400 shadow-lg">
+              <div className="text-white font-black text-lg">M</div>
+            </div>
+          </button>
+          
+          {/* Score Pill */}
+          <div className="bg-white text-orange-600 rounded-full px-4 py-2 text-sm font-bold shadow-lg">
+            Score: {gameState.score}
           </div>
         </div>
-        
-        {/* Score Pill */}
-        <div className="bg-white text-orange-600 rounded-full px-4 py-2 text-sm font-bold shadow-lg">
-          Score: {gameState.score}
-        </div>
-      </div>
 
-      {/* Key Box - Actor Names */}
-      <div className="mt-20">
+        {/* Key Box - Actor Names */}
+        <div className="mt-20">
         <WordList
           words={currentWords}
           foundWords={foundWords}
@@ -190,7 +194,7 @@ function App() {
         </div>
       )}
 
-
+      </div>
     </div>
   );
 }
