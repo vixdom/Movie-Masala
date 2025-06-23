@@ -230,8 +230,8 @@ function App() {
       <div className="fixed top-[calc(10vh+44px+8px)] left-0 right-0 h-[55vh] z-10 p-2">
         <div className="h-full flex items-center justify-center">
           <div className="relative">
-            {/* Gold border container */}
-            <div className="border-4 border-yellow-400 rounded bg-black/20 backdrop-blur-sm p-4">
+            {/* Bollywood-themed grid container */}
+            <div className="bollywood-grid-container p-4">
               <div className="grid grid-cols-12 gap-[6px] w-fit">
                 {gameState.grid.map((row, rowIndex) =>
                   row.map((cell, colIndex) => (
@@ -240,11 +240,15 @@ function App() {
                       className={cn(
                         "w-12 h-12 flex items-center justify-center font-bold rounded-lg cursor-pointer transition-all duration-200 touch-target text-sm",
                         cell.isSelected 
-                          ? "bg-orange-400 text-white shadow-lg scale-110 z-10" 
+                          ? "bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-xl scale-110 z-10 border-2 border-yellow-300" 
                           : cell.isFound 
-                          ? "bg-green-500 text-white shadow-md" 
-                          : "bg-gray-100 text-red-900 hover:bg-gray-200 active:scale-95 shadow-sm"
+                          ? "bg-gradient-to-br from-green-500 to-green-600 text-white shadow-lg border border-green-400" 
+                          : "bg-gradient-to-br from-yellow-50 to-yellow-100 text-red-900 hover:from-yellow-100 hover:to-yellow-200 active:scale-95 shadow-md border border-yellow-300"
                       )}
+                      style={{ 
+                        fontFamily: "'Cinzel', serif",
+                        textShadow: cell.isSelected || cell.isFound ? '1px 1px 2px rgba(0,0,0,0.5)' : '1px 1px 2px rgba(0,0,0,0.2)'
+                      }}
                       data-row={rowIndex}
                       data-col={colIndex}
                       onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
@@ -266,17 +270,20 @@ function App() {
 
       {/* Completion Message */}
       {gameState.isComplete && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 text-center max-w-sm mx-4">
-            <div className="text-2xl mb-2">🎉</div>
-            <h2 className="text-xl font-bold text-gray-800 mb-2">
-              Congratulations!
+        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-gradient-to-br from-red-900 to-red-800 border-4 border-yellow-400 rounded-xl p-8 text-center max-w-sm mx-4 shadow-2xl">
+            <div className="text-4xl mb-4">🎬✨</div>
+            <h2 className="bollywood-title text-2xl font-bold mb-3">
+              Blockbuster!
             </h2>
-            <p className="text-gray-600 mb-4">
-              You found all the Bollywood actors!
+            <p className="text-yellow-100 mb-6 font-medium">
+              You found all the Bollywood stars! The show must go on...
             </p>
-            <Button onClick={startNewGame} className="w-full">
-              Play Again
+            <Button 
+              onClick={startNewGame} 
+              className="bollywood-button w-full py-3 text-lg font-bold"
+            >
+              New Show
             </Button>
           </div>
         </div>
