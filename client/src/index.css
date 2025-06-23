@@ -203,3 +203,159 @@ html {
   -webkit-user-select: none;
   user-select: none;
 }
+
+/* Responsive Grid Layout */
+.responsive-grid {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.letter-tile {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 50px;
+  min-width: 50px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Mobile Portrait - Smaller tiles for better fit */
+@media (max-width: 480px) and (orientation: portrait) {
+  .letter-tile {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 14px;
+  }
+  
+  .responsive-grid {
+    gap: 4px !important;
+  }
+  
+  .bollywood-grid-container {
+    padding: 12px;
+    max-width: 95vw;
+    margin: 0 auto;
+  }
+}
+
+/* Mobile Landscape - Adjust for limited height */
+@media (max-width: 768px) and (orientation: landscape) {
+  .letter-tile {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 13px;
+  }
+  
+  .responsive-grid {
+    gap: 3px !important;
+  }
+  
+  .bollywood-grid-container {
+    padding: 8px;
+    max-width: 90vw;
+    margin: 0 auto;
+  }
+}
+
+/* Tablet Portrait */
+@media (min-width: 481px) and (max-width: 768px) and (orientation: portrait) {
+  .letter-tile {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 15px;
+  }
+  
+  .responsive-grid {
+    gap: 5px !important;
+  }
+}
+
+/* Tablet Landscape and Desktop */
+@media (min-width: 769px) {
+  .letter-tile {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px;
+    min-height: 50px;
+    font-size: 16px;
+  }
+  
+  .responsive-grid {
+    gap: 6px !important;
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1200px) {
+  .letter-tile {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px;
+    min-height: 52px;
+    font-size: 17px;
+  }
+  
+  .responsive-grid {
+    gap: 8px !important;
+  }
+}
+
+/* Ensure minimum touch targets on all devices */
+@media (pointer: coarse) {
+  .letter-tile {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    padding: 2px;
+  }
+}
+
+/* Bottom-aligned grid spacing adjustments */
+.bollywood-grid-container {
+  margin-bottom: safe-area-inset-bottom;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Prevent grid from overlapping with virtual keyboards */
+@media (max-height: 600px) {
+  .bollywood-grid-container {
+    transform: scale(0.85);
+    transform-origin: center bottom;
+  }
+  
+  .letter-tile {
+    font-size: 13px !important;
+  }
+}
+
+/* Ensure proper spacing for very small screens */
+@media (max-width: 360px) {
+  .responsive-grid {
+    gap: 3px !important;
+  }
+  
+  .letter-tile {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 12px !important;
+  }
+  
+  .bollywood-grid-container {
+    padding: 8px;
+  }
+}
+
+/* High DPI screens optimization */
+@media (-webkit-min-device-pixel-ratio: 2) {
+  .letter-tile {
+    border-width: 0.5px;
+  }
+}

@@ -91,6 +91,15 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
+- June 23, 2025: **BOLLYWOOD THEME COMPLETE** - Applied comprehensive Bollywood-inspired styling with deep-red background and gold accents
+- June 23, 2025: Added film-strip texture background pattern with subtle gold overlay effects
+- June 23, 2025: Implemented decorative Cinzel and Playfair Display fonts throughout the UI
+- June 23, 2025: Enhanced header with clapboard icon and gold text with drop-shadow effects
+- June 23, 2025: **GRID REFACTOR** - Increased tiles to 50x50px with 6px gaps, moved grid to bottom for thumb access
+- June 23, 2025: Ensured all touch targets meet 44x44px minimum requirement with proper responsive scaling
+- June 23, 2025: Added smooth CSS transitions for layout reflow and responsive grid adjustments
+- June 23, 2025: Implemented comprehensive responsive breakpoints for mobile/tablet/desktop optimization
+- June 23, 2025: Bottom-aligned grid with safe area support and virtual keyboard avoidance
 - June 22, 2025: **CHECKPOINT v0.3** - Compact name pills with long press hints and optimized spacing
 - June 22, 2025: **COMPACT DESIGN** - Removed eye icons and implemented 3-second long press for hints
 - June 22, 2025: Reduced name pill font size to text-xs and decreased padding (px-1.5 py-0.5)
@@ -99,13 +108,6 @@ Always confirm before creating checkpoints - user is paying for them.
 - June 22, 2025: Repositioned grid higher (top-56) to utilize reclaimed space from compact pills
 - June 22, 2025: Enhanced touch and mouse compatibility for long press functionality
 - June 22, 2025: Improved spacing hierarchy with selection bubble at top-48 and hints at top-52
-- June 22, 2025: **CHECKPOINT v0.2** - Mobile-optimized floating UI with thumb-friendly layout and ASMR audio
-- June 22, 2025: **MOBILE OPTIMIZED** - Complete redesign for iPhone 15 Plus portrait mode with floating elements
-- June 22, 2025: Implemented floating MM logo (top-left) and score pill (top-right) with no title bar
-- June 22, 2025: Created floating word pills with generous spacing and no background container
-- June 22, 2025: Positioned grid at bottom for thumb accessibility with ASMR audio (220Hz-180Hz gentle tones)
-- June 22, 2025: Added enhanced haptic feedback: gentle bumps (15ms) while tracing, clap pattern (80-40-80ms) on word completion
-- June 22, 2025: Implemented Web Audio API for mobile-compatible sound with lowpass filtering
 
 ## Changelog
 
