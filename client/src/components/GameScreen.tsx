@@ -4,6 +4,7 @@ import { getGameWords } from '../lib/bollywoodWords';
 import { Button } from './ui/button';
 import { cn } from '../lib/utils';
 import { WordFoundAnimation } from './WordFoundAnimation';
+import { MobileOptimizedWordSearch } from './MobileOptimizedWordSearch';
 import { ChevronLeft } from 'lucide-react';
 
 interface GameScreenProps {
@@ -320,38 +321,16 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
 
       {/* Grid Wrapper - Fills remainder of screen */}
       <div className="grid-wrapper">
-        <div className="grid-container">
-          <div className="game-grid">
-            {gameState.grid.map((row, rowIndex) =>
-              row.map((cell, colIndex) => {
-                const positionKey = `${rowIndex}-${colIndex}`;
-                const isHinted = hintedPositions.has(positionKey);
-                
-                return (
-                  <div
-                    key={`${rowIndex}-${colIndex}`}
-                    className={cn(
-                      "grid-tile",
-                      cell.isSelected && "selected",
-                      cell.isFound && "found",
-                      isHinted && "hinted"
-                    )}
-                    data-row={rowIndex}
-                    data-col={colIndex}
-                    onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
-                    onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
-                    onMouseUp={handleCellMouseUp}
-                    onTouchStart={() => handleCellTouchStart(rowIndex, colIndex)}
-                    onTouchMove={handleCellTouchMove}
-                    onTouchEnd={handleCellTouchEnd}
-                  >
-                    {cell.letter}
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
+        <MobileOptimizedWordSearch
+          grid={gameState.grid}
+          onCellMouseDown={handleCellMouseDown}
+          onCellMouseEnter={handleCellMouseEnter}
+          onCellMouseUp={handleCellMouseUp}
+          onCellTouchStart={handleCellTouchStart}
+          onCellTouchMove={handleCellTouchMove}
+          onCellTouchEnd={handleCellTouchEnd}
+          highlightedWord={highlightedWord}
+        />
       </div>
 
       {/* Word Found Animation */}
