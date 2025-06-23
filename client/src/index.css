@@ -211,8 +211,8 @@ html {
 
 .letter-tile {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 50px;
-  min-width: 50px;
+  min-height: 44px;
+  min-width: 44px;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -220,14 +220,14 @@ html {
   user-select: none;
 }
 
-/* Mobile Portrait - Smaller tiles for better fit */
+/* Mobile Portrait - Compact tiles with optimal font size */
 @media (max-width: 480px) and (orientation: portrait) {
   .letter-tile {
-    width: 44px !important;
-    height: 44px !important;
+    width: 36px !important;
+    height: 36px !important;
     min-width: 44px;
     min-height: 44px;
-    font-size: 14px;
+    font-size: 16px !important;
   }
   
   .responsive-grid {
@@ -241,14 +241,14 @@ html {
   }
 }
 
-/* Mobile Landscape - Adjust for limited height */
+/* Mobile Landscape - Very compact for limited height */
 @media (max-width: 768px) and (orientation: landscape) {
   .letter-tile {
-    width: 40px !important;
-    height: 40px !important;
+    width: 32px !important;
+    height: 32px !important;
     min-width: 44px;
     min-height: 44px;
-    font-size: 13px;
+    font-size: 14px !important;
   }
   
   .responsive-grid {
@@ -265,11 +265,11 @@ html {
 /* Tablet Portrait */
 @media (min-width: 481px) and (max-width: 768px) and (orientation: portrait) {
   .letter-tile {
-    width: 48px !important;
-    height: 48px !important;
-    min-width: 48px;
-    min-height: 48px;
-    font-size: 15px;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 17px !important;
   }
   
   .responsive-grid {
@@ -280,11 +280,11 @@ html {
 /* Tablet Landscape and Desktop */
 @media (min-width: 769px) {
   .letter-tile {
-    width: 50px !important;
-    height: 50px !important;
-    min-width: 50px;
-    min-height: 50px;
-    font-size: 16px;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 18px !important;
   }
   
   .responsive-grid {
@@ -295,15 +295,15 @@ html {
 /* Large Desktop */
 @media (min-width: 1200px) {
   .letter-tile {
-    width: 52px !important;
-    height: 52px !important;
-    min-width: 52px;
-    min-height: 52px;
-    font-size: 17px;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 19px !important;
   }
   
   .responsive-grid {
-    gap: 8px !important;
+    gap: 7px !important;
   }
 }
 
@@ -341,15 +341,36 @@ html {
   }
   
   .letter-tile {
-    width: 38px !important;
-    height: 38px !important;
+    width: 32px !important;
+    height: 32px !important;
     min-width: 44px;
     min-height: 44px;
-    font-size: 12px !important;
+    font-size: 14px !important;
   }
   
   .bollywood-grid-container {
     padding: 8px;
+  }
+}
+
+/* Word pills responsive layout */
+.bollywood-word-pill {
+  flex: 0 0 auto;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 480px) {
+  .bollywood-word-pill {
+    font-size: 10px !important;
+    padding: 6px 12px !important;
+    min-height: 36px !important;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .bollywood-word-pill {
+    font-size: 11px !important;
+    padding: 8px 16px !important;
   }
 }
 

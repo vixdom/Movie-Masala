@@ -155,10 +155,10 @@ function App() {
         </div>
       </div>
 
-      {/* Actor Strip - Responsive height, solid background */}
-      <div className="fixed top-[60px] left-0 right-0 min-h-[50px] bg-gradient-to-r from-red-900/90 to-red-800/90 z-20 border-b-2 border-yellow-400/40 backdrop-blur-sm transition-all duration-300">
-        <div className="h-full overflow-x-auto scrollbar-hide px-3 py-2">
-          <div className="flex items-center gap-2 h-full min-w-max">
+      {/* Actor Strip - Multiple rows, no horizontal scrolling */}
+      <div className="fixed top-[60px] left-0 right-0 bg-gradient-to-r from-red-900/90 to-red-800/90 z-20 border-b-2 border-yellow-400/40 backdrop-blur-sm transition-all duration-300">
+        <div className="px-3 py-2">
+          <div className="flex flex-wrap items-center justify-center gap-2 max-w-full">
             {currentWords.map((wordItem) => {
               const wordPlacement = gameState.words.find(wp => wp.word === wordItem.word);
               const isFound = wordPlacement && gameState.foundWords.has(wordPlacement.id);
@@ -191,7 +191,7 @@ function App() {
                 <button
                   key={wordItem.word}
                   className={cn(
-                    "bollywood-word-pill flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 cursor-pointer shadow-lg whitespace-nowrap uppercase tracking-wide min-h-[44px] min-w-[44px]",
+                    "bollywood-word-pill flex items-center justify-center px-3 py-2 rounded-full text-xs font-semibold transition-all duration-300 cursor-pointer shadow-lg whitespace-nowrap uppercase tracking-wide min-h-[44px]",
                     isFound && "found"
                   )}
                   onClick={handleClick}
@@ -207,14 +207,11 @@ function App() {
             })}
           </div>
         </div>
-        
-        {/* Gold scroll indicator */}
-        <div className="absolute bottom-0 left-4 right-4 h-1 bg-gradient-to-r from-transparent via-yellow-400/80 to-transparent rounded-full"></div>
       </div>
 
       {/* Selection Bubble - word in progress */}
       {currentSelection && (
-        <div className="fixed top-[120px] left-1/2 transform -translate-x-1/2 z-30 bollywood-selection-bubble text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300">
+        <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 z-30 bollywood-selection-bubble text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300">
           <span className="text-lg font-bold tracking-widest">
             {currentSelection.split('').join(' ')}
           </span>
@@ -223,7 +220,7 @@ function App() {
 
       {/* Hint Display - long press result */}
       {showHint && (
-        <div className="fixed top-[130px] left-1/2 transform -translate-x-1/2 z-30 bollywood-hint-bubble text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 max-w-xs text-center">
+        <div className="fixed top-1/4 left-1/2 transform -translate-x-1/2 z-30 bollywood-hint-bubble text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 max-w-xs text-center">
           <span className="text-sm font-medium">{showHint}</span>
         </div>
       )}
@@ -240,7 +237,7 @@ function App() {
                     <div
                       key={`${rowIndex}-${colIndex}`}
                       className={cn(
-                        "letter-tile w-[50px] h-[50px] flex items-center justify-center font-bold rounded-lg cursor-pointer transition-all duration-200 text-base",
+                        "letter-tile w-[42px] h-[42px] flex items-center justify-center font-bold rounded-lg cursor-pointer transition-all duration-200 text-lg",
                         cell.isSelected 
                           ? "bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-xl scale-110 z-10 border-2 border-yellow-300" 
                           : cell.isFound 
@@ -250,8 +247,8 @@ function App() {
                       style={{ 
                         fontFamily: "'Cinzel', serif",
                         textShadow: cell.isSelected || cell.isFound ? '1px 1px 2px rgba(0,0,0,0.5)' : '1px 1px 2px rgba(0,0,0,0.2)',
-                        minWidth: '50px',
-                        minHeight: '50px'
+                        minWidth: '44px',
+                        minHeight: '44px'
                       }}
                       data-row={rowIndex}
                       data-col={colIndex}
