@@ -188,16 +188,23 @@
   .crossword-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-gap: 8px;
+    gap: 2px;
     width: 100%;
+    max-width: min(90vw, 90vh);
     aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(255, 215, 0, 0.6);
+    border-radius: 8px;
     user-select: none;
     touch-action: manipulation;
   }
 
   .crossword-cell {
-    width: clamp(50px, 8vw, 70px);
-    height: clamp(50px, 8vw, 70px);
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
     min-width: 44px;
     min-height: 44px;
     display: flex;
@@ -205,51 +212,50 @@
     justify-content: center;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
-    font-size: clamp(20px, 3vw, 28px);
-    color: #111;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,215,0,0.3);
+    font-size: clamp(16px, 2.5vw, 24px);
+    color: #FFD700;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 215, 0, 0.4);
     user-select: none;
     cursor: pointer;
     touch-action: manipulation;
-    transition: all 0.1s ease;
-    border-radius: 4px;
-    backdrop-filter: blur(2px);
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   .crossword-cell.selected {
-    outline: 2px solid #FFD700;
-    background: rgba(255,255,255,0.25);
-    transform: scale(1.02);
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    background: rgba(255, 215, 0, 0.3);
+    border-color: #FFD700;
+    box-shadow: inset 0 0 8px rgba(255, 215, 0, 0.5);
   }
 
   .crossword-cell.found {
-    background: rgba(255, 215, 0, 0.8);
-    color: #8B0000;
+    background: rgba(255, 215, 0, 0.9);
+    color: #000;
     font-weight: 700;
-    border: 2px solid #FFD700;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    border-color: #FFD700;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
   }
 
   .crossword-cell.highlighted {
-    background: rgba(255, 255, 0, 0.6);
-    border: 2px solid #FFED4E;
-    animation: pulse-highlight 1s ease-in-out infinite alternate;
+    background: rgba(255, 255, 100, 0.4);
+    border-color: #FFFF64;
+    animation: pulse-highlight 1.5s ease-in-out infinite alternate;
   }
 
   @keyframes pulse-highlight {
-    0% { background: rgba(255, 255, 0, 0.6); }
-    100% { background: rgba(255, 255, 0, 0.8); }
+    0% { background: rgba(255, 255, 100, 0.4); }
+    100% { background: rgba(255, 255, 100, 0.6); }
   }
 
   .crossword-cell:hover {
-    background: rgba(255,255,255,0.2);
-    border-color: rgba(255,215,0,0.5);
+    background: rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 215, 0, 0.6);
   }
 
   .crossword-cell:active {
-    transform: scale(0.98);
+    background: rgba(255, 215, 0, 0.4);
   }
 }
 
