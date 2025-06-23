@@ -83,24 +83,36 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [game]);
 
   const revealHintLetter = useCallback((wordPlacement: any) => {
-    if (!wordPlacement || hintedLetters.has(wordPlacement.id)) return;
+    console.log('revealHintLetter called with:', wordPlacement);
+    if (!wordPlacement || hintedLetters.has(wordPlacement.id)) {
+      console.log('Early return: no placement or already hinted');
+      return;
+    }
+
+    console.log('Processing hint for word:', wordPlacement.word);
+    console.log('Word positions:', wordPlacement.positions);
 
     // Calculate point deduction (1.5x the word value)
     const pointDeduction = Math.floor(wordPlacement.word.length * 10 * 1.5);
+    console.log('Point deduction calculated:', pointDeduction);
     
     // Update game state to deduct points
     const currentGameState = game.getGameState();
+    const oldScore = currentGameState.score;
     currentGameState.score = Math.max(0, currentGameState.score - pointDeduction);
+    console.log('Score updated from', oldScore, 'to', currentGameState.score);
     setGameState({...currentGameState});
 
     // Select a random letter position from the word
     const randomIndex = Math.floor(Math.random() * wordPlacement.positions.length);
     const randomPosition = wordPlacement.positions[randomIndex];
+    console.log('Selected random position:', randomPosition, 'letter:', wordPlacement.word[randomIndex]);
     
     // Mark the word as hinted
     setHintedLetters(prev => {
       const newSet = new Set(prev);
       newSet.add(wordPlacement.id);
+      console.log('Added to hinted letters:', wordPlacement.id);
       return newSet;
     });
 
@@ -109,11 +121,14 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     setHintedPositions(prev => {
       const newSet = new Set(prev);
       newSet.add(positionKey);
+      console.log('Added to hinted positions:', positionKey);
       return newSet;
     });
     
     // Show hint message
-    setShowHint(`Letter "${wordPlacement.word[randomIndex]}" revealed at row ${randomPosition.row + 1}, column ${randomPosition.col + 1}. Points deducted: ${pointDeduction}`);
+    const hintMessage = `Letter "${wordPlacement.word[randomIndex]}" revealed at row ${randomPosition.row + 1}, column ${randomPosition.col + 1}. Points deducted: ${pointDeduction}`;
+    console.log('Setting hint message:', hintMessage);
+    setShowHint(hintMessage);
     setTimeout(() => setShowHint(null), 3000);
   }, [game, hintedLetters]);
 
@@ -209,19 +224,39 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
             const isFound = wordPlacement && gameState.foundWords.has(wordPlacement.id);
             
             const handleMouseDown = () => {
-              if (wordPlacement && !isFound && !hintedLetters.has(wordPlacement.id)) {
+              console.log('Word pill mousedown:', wordItem.word, 'isFound:', isFound, 'wordPlacement:', wordPlacement);
+              if (wordPlacement && !isFound && wordPlacement.id && !hintedLetters.has(wordPlacement.id)) {
+                console.log('Setting 3-second timer for hint on:', wordItem.word);
                 const timer = setTimeout(() => {
+                  console.log('Timer fired, revealing hint for:', wordItem.word);
                   revealHintLetter(wordPlacement);
                 }, 3000);
                 setLongPressTimer(timer);
+              } else {
+                console.log('Hint blocked:', {
+                  hasWordPlacement: !!wordPlacement,
+                  isFound,
+                  alreadyHinted: wordPlacement ? hintedLetters.has(wordPlacement.id) : false
+                });
               }
             };
 
             const handleMouseUp = () => {
+              console.log('Word pill mouseup, clearing timer');
               if (longPressTimer) {
                 clearTimeout(longPressTimer);
                 setLongPressTimer(null);
               }
+            };
+
+            const handleTouchStart = () => {
+              console.log('Word pill touchstart:', wordItem.word);
+              handleMouseDown();
+            };
+
+            const handleTouchEnd = () => {
+              console.log('Word pill touchend:', wordItem.word);
+              handleMouseUp();
             };
 
             const handleClick = () => {
@@ -242,8 +277,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
-                onTouchStart={handleMouseDown}
-                onTouchEnd={handleMouseUp}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
               >
                 <span className="text-center leading-tight">{wordItem.word}</span>
               </button>
