@@ -91,6 +91,9 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
+- June 23, 2025: **HOME SCREEN NAVIGATION** - Implemented multi-screen app with Home, Game, and Options screens
+- June 23, 2025: Large centered Movie Masala title with clapboard icon and tagline on Home screen
+- June 23, 2025: Navigation buttons (Play Now/Options) with back chevrons on Game/Options screens
 - June 23, 2025: **CHECKPOINT v0.4** - CSS architecture refactor with spacious, scroll-free responsive layout complete
 - June 23, 2025: **CSS ARCHITECTURE REFACTOR** - Complete restructure for spacious, scroll-free responsive layout
 - June 23, 2025: Header fixed at exactly 10% viewport height with precise 8px/16px padding structure

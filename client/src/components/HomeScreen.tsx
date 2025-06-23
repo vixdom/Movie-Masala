@@ -6,47 +6,71 @@ interface HomeScreenProps {
 }
 
 export function HomeScreen({ onNavigateToGame, onNavigateToOptions }: HomeScreenProps) {
+  const handleGameClick = () => {
+    console.log('Play Now button clicked');
+    onNavigateToGame();
+  };
+
+  const handleOptionsClick = () => {
+    console.log('Options button clicked');
+    onNavigateToOptions();
+  };
+
   return (
     <div className="h-screen text-white relative overflow-hidden">
       {/* Enhanced film-strip background overlay */}
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
       
       {/* Header - Exactly 10% viewport height */}
       <header className="app-header justify-center">
-        <div className="flex items-center gap-3">
-          <span className="text-2xl">🎬</span>
-          <span className="bollywood-title text-2xl font-bold">Movie Masala</span>
-        </div>
+        {/* Empty spacer for consistent layout */}
+        <div></div>
+        <div></div>
+        <div></div>
       </header>
 
       {/* Main Content - Centered */}
       <div className="flex flex-col items-center justify-center h-[90vh] px-4">
-        <div className="text-center mb-12">
+        {/* Large Title Section */}
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-6 mb-8">
+            <span className="text-6xl md:text-7xl">🎬</span>
+            <h1 className="bollywood-title text-4xl md:text-6xl lg:text-7xl font-bold text-yellow-300 drop-shadow-2xl" 
+                style={{ fontFamily: "'Cinzel', serif" }}>
+              Movie Masala
+            </h1>
+          </div>
+          
           {/* Subtitle/Tagline */}
-          <p className="text-lg font-medium text-yellow-200 mb-8 max-w-md mx-auto leading-relaxed" 
+          <p className="text-xl md:text-2xl font-medium text-yellow-200 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-lg" 
              style={{ fontFamily: "'Playfair Display', serif" }}>
             Find your favorite stars, one name at a time.
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col gap-6 w-full max-w-sm">
-          <Button
-            onClick={onNavigateToGame}
-            className="w-full h-16 text-xl font-bold bollywood-gold-accent hover:scale-105 active:scale-95 transition-all duration-300 shadow-2xl min-h-[44px]"
+        <div className="flex flex-col gap-8 w-full max-w-lg relative z-20">
+          <button
+            onClick={handleGameClick}
+            className="w-full h-20 text-2xl font-bold bollywood-gold-accent hover:scale-105 active:scale-95 transition-all duration-300 shadow-2xl min-h-[44px] rounded-lg cursor-pointer relative z-30"
             style={{ fontFamily: "'Cinzel', serif" }}
+            type="button"
+            onMouseDown={(e) => console.log('Play Now mousedown', e)}
+            onMouseUp={(e) => console.log('Play Now mouseup', e)}
           >
             Play Now
-          </Button>
+          </button>
           
-          <Button
-            onClick={onNavigateToOptions}
-            variant="outline"
-            className="w-full h-16 text-xl font-bold bg-transparent border-2 border-yellow-400/60 text-yellow-200 hover:bg-yellow-400/20 hover:border-yellow-400 hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl min-h-[44px]"
+          <button
+            onClick={handleOptionsClick}
+            className="w-full h-20 text-2xl font-bold bg-transparent border-2 border-yellow-400/60 text-yellow-200 hover:bg-yellow-400/20 hover:border-yellow-400 hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl min-h-[44px] rounded-lg cursor-pointer relative z-30"
             style={{ fontFamily: "'Cinzel', serif" }}
+            type="button"
+            onMouseDown={(e) => console.log('Options mousedown', e)}
+            onMouseUp={(e) => console.log('Options mouseup', e)}
           >
             Options
-          </Button>
+          </button>
         </div>
       </div>
     </div>

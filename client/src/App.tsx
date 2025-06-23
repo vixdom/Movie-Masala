@@ -10,14 +10,17 @@ function App() {
   const [isSoundMuted, setIsSoundMuted] = useState(false);
 
   const navigateToGame = useCallback(() => {
+    console.log('Navigating to game screen');
     setCurrentScreen('game');
   }, []);
 
   const navigateToOptions = useCallback(() => {
+    console.log('Navigating to options screen');
     setCurrentScreen('options');
   }, []);
 
   const navigateToHome = useCallback(() => {
+    console.log('Navigating to home screen');
     setCurrentScreen('home');
   }, []);
 
