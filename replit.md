@@ -91,6 +91,11 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
+- June 23, 2025: **CROSSWORD-STYLE GRID** - Transformed grid into sleek crossword layout with CSS Grid
+- June 23, 2025: Implemented Poppins font with clamp(20px,3vw,28px) sizing and 44×44px minimum touch targets
+- June 23, 2025: Added crossword-cell styling with gold borders, backdrop blur, and selection feedback
+- June 23, 2025: Preserved existing names box and maintained scroll-free responsive design
+- June 23, 2025: Enhanced found word styling with gold background and deep-red text
 - June 23, 2025: **HOME SCREEN NAVIGATION** - Implemented multi-screen app with Home, Game, and Options screens
 - June 23, 2025: Large centered Movie Masala title with clapboard icon and tagline on Home screen
 - June 23, 2025: Navigation buttons (Play Now/Options) with back chevrons on Game/Options screens
