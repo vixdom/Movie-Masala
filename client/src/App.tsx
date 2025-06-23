@@ -247,7 +247,7 @@ function App() {
                     <div
                       key={`${rowIndex}-${colIndex}`}
                       className={cn(
-                        "w-12 h-12 flex items-center justify-center font-bold rounded-lg cursor-pointer transition-all duration-200 touch-target text-sm grid-cell-interactive",
+                        "w-12 h-12 flex items-center justify-center font-bold rounded-lg cursor-pointer transition-all duration-200 touch-target text-sm",
                         cell.isSelected 
                           ? "bg-orange-400 text-white shadow-lg scale-110 z-10" 
                           : cell.isFound 

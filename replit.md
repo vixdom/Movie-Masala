@@ -91,12 +91,6 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
-- June 23, 2025: **BALANCED MOBILE LAYOUT** - Refined viewport proportions and visual hierarchy for optimal mobile gameplay
-- June 23, 2025: Header Bar (10% viewport): Left-aligned clapboard + title, right-aligned score with proper 8px/16px padding
-- June 23, 2025: Actor Strip (44px): Solid red background, 14px uppercase pills with 20px radius, hidden scrollbar with gold indicator
-- June 23, 2025: Grid Container (55% viewport): Centered 48×48px tiles with 6px gaps, 4px gold border, translucent backdrop
-- June 23, 2025: Color Consistency: Gold accents only, deep red bars, off-white tiles, removed thick white dividers
-- June 23, 2025: Fixed JSX syntax errors and restored proper component structure for compilation
 - June 22, 2025: **CHECKPOINT v0.3** - Compact name pills with long press hints and optimized spacing
 - June 22, 2025: **COMPACT DESIGN** - Removed eye icons and implemented 3-second long press for hints
 - June 22, 2025: Reduced name pill font size to text-xs and decreased padding (px-1.5 py-0.5)
