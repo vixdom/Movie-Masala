@@ -260,6 +260,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
             };
 
             const handleClick = () => {
+              console.log('Word pill clicked:', wordItem.word);
               if (wordPlacement && !isFound) {
                 setHighlightedWord(wordPlacement.word);
                 setTimeout(() => setHighlightedWord(null), 2000);
@@ -270,7 +271,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
               <button
                 key={wordItem.word}
                 className={cn(
-                  "hint-pill bollywood-word-pill transition-all duration-300 cursor-pointer shadow-lg whitespace-nowrap uppercase tracking-wide",
+                  "hint-pill bollywood-word-pill transition-all duration-300 cursor-pointer shadow-lg whitespace-nowrap uppercase tracking-wide border-2 border-yellow-400 hover:bg-yellow-400/30 active:bg-yellow-400/50",
                   isFound && "found"
                 )}
                 onClick={handleClick}
@@ -279,8 +280,15 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
                 onMouseLeave={handleMouseUp}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
+                style={{ 
+                  minHeight: '48px',
+                  minWidth: '48px',
+                  zIndex: 50,
+                  position: 'relative',
+                  pointerEvents: 'auto'
+                }}
               >
-                <span className="text-center leading-tight">{wordItem.word}</span>
+                <span className="text-center leading-tight pointer-events-none">{wordItem.word}</span>
               </button>
             );
           })}
