@@ -21,6 +21,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   const [wordFoundAnimation, setWordFoundAnimation] = useState<string | null>(null);
   const [showHint, setShowHint] = useState<string | null>(null);
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+  const [hintedLetters, setHintedLetters] = useState<Set<string>>(new Set());
+  const [hintedPositions, setHintedPositions] = useState<Set<string>>(new Set());
 
   // Audio setup
   const playSuccess = useCallback(() => {
@@ -76,7 +78,44 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     setCurrentSelection('');
     setWordFoundAnimation(null);
     setShowHint(null);
+    setHintedLetters(new Set());
+    setHintedPositions(new Set());
   }, [game]);
+
+  const revealHintLetter = useCallback((wordPlacement: any) => {
+    if (!wordPlacement || hintedLetters.has(wordPlacement.id)) return;
+
+    // Calculate point deduction (1.5x the word value)
+    const pointDeduction = Math.floor(wordPlacement.word.length * 10 * 1.5);
+    
+    // Update game state to deduct points
+    const currentGameState = game.getGameState();
+    currentGameState.score = Math.max(0, currentGameState.score - pointDeduction);
+    setGameState({...currentGameState});
+
+    // Select a random letter position from the word
+    const randomIndex = Math.floor(Math.random() * wordPlacement.positions.length);
+    const randomPosition = wordPlacement.positions[randomIndex];
+    
+    // Mark the word as hinted
+    setHintedLetters(prev => {
+      const newSet = new Set(prev);
+      newSet.add(wordPlacement.id);
+      return newSet;
+    });
+
+    // Mark the specific position as hinted
+    const positionKey = `${randomPosition.row}-${randomPosition.col}`;
+    setHintedPositions(prev => {
+      const newSet = new Set(prev);
+      newSet.add(positionKey);
+      return newSet;
+    });
+    
+    // Show hint message
+    setShowHint(`Letter "${wordPlacement.word[randomIndex]}" revealed at row ${randomPosition.row + 1}, column ${randomPosition.col + 1}. Points deducted: ${pointDeduction}`);
+    setTimeout(() => setShowHint(null), 3000);
+  }, [game, hintedLetters]);
 
   useEffect(() => {
     startNewGame();
@@ -170,10 +209,9 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
             const isFound = wordPlacement && gameState.foundWords.has(wordPlacement.id);
             
             const handleMouseDown = () => {
-              if (wordItem.hint && !isFound) {
+              if (wordPlacement && !isFound && !hintedLetters.has(wordPlacement.id)) {
                 const timer = setTimeout(() => {
-                  setShowHint(wordItem.hint || null);
-                  setTimeout(() => setShowHint(null), 2000);
+                  revealHintLetter(wordPlacement);
                 }, 3000);
                 setLongPressTimer(timer);
               }
