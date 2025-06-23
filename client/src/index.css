@@ -144,6 +144,89 @@ html {
   display: none;
 }
 
+/* Micro-animations */
+@keyframes foundPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(34, 197, 94, 0.6); }
+  100% { transform: scale(0.95); }
+}
+
+@keyframes selectionPulse {
+  0% { box-shadow: 0 6px 20px rgba(255, 165, 0, 0.5); }
+  100% { box-shadow: 0 8px 24px rgba(255, 165, 0, 0.7); }
+}
+
+@keyframes hintFadeIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes gridCellShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Enhanced Bollywood Pill Interactions */
+.bollywood-pill {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bollywood-pill:hover {
+  background: linear-gradient(135deg, rgba(255, 245, 157, 0.95), rgba(254, 240, 138, 0.9));
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+}
+
+.bollywood-pill.found {
+  animation: foundPulse 0.6s ease-out;
+}
+
+/* Selection Bubble Animation */
+.bollywood-selection-bubble {
+  animation: selectionPulse 1s ease-in-out infinite alternate;
+}
+
+/* Hint Bubble Animation */
+.bollywood-hint-bubble {
+  animation: hintFadeIn 0.3s ease-out;
+}
+
+/* Enhanced Gold Accent Interactions */
+.bollywood-gold-accent {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bollywood-gold-accent:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 215, 0, 0.5);
+}
+
+/* Grid Cell Interactive Feedback */
+.grid-cell-interactive {
+  position: relative;
+  overflow: hidden;
+}
+
+.grid-cell-interactive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+  transition: left 0.4s ease;
+}
+
+.grid-cell-interactive:hover::before {
+  left: 100%;
+}
+
+.grid-cell-interactive:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+
 /* Smooth Orientation Transitions */
 .layout-transition {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
