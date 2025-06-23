@@ -13,8 +13,8 @@ interface WordSearchProps {
   highlightedWord?: string | null;
 }
 
-// Memoized cell component for better performance
-const OptimizedGridCell = memo(({ 
+// Crossword-style cell component for sleek grid layout
+const CrosswordGridCell = memo(({ 
   cell, 
   rowIndex, 
   colIndex, 
@@ -22,6 +22,7 @@ const OptimizedGridCell = memo(({
   isTouching,
   onMouseDown,
   onMouseEnter,
+  onPointerEnter,
   onTouchStart,
   getWordColor,
   highlightedWord 
@@ -33,6 +34,7 @@ const OptimizedGridCell = memo(({
   isTouching: boolean;
   onMouseDown: (row: number, col: number) => void;
   onMouseEnter: (row: number, col: number) => void;
+  onPointerEnter: (row: number, col: number) => void;
   onTouchStart: (row: number, col: number) => void;
   getWordColor: (wordId: string | undefined) => string;
   highlightedWord?: string | null;
@@ -40,26 +42,13 @@ const OptimizedGridCell = memo(({
   return (
     <div
       className={cn(
-        'flex items-center justify-center text-3xl md:text-2xl font-black cursor-pointer transition-transform duration-100 select-none rounded-xl touch-manipulation shadow-lg',
-        'active:scale-95',
-        'bg-white/95 backdrop-blur-sm border border-gray-200/50',
+        'crossword-cell',
         {
-          [getWordColor(cell.wordId)]: cell.isFound,
-          'bg-blue-500 text-white shadow-blue-300/50 transform scale-105': cell.isSelected && !cell.isFound,
-          'bg-yellow-400 text-black shadow-yellow-300/50': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
-          'text-gray-900': !cell.isSelected && !cell.isFound && !(highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-')),
+          'selected': cell.isSelected && !cell.isFound,
+          'found': cell.isFound,
+          'highlighted': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
         }
       )}
-      style={{
-        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
-        fontWeight: '900',
-        letterSpacing: '0.02em',
-        aspectRatio: '1',
-        width: '100%',
-        height: '100%',
-        textShadow: '0 1px 2px rgba(0,0,0,0.5)',
-        touchAction: 'manipulation',
-      }}
       onMouseDown={(e) => {
         e.preventDefault();
         onMouseDown(rowIndex, colIndex);
@@ -71,6 +60,11 @@ const OptimizedGridCell = memo(({
             navigator.vibrate(10);
           }
           onMouseEnter(rowIndex, colIndex);
+        }
+      }}
+      onPointerEnter={() => {
+        if (isMouseDown) {
+          onPointerEnter(rowIndex, colIndex);
         }
       }}
       onTouchStart={(e) => {
@@ -118,11 +112,18 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     return wordColors[hash % wordColors.length];
   }, []);
 
+  // Handle pointer events for drag selection
+  const handlePointerEnter = useCallback((row: number, col: number) => {
+    if (isMouseDown) {
+      onCellMouseEnter(row, col);
+    }
+  }, [isMouseDown, onCellMouseEnter]);
+
   // Optimized grid rendering with memoization
   const renderedGrid = useMemo(() => {
     return grid.map((row, rowIndex) =>
       row.map((cell, colIndex) => (
-        <OptimizedGridCell
+        <CrosswordGridCell
           key={`${rowIndex}-${colIndex}`}
           cell={cell}
           rowIndex={rowIndex}
@@ -131,28 +132,35 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           isTouching={isTouching}
           onMouseDown={onCellMouseDown}
           onMouseEnter={onCellMouseEnter}
+          onPointerEnter={handlePointerEnter}
           onTouchStart={onCellTouchStart}
           getWordColor={getWordColor}
           highlightedWord={highlightedWord}
         />
       ))
     );
-  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, onCellTouchStart, getWordColor, highlightedWord]);
+  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord]);
 
   return (
     <div className="w-full max-w-3xl mx-auto px-3">
       <div
         ref={gridRef}
-        className="grid gap-2 p-3 select-none"
+        className="crossword-grid"
         style={{
-          gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
-          gridTemplateRows: `repeat(${grid.length}, 1fr)`,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(12, 1fr)',
+          gridGap: '8px',
           width: '100%',
           aspectRatio: '1 / 1',
+          userSelect: 'none',
+          touchAction: 'manipulation',
         }}
         onMouseUp={() => {
           setIsMouseDown(false);
           onCellMouseUp();
+        }}
+        onMouseDown={() => {
+          setIsMouseDown(true);
         }}
         onMouseLeave={() => {
           setIsMouseDown(false);
