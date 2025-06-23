@@ -142,38 +142,27 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord]);
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-3">
-      <div
-        ref={gridRef}
-        className="crossword-grid"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(12, 1fr)',
-          gridGap: '8px',
-          width: '100%',
-          aspectRatio: '1 / 1',
-          userSelect: 'none',
-          touchAction: 'manipulation',
-        }}
-        onMouseUp={() => {
-          setIsMouseDown(false);
-          onCellMouseUp();
-        }}
-        onMouseDown={() => {
-          setIsMouseDown(true);
-        }}
-        onMouseLeave={() => {
-          setIsMouseDown(false);
-          onCellMouseUp();
-        }}
-        onTouchMove={onCellTouchMove}
-        onTouchEnd={() => {
-          setIsTouching(false);
-          onCellTouchEnd();
-        }}
-      >
-        {renderedGrid}
-      </div>
+    <div
+      ref={gridRef}
+      className="crossword-grid"
+      onMouseUp={() => {
+        setIsMouseDown(false);
+        onCellMouseUp();
+      }}
+      onMouseDown={() => {
+        setIsMouseDown(true);
+      }}
+      onMouseLeave={() => {
+        setIsMouseDown(false);
+        onCellMouseUp();
+      }}
+      onTouchMove={onCellTouchMove}
+      onTouchEnd={() => {
+        setIsTouching(false);
+        onCellTouchEnd();
+      }}
+    >
+      {renderedGrid}
     </div>
   );
 });
