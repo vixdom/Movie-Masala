@@ -176,10 +176,10 @@ function App() {
             <div
               key={wordItem.word}
               className={cn(
-                "flex items-center px-1.5 py-0.5 rounded-full text-xs transition-all duration-200 cursor-pointer backdrop-blur-sm shadow-lg mb-1",
+                "flex items-center px-1.5 py-0.5 rounded-full text-xs transition-all duration-200 cursor-pointer shadow-lg mb-1",
                 isFound 
-                  ? "bg-green-500/90 text-white line-through" 
-                  : "bg-white/90 text-gray-800 hover:bg-white active:bg-gray-100"
+                  ? "bollywood-pill found line-through" 
+                  : "bollywood-pill hover:scale-105 active:scale-95"
               )}
               onClick={handleClick}
               onMouseDown={handleMouseDown}
@@ -196,7 +196,7 @@ function App() {
 
       {/* Selection Bubble - word in progress */}
       {currentSelection && (
-        <div className="absolute top-48 left-1/2 transform -translate-x-1/2 z-30 bg-orange-500/95 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200">
+        <div className="absolute top-48 left-1/2 transform -translate-x-1/2 z-30 bollywood-selection-bubble text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200">
           <span className="text-lg font-bold tracking-widest">
             {currentSelection.split('').join(' ')}
           </span>
@@ -205,7 +205,7 @@ function App() {
 
       {/* Hint Display - long press result */}
       {showHint && (
-        <div className="absolute top-52 left-1/2 transform -translate-x-1/2 z-30 bg-blue-600/95 backdrop-blur-sm text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-200 max-w-xs text-center">
+        <div className="absolute top-52 left-1/2 transform -translate-x-1/2 z-30 bollywood-hint-bubble text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-200 max-w-xs text-center">
           <span className="text-sm font-medium">{showHint}</span>
         </div>
       )}
@@ -213,7 +213,7 @@ function App() {
       {/* Game Grid - positioned low for thumb accessibility */}
       <div className="absolute bottom-4 left-2 right-2 top-56 z-10">
         <div className="w-full h-full flex items-end justify-center">
-          <div className="w-full max-w-md">
+          <div className="w-full max-w-md bollywood-grid-container p-3">
             <WordSearch
               grid={gameState.grid}
               onCellMouseDown={handleCellMouseDown}
