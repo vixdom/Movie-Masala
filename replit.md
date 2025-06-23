@@ -91,15 +91,17 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
+- June 23, 2025: **CSS ARCHITECTURE REFACTOR** - Complete restructure for spacious, scroll-free responsive layout
+- June 23, 2025: Header fixed at exactly 10% viewport height with precise 8px/16px padding structure
+- June 23, 2025: Hint strip redesigned with flex-wrap pills, 8px gaps, 14px text, 4px×12px padding, 20px border-radius
+- June 23, 2025: Grid wrapper fills remainder screen using calc(100vh - header - hint strip - 16px) height
+- June 23, 2025: Implemented CSS Grid with repeat(12, 1fr), 6px gaps, aspect-ratio: 1, perfect square scaling
+- June 23, 2025: Tiles optimized with rgba(245,232,199,0.8) background, clamp(16px,2vw,24px) font size, 4.5:1 contrast
+- June 23, 2025: Applied 2px gold border and 8px padding around grid container with html/body overflow:hidden
 - June 23, 2025: **BOLLYWOOD THEME COMPLETE** - Applied comprehensive Bollywood-inspired styling with deep-red background and gold accents
 - June 23, 2025: Added film-strip texture background pattern with subtle gold overlay effects
 - June 23, 2025: Implemented decorative Cinzel and Playfair Display fonts throughout the UI
 - June 23, 2025: Enhanced header with clapboard icon and gold text with drop-shadow effects
-- June 23, 2025: **GRID REFACTOR** - Increased tiles to 50x50px with 6px gaps, moved grid to bottom for thumb access
-- June 23, 2025: Ensured all touch targets meet 44x44px minimum requirement with proper responsive scaling
-- June 23, 2025: Added smooth CSS transitions for layout reflow and responsive grid adjustments
-- June 23, 2025: Implemented comprehensive responsive breakpoints for mobile/tablet/desktop optimization
-- June 23, 2025: Bottom-aligned grid with safe area support and virtual keyboard avoidance
 - June 22, 2025: **CHECKPOINT v0.3** - Compact name pills with long press hints and optimized spacing
 - June 22, 2025: **COMPACT DESIGN** - Removed eye icons and implemented 3-second long press for hints
 - June 22, 2025: Reduced name pill font size to text-xs and decreased padding (px-1.5 py-0.5)

@@ -34,6 +34,13 @@
     --bollywood-dark-gold: #B8860B;
   }
 
+  html, body, #root {
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     font-family: 'Playfair Display', serif;
     background-color: var(--bollywood-deep-red);
@@ -57,6 +64,11 @@
       radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.02) 0%, transparent 50%),
       radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.02) 0%, transparent 50%),
       radial-gradient(circle at 40% 80%, rgba(255, 215, 0, 0.02) 0%, transparent 50%);
+  }
+
+  :root {
+    --header-height: 10vh;
+    --hint-strip-height: auto;
   }
 }
 
@@ -204,179 +216,176 @@ html {
   user-select: none;
 }
 
-/* Responsive Grid Layout */
-.responsive-grid {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* New Layout Structure */
+.app-header {
+  height: var(--header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: linear-gradient(to right, rgba(139, 0, 0, 0.95), rgba(127, 0, 0, 0.95));
+  border-bottom: 2px solid rgba(255, 215, 0, 0.5);
+  backdrop-filter: blur(4px);
 }
 
-.letter-tile {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+.hint-strip {
+  background: var(--bollywood-deep-red);
+  padding: 8px 16px;
+  border-bottom: 2px solid rgba(255, 215, 0, 0.4);
+}
+
+.hint-pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.hint-pill {
+  font-size: 14px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
   min-height: 44px;
-  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+.grid-wrapper {
+  height: calc(100vh - var(--header-height) - 60px - 16px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 8px;
+}
+
+.grid-container {
+  border: 2px solid rgba(255, 215, 0, 0.8);
+  border-radius: 8px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  width: 100%;
+  max-width: min(90vw, 90vh);
+  aspect-ratio: 1;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: 6px;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+}
+
+.grid-tile {
+  background: rgba(245, 232, 199, 0.8);
+  font-size: clamp(16px, 2vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  color: var(--bollywood-deep-red);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(184, 134, 11, 0.3);
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
   user-select: none;
 }
 
-/* Mobile Portrait - Compact tiles with optimal font size */
-@media (max-width: 480px) and (orientation: portrait) {
-  .letter-tile {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 44px;
-    min-height: 44px;
+.grid-tile:hover {
+  background: rgba(255, 248, 220, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+}
+
+.grid-tile.selected {
+  background: linear-gradient(135deg, rgba(255, 140, 0, 0.95), rgba(255, 69, 0, 0.95));
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  transform: scale(1.05);
+  z-index: 10;
+  border: 2px solid rgba(255, 215, 0, 0.8);
+  box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4);
+}
+
+.grid-tile.found {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.9), rgba(22, 163, 74, 0.9));
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(34, 197, 94, 0.6);
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
+}
+
+/* Responsive adjustments for new layout */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 6px 12px;
+  }
+  
+  .bollywood-title {
     font-size: 16px !important;
   }
   
-  .responsive-grid {
-    gap: 4px !important;
+  .hint-strip {
+    padding: 6px 12px;
   }
   
-  .bollywood-grid-container {
-    padding: 12px;
-    max-width: 95vw;
-    margin: 0 auto;
-  }
-}
-
-/* Mobile Landscape - Very compact for limited height */
-@media (max-width: 768px) and (orientation: landscape) {
-  .letter-tile {
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 44px;
-    min-height: 44px;
-    font-size: 14px !important;
+  .hint-pill {
+    font-size: 12px;
+    padding: 3px 10px;
   }
   
-  .responsive-grid {
-    gap: 3px !important;
+  .grid-wrapper {
+    padding: 4px;
   }
   
-  .bollywood-grid-container {
-    padding: 8px;
-    max-width: 90vw;
-    margin: 0 auto;
+  .grid-container {
+    padding: 6px;
   }
-}
-
-/* Tablet Portrait */
-@media (min-width: 481px) and (max-width: 768px) and (orientation: portrait) {
-  .letter-tile {
-    width: 40px !important;
-    height: 40px !important;
-    min-width: 44px;
-    min-height: 44px;
-    font-size: 17px !important;
-  }
-  
-  .responsive-grid {
-    gap: 5px !important;
-  }
-}
-
-/* Tablet Landscape and Desktop */
-@media (min-width: 769px) {
-  .letter-tile {
-    width: 42px !important;
-    height: 42px !important;
-    min-width: 44px;
-    min-height: 44px;
-    font-size: 18px !important;
-  }
-  
-  .responsive-grid {
-    gap: 6px !important;
-  }
-}
-
-/* Large Desktop */
-@media (min-width: 1200px) {
-  .letter-tile {
-    width: 44px !important;
-    height: 44px !important;
-    min-width: 44px;
-    min-height: 44px;
-    font-size: 19px !important;
-  }
-  
-  .responsive-grid {
-    gap: 7px !important;
-  }
-}
-
-/* Ensure minimum touch targets on all devices */
-@media (pointer: coarse) {
-  .letter-tile {
-    min-width: 44px !important;
-    min-height: 44px !important;
-    padding: 2px;
-  }
-}
-
-/* Bottom-aligned grid spacing adjustments */
-.bollywood-grid-container {
-  margin-bottom: safe-area-inset-bottom;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Prevent grid from overlapping with virtual keyboards */
-@media (max-height: 600px) {
-  .bollywood-grid-container {
-    transform: scale(0.85);
-    transform-origin: center bottom;
-  }
-  
-  .letter-tile {
-    font-size: 13px !important;
-  }
-}
-
-/* Ensure proper spacing for very small screens */
-@media (max-width: 360px) {
-  .responsive-grid {
-    gap: 3px !important;
-  }
-  
-  .letter-tile {
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 44px;
-    min-height: 44px;
-    font-size: 14px !important;
-  }
-  
-  .bollywood-grid-container {
-    padding: 8px;
-  }
-}
-
-/* Word pills responsive layout */
-.bollywood-word-pill {
-  flex: 0 0 auto;
-  transition: all 0.3s ease;
 }
 
 @media (max-width: 480px) {
-  .bollywood-word-pill {
-    font-size: 10px !important;
-    padding: 6px 12px !important;
-    min-height: 36px !important;
+  .bollywood-title {
+    font-size: 14px !important;
+  }
+  
+  .hint-pill {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+  
+  .grid-tile {
+    font-size: clamp(14px, 1.8vw, 20px) !important;
   }
 }
 
-@media (min-width: 481px) and (max-width: 768px) {
-  .bollywood-word-pill {
-    font-size: 11px !important;
-    padding: 8px 16px !important;
-  }
+/* Ensure proper contrast ratios */
+.grid-tile {
+  color: rgba(139, 0, 0, 1); /* Ensures 4.5:1 contrast ratio against light background */
 }
 
-/* High DPI screens optimization */
+.grid-tile.selected,
+.grid-tile.found {
+  color: white; /* High contrast against dark backgrounds */
+}
+
+/* High DPI optimization */
 @media (-webkit-min-device-pixel-ratio: 2) {
-  .letter-tile {
+  .grid-container {
+    border-width: 1px;
+  }
+  
+  .grid-tile {
     border-width: 0.5px;
   }
 }

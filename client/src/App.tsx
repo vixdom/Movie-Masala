@@ -131,87 +131,83 @@ function App() {
   }, [handleCellMouseUp]);
 
   return (
-    <div className="min-h-screen text-white relative overflow-hidden">
+    <div className="h-screen text-white relative overflow-hidden">
       {/* Enhanced film-strip background overlay */}
       <div className="absolute inset-0 bg-black/40" />
       
-      {/* Header Bar - 10% viewport height */}
-      <div className="fixed top-0 left-0 right-0 min-h-[60px] bg-gradient-to-r from-red-900/95 to-red-800/95 z-30 flex items-center justify-between px-4 py-3 border-b-2 border-yellow-400/50 backdrop-blur-sm">
+      {/* Header - Exactly 10% viewport height */}
+      <header className="app-header">
         {/* Left: Clapboard + Title */}
         <button 
           onClick={startNewGame}
-          className="flex items-center gap-3 bollywood-gold-accent rounded-lg px-5 py-3 hover:scale-105 transition-all duration-300 active:scale-95 shadow-xl min-h-[44px] min-w-[44px]"
+          className="flex items-center gap-3 bollywood-gold-accent rounded-lg px-5 py-3 hover:scale-105 transition-all duration-300 active:scale-95 shadow-xl min-h-[44px]"
           title="Click to start new game"
         >
           <span className="text-xl">🎬</span>
-          <span className="bollywood-title text-lg font-bold hidden sm:inline">Movie Masala</span>
-          <span className="bollywood-title text-base font-bold sm:hidden">MM</span>
+          <span className="bollywood-title text-lg font-bold">Movie Masala</span>
         </button>
         
         {/* Right: Score */}
         <div className="bollywood-gold-accent rounded-full px-5 py-3 text-sm font-bold shadow-xl min-h-[44px] flex items-center justify-center">
-          <span className="hidden sm:inline">Score: {gameState.score}</span>
-          <span className="sm:hidden">{gameState.score}</span>
+          Score: {gameState.score}
         </div>
-      </div>
+      </header>
 
-      {/* Actor Strip - Multiple rows, no horizontal scrolling */}
-      <div className="fixed top-[60px] left-0 right-0 bg-gradient-to-r from-red-900/90 to-red-800/90 z-20 border-b-2 border-yellow-400/40 backdrop-blur-sm transition-all duration-300">
-        <div className="px-3 py-2">
-          <div className="flex flex-wrap items-center justify-center gap-2 max-w-full">
-            {currentWords.map((wordItem) => {
-              const wordPlacement = gameState.words.find(wp => wp.word === wordItem.word);
-              const isFound = wordPlacement && gameState.foundWords.has(wordPlacement.id);
-              
-              const handleMouseDown = () => {
-                if (wordItem.hint && !isFound) {
-                  const timer = setTimeout(() => {
-                    setShowHint(wordItem.hint || null);
-                    setTimeout(() => setShowHint(null), 2000);
-                  }, 3000);
-                  setLongPressTimer(timer);
-                }
-              };
+      {/* Hint Strip - Direct under header */}
+      <div className="hint-strip">
+        <div className="hint-pills-container">
+          {currentWords.map((wordItem) => {
+            const wordPlacement = gameState.words.find(wp => wp.word === wordItem.word);
+            const isFound = wordPlacement && gameState.foundWords.has(wordPlacement.id);
+            
+            const handleMouseDown = () => {
+              if (wordItem.hint && !isFound) {
+                const timer = setTimeout(() => {
+                  setShowHint(wordItem.hint || null);
+                  setTimeout(() => setShowHint(null), 2000);
+                }, 3000);
+                setLongPressTimer(timer);
+              }
+            };
 
-              const handleMouseUp = () => {
-                if (longPressTimer) {
-                  clearTimeout(longPressTimer);
-                  setLongPressTimer(null);
-                }
-              };
+            const handleMouseUp = () => {
+              if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                setLongPressTimer(null);
+              }
+            };
 
-              const handleClick = () => {
-                if (wordPlacement && !isFound) {
-                  setHighlightedWord(wordPlacement.word);
-                  setTimeout(() => setHighlightedWord(null), 2000);
-                }
-              };
-              
-              return (
-                <button
-                  key={wordItem.word}
-                  className={cn(
-                    "bollywood-word-pill flex items-center justify-center px-3 py-2 rounded-full text-xs font-semibold transition-all duration-300 cursor-pointer shadow-lg whitespace-nowrap uppercase tracking-wide min-h-[44px]",
-                    isFound && "found"
-                  )}
-                  onClick={handleClick}
-                  onMouseDown={handleMouseDown}
-                  onMouseUp={handleMouseUp}
-                  onMouseLeave={handleMouseUp}
-                  onTouchStart={handleMouseDown}
-                  onTouchEnd={handleMouseUp}
-                >
-                  <span className="text-center leading-tight">{wordItem.word}</span>
-                </button>
-              );
-            })}
-          </div>
+            const handleClick = () => {
+              if (wordPlacement && !isFound) {
+                setHighlightedWord(wordPlacement.word);
+                setTimeout(() => setHighlightedWord(null), 2000);
+              }
+            };
+            
+            return (
+              <button
+                key={wordItem.word}
+                className={cn(
+                  "hint-pill bollywood-word-pill transition-all duration-300 cursor-pointer shadow-lg whitespace-nowrap uppercase tracking-wide",
+                  isFound && "found"
+                )}
+                onClick={handleClick}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                onTouchStart={handleMouseDown}
+                onTouchEnd={handleMouseUp}
+              >
+                <span className="text-center leading-tight">{wordItem.word}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* Selection Bubble - word in progress */}
       {currentSelection && (
-        <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 z-30 bollywood-selection-bubble text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300">
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 bollywood-selection-bubble text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300">
           <span className="text-lg font-bold tracking-widest">
             {currentSelection.split('').join(' ')}
           </span>
@@ -220,51 +216,37 @@ function App() {
 
       {/* Hint Display - long press result */}
       {showHint && (
-        <div className="fixed top-1/4 left-1/2 transform -translate-x-1/2 z-30 bollywood-hint-bubble text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 max-w-xs text-center">
+        <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 z-30 bollywood-hint-bubble text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 max-w-xs text-center">
           <span className="text-sm font-medium">{showHint}</span>
         </div>
       )}
 
-      {/* Grid Container - Bottom aligned for thumb access */}
-      <div className="fixed bottom-4 left-0 right-0 z-10 p-4">
-        <div className="flex items-end justify-center min-h-0">
-          <div className="relative max-w-full overflow-hidden">
-            {/* Bollywood-themed grid container */}
-            <div className="bollywood-grid-container p-4 transition-all duration-300 ease-in-out">
-              <div className="responsive-grid grid grid-cols-12 gap-[6px] w-fit transition-all duration-300 ease-in-out">
-                {gameState.grid.map((row, rowIndex) =>
-                  row.map((cell, colIndex) => (
-                    <div
-                      key={`${rowIndex}-${colIndex}`}
-                      className={cn(
-                        "letter-tile w-[42px] h-[42px] flex items-center justify-center font-bold rounded-lg cursor-pointer transition-all duration-200 text-lg",
-                        cell.isSelected 
-                          ? "bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-xl scale-110 z-10 border-2 border-yellow-300" 
-                          : cell.isFound 
-                          ? "bg-gradient-to-br from-green-500 to-green-600 text-white shadow-lg border border-green-400" 
-                          : "bg-gradient-to-br from-yellow-50 to-yellow-100 text-red-900 hover:from-yellow-100 hover:to-yellow-200 active:scale-95 shadow-md border border-yellow-300"
-                      )}
-                      style={{ 
-                        fontFamily: "'Cinzel', serif",
-                        textShadow: cell.isSelected || cell.isFound ? '1px 1px 2px rgba(0,0,0,0.5)' : '1px 1px 2px rgba(0,0,0,0.2)',
-                        minWidth: '44px',
-                        minHeight: '44px'
-                      }}
-                      data-row={rowIndex}
-                      data-col={colIndex}
-                      onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
-                      onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
-                      onMouseUp={handleCellMouseUp}
-                      onTouchStart={() => handleCellTouchStart(rowIndex, colIndex)}
-                      onTouchMove={handleCellTouchMove}
-                      onTouchEnd={handleCellTouchEnd}
-                    >
-                      {cell.letter}
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+      {/* Grid Wrapper - Fills remainder of screen */}
+      <div className="grid-wrapper">
+        <div className="grid-container">
+          <div className="game-grid">
+            {gameState.grid.map((row, rowIndex) =>
+              row.map((cell, colIndex) => (
+                <div
+                  key={`${rowIndex}-${colIndex}`}
+                  className={cn(
+                    "grid-tile",
+                    cell.isSelected && "selected",
+                    cell.isFound && "found"
+                  )}
+                  data-row={rowIndex}
+                  data-col={colIndex}
+                  onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
+                  onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
+                  onMouseUp={handleCellMouseUp}
+                  onTouchStart={() => handleCellTouchStart(rowIndex, colIndex)}
+                  onTouchMove={handleCellTouchMove}
+                  onTouchEnd={handleCellTouchEnd}
+                >
+                  {cell.letter}
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
