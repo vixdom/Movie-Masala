@@ -91,6 +91,14 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
+- June 22, 2025: **CHECKPOINT v0.3** - Compact name pills with long press hints and optimized spacing
+- June 22, 2025: **COMPACT DESIGN** - Removed eye icons and implemented 3-second long press for hints
+- June 22, 2025: Reduced name pill font size to text-xs and decreased padding (px-1.5 py-0.5)
+- June 22, 2025: Minimized total space usage with max-h-24 and reduced gaps between pills
+- June 22, 2025: Added blue hint bubble display system with 2-second auto-dismiss
+- June 22, 2025: Repositioned grid higher (top-56) to utilize reclaimed space from compact pills
+- June 22, 2025: Enhanced touch and mouse compatibility for long press functionality
+- June 22, 2025: Improved spacing hierarchy with selection bubble at top-48 and hints at top-52
 - June 22, 2025: **CHECKPOINT v0.2** - Mobile-optimized floating UI with thumb-friendly layout and ASMR audio
 - June 22, 2025: **MOBILE OPTIMIZED** - Complete redesign for iPhone 15 Plus portrait mode with floating elements
 - June 22, 2025: Implemented floating MM logo (top-left) and score pill (top-right) with no title bar
@@ -98,11 +106,6 @@ Always confirm before creating checkpoints - user is paying for them.
 - June 22, 2025: Positioned grid at bottom for thumb accessibility with ASMR audio (220Hz-180Hz gentle tones)
 - June 22, 2025: Added enhanced haptic feedback: gentle bumps (15ms) while tracing, clap pattern (80-40-80ms) on word completion
 - June 22, 2025: Implemented Web Audio API for mobile-compatible sound with lowpass filtering
-- June 22, 2025: Grid optimized for full-screen usage with 16px font and proper touch targets
-- June 22, 2025: Selection bubble positioned between word pills and grid for clear visibility
-- June 22, 2025: **CHECKPOINT v0.1** - Stable release with verified straight-line word placement and mobile-optimized layout
-- June 22, 2025: **VERIFIED** - All actor names confirmed in perfect straight lines with mathematical precision
-- June 22, 2025: Perfect straight-line word placement algorithm with enhanced validation
 
 ## Changelog
 
