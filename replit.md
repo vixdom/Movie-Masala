@@ -91,6 +91,7 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
+- June 23, 2025: **CHECKPOINT v0.4** - CSS architecture refactor with spacious, scroll-free responsive layout complete
 - June 23, 2025: **CSS ARCHITECTURE REFACTOR** - Complete restructure for spacious, scroll-free responsive layout
 - June 23, 2025: Header fixed at exactly 10% viewport height with precise 8px/16px padding structure
 - June 23, 2025: Hint strip redesigned with flex-wrap pills, 8px gaps, 14px text, 4px×12px padding, 20px border-radius
