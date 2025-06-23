@@ -98,10 +98,10 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [game, gameState.isSelecting]);
 
   const handleCellMouseUp = useCallback(() => {
-    const foundWordResult = game.endSelection();
-    if (foundWordResult) {
+    const foundWord = game.endSelection();
+    if (foundWord) {
       playSuccess();
-      setWordFoundAnimation(typeof foundWordResult === 'object' ? foundWordResult.word : 'Word Found!');
+      setWordFoundAnimation('Word Found!');
       setTimeout(() => setWordFoundAnimation(null), 2000);
     }
     setGameState(game.getGameState());
