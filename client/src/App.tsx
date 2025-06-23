@@ -128,22 +128,17 @@ function App() {
       />
       <div className="absolute inset-0 bg-black/70" />
       
-      {/* Floating MM Logo - top left */}
+      {/* Movie Masala Title with Clapboard */}
       <button 
         onClick={startNewGame}
-        className="absolute top-4 left-4 z-30 flex items-center space-x-1 hover:scale-105 transition-transform active:scale-95"
+        className="absolute top-4 left-4 z-30 bollywood-gold-accent rounded-lg px-4 py-2 hover:scale-105 transition-transform active:scale-95 shadow-lg"
         title="Click to start new game"
       >
-        <div className="w-10 h-10 bg-orange-500/90 backdrop-blur-sm rounded-lg flex items-center justify-center border-2 border-orange-400 shadow-lg">
-          <div className="text-white font-black text-lg">M</div>
-        </div>
-        <div className="w-10 h-10 bg-orange-500/90 backdrop-blur-sm rounded-lg flex items-center justify-center border-2 border-orange-400 shadow-lg">
-          <div className="text-white font-black text-lg">M</div>
-        </div>
+        <span className="clapboard-icon bollywood-title text-lg">Movie Masala</span>
       </button>
       
       {/* Floating Score Pill - top right */}
-      <div className="absolute top-4 right-4 z-30 bg-white/90 backdrop-blur-sm text-orange-600 rounded-full px-4 py-2 text-sm font-bold shadow-lg">
+      <div className="absolute top-4 right-4 z-30 bollywood-gold-accent rounded-full px-4 py-2 text-sm font-bold shadow-lg">
         Score: {gameState.score}
       </div>
 
