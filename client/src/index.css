@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -33,105 +34,153 @@
     --bollywood-dark-gold: #B8860B;
   }
 
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-background text-foreground;
     font-family: 'Playfair Display', serif;
-    background: var(--bollywood-deep-red);
+    background-color: var(--bollywood-deep-red);
     background-image: 
+      /* Film strip pattern */
       repeating-linear-gradient(
         90deg,
         transparent,
         transparent 10px,
-        rgba(0,0,0,0.1) 10px,
-        rgba(0,0,0,0.1) 15px
+        rgba(255, 215, 0, 0.05) 10px,
+        rgba(255, 215, 0, 0.05) 12px
       ),
       repeating-linear-gradient(
         0deg,
         transparent,
-        transparent 40px,
-        rgba(0,0,0,0.05) 40px,
-        rgba(0,0,0,0.05) 45px
-      );
+        transparent 50px,
+        rgba(255, 215, 0, 0.03) 50px,
+        rgba(255, 215, 0, 0.03) 54px
+      ),
+      /* Subtle texture overlay */
+      radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.02) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.02) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(255, 215, 0, 0.02) 0%, transparent 50%);
+  }
+}
+
+@layer components {
+  /* Bollywood-themed UI components */
+  .bollywood-title {
+    font-family: 'Cinzel', serif;
+    color: var(--bollywood-gold);
+    text-shadow: 
+      2px 2px 4px rgba(0, 0, 0, 0.8),
+      0 0 10px rgba(255, 215, 0, 0.3);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .bollywood-gold-accent {
+    background: linear-gradient(135deg, var(--bollywood-gold) 0%, var(--bollywood-dark-gold) 100%);
+    color: var(--bollywood-deep-red);
+    border: 2px solid var(--bollywood-dark-gold);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+  }
+
+  .bollywood-gold-accent:hover {
+    background: linear-gradient(135deg, #FFED4E 0%, var(--bollywood-gold) 100%);
+    box-shadow: 
+      0 4px 15px rgba(255, 215, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .bollywood-selection-bubble {
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.95) 0%, rgba(255, 69, 0, 0.95) 100%);
+    border: 2px solid var(--bollywood-gold);
+    box-shadow: 
+      0 8px 25px rgba(255, 140, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+  }
+
+  .bollywood-hint-bubble {
+    background: linear-gradient(135deg, rgba(30, 144, 255, 0.95) 0%, rgba(0, 100, 255, 0.95) 100%);
+    border: 2px solid rgba(255, 215, 0, 0.6);
+    box-shadow: 
+      0 8px 25px rgba(30, 144, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Enhanced button styles */
+  .bollywood-button {
+    font-family: 'Cinzel', serif;
+    background: linear-gradient(135deg, var(--bollywood-gold) 0%, var(--bollywood-dark-gold) 100%);
+    color: var(--bollywood-deep-red);
+    border: 2px solid var(--bollywood-dark-gold);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 
+      0 4px 15px rgba(255, 215, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .bollywood-button:hover {
+    background: linear-gradient(135deg, #FFED4E 0%, var(--bollywood-gold) 100%);
+    box-shadow: 
+      0 6px 20px rgba(255, 215, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+
+  /* Grid container with film-strip border */
+  .bollywood-grid-container {
+    background: 
+      linear-gradient(45deg, transparent 24%, rgba(255, 215, 0, 0.1) 25%, rgba(255, 215, 0, 0.1) 26%, transparent 27%, transparent 74%, rgba(255, 215, 0, 0.1) 75%, rgba(255, 215, 0, 0.1) 76%, transparent 77%),
+      linear-gradient(-45deg, transparent 24%, rgba(255, 215, 0, 0.1) 25%, rgba(255, 215, 0, 0.1) 26%, transparent 27%, transparent 74%, rgba(255, 215, 0, 0.1) 75%, rgba(255, 215, 0, 0.1) 76%, transparent 77%);
+    background-size: 20px 20px;
+    border: 4px solid var(--bollywood-gold);
+    border-radius: 8px;
+    box-shadow: 
+      0 0 30px rgba(255, 215, 0, 0.3),
+      inset 0 0 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+  }
+
+  /* Word pills styling */
+  .bollywood-word-pill {
+    background: linear-gradient(135deg, rgba(255, 248, 220, 0.95) 0%, rgba(255, 235, 180, 0.95) 100%);
+    color: var(--bollywood-deep-red);
+    border: 1px solid var(--bollywood-dark-gold);
+    font-family: 'Cinzel', serif;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    box-shadow: 
+      0 2px 8px rgba(255, 215, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .bollywood-word-pill:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 240, 0.98) 0%, rgba(255, 245, 200, 0.98) 100%);
+    box-shadow: 
+      0 4px 12px rgba(255, 215, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .bollywood-word-pill.found {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(22, 163, 74, 0.9) 100%);
+    color: white;
+    text-decoration: line-through;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@layer utilities {
+  * {
+    @apply border-border;
   }
 }
 
 /* Safe Area Support */
 html {
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-}
-
-/* Responsive Grid System */
-@media (max-width: 640px) {
-  .mobile-grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 6px;
-  }
-  
-  .mobile-grid > div {
-    min-height: 44px;
-    min-width: 44px;
-    font-size: clamp(10px, 2.5vw, 14px);
-  }
-}
-
-@media (min-width: 641px) and (max-width: 1023px) {
-  .tablet-grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 8px;
-  }
-  
-  .tablet-grid > div {
-    min-height: 48px;
-    min-width: 48px;
-    font-size: 16px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .desktop-grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 10px;
-  }
-  
-  .desktop-grid > div {
-    min-height: 52px;
-    min-width: 52px;
-    font-size: 18px;
-  }
-}
-
-/* Touch Target Optimization */
-.touch-target {
-  min-height: 44px;
-  min-width: 44px;
-  touch-action: manipulation;
 }
 
 /* Hide Scrollbars */
@@ -144,110 +193,13 @@ html {
   display: none;
 }
 
-/* Smooth Orientation Transitions */
-.layout-transition {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Performance Optimizations */
+/* Touch Target Optimization */
 .touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
-}
-
-/* Landscape Mobile Layout */
-@media (orientation: landscape) and (max-height: 600px) {
-  .landscape-mobile .mobile-grid {
-    max-width: 70vh;
-    margin: 0 auto;
-  }
-  
-  .landscape-mobile .actor-pills {
-    padding: 8px 16px;
-    font-size: 12px;
-  }
-}
-
-/* Bollywood Theme Custom Styles */
-.bollywood-title {
-  font-family: 'Playfair Display', serif;
-  font-weight: 900;
-  color: var(--bollywood-gold);
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-}
-
-.bollywood-gold-accent {
-  background: linear-gradient(135deg, var(--bollywood-gold) 0%, #B8860B 100%);
-  color: var(--bollywood-deep-red);
-  font-weight: 600;
-}
-
-.bollywood-pill {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.95) 0%, rgba(184, 134, 11, 0.95) 100%);
-  color: var(--bollywood-deep-red);
-  border: 1px solid var(--bollywood-gold);
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-}
-
-.bollywood-pill.found {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.95) 0%, rgba(21, 128, 61, 0.95) 100%);
-  color: white;
-}
-
-.bollywood-grid-container {
-  background: rgba(139, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  border: 2px solid var(--bollywood-gold);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
-}
-
-.bollywood-selection-bubble {
-  background: linear-gradient(135deg, rgba(255, 140, 0, 0.95) 0%, rgba(255, 69, 0, 0.95) 100%);
-  border: 2px solid var(--bollywood-gold);
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-}
-
-.bollywood-hint-bubble {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(29, 78, 216, 0.95) 100%);
-  border: 2px solid var(--bollywood-gold);
-  font-family: 'Playfair Display', serif;
-}
-
-.clapboard-icon::before {
-  content: "🎬";
-  margin-right: 8px;
-  font-size: 1.2em;
-}
-
-@layer utilities {
-  .animate-pulse-subtle {
-    animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  
-  .animate-bounce-gentle {
-    animation: bounce-gentle 0.6s ease-in-out;
-  }
-  
-  @keyframes pulse-subtle {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.95;
-    }
-  }
-  
-  @keyframes bounce-gentle {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-4px);
-    }
-  }
 }

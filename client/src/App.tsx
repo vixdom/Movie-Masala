@@ -131,36 +131,30 @@ function App() {
   }, [handleCellMouseUp]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-red-900 text-white relative overflow-hidden">
-      {/* Background Pattern */}
-      <div 
-        className="absolute inset-0 opacity-10"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFD700' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}
-      />
-      <div className="absolute inset-0 bg-black/70" />
+    <div className="min-h-screen text-white relative overflow-hidden">
+      {/* Enhanced film-strip background overlay */}
+      <div className="absolute inset-0 bg-black/40" />
       
       {/* Header Bar - 10% viewport height */}
-      <div className="fixed top-0 left-0 right-0 h-[10vh] bg-gradient-to-r from-red-900 to-red-800 z-30 flex items-center justify-between px-4 py-2 border-b border-yellow-400/30">
+      <div className="fixed top-0 left-0 right-0 h-[10vh] bg-gradient-to-r from-red-900/95 to-red-800/95 z-30 flex items-center justify-between px-4 py-2 border-b-2 border-yellow-400/50 backdrop-blur-sm">
         {/* Left: Clapboard + Title */}
         <button 
           onClick={startNewGame}
-          className="flex items-center gap-2 bollywood-gold-accent rounded-lg px-4 py-2 hover:scale-105 transition-transform active:scale-95 shadow-lg"
+          className="flex items-center gap-3 bollywood-gold-accent rounded-lg px-5 py-3 hover:scale-105 transition-all duration-300 active:scale-95 shadow-xl"
           title="Click to start new game"
         >
-          <span className="text-lg">🎬</span>
-          <span className="bollywood-title text-base font-bold">Movie Masala</span>
+          <span className="text-xl">🎬</span>
+          <span className="bollywood-title text-lg font-bold">Movie Masala</span>
         </button>
         
         {/* Right: Score */}
-        <div className="bollywood-gold-accent rounded-full px-4 py-2 text-sm font-bold shadow-lg">
+        <div className="bollywood-gold-accent rounded-full px-5 py-2 text-sm font-bold shadow-xl">
           Score: {gameState.score}
         </div>
       </div>
 
       {/* Actor Strip - 44px tall, solid background */}
-      <div className="fixed top-[10vh] left-0 right-0 h-[44px] bg-red-900 z-20 border-b border-yellow-400/30">
+      <div className="fixed top-[10vh] left-0 right-0 h-[44px] bg-gradient-to-r from-red-900/90 to-red-800/90 z-20 border-b-2 border-yellow-400/40 backdrop-blur-sm">
         <div className="h-full overflow-x-auto scrollbar-hide px-2">
           <div className="flex items-center gap-3 h-full min-w-max px-2">
             {currentWords.map((wordItem) => {
@@ -195,12 +189,9 @@ function App() {
                 <div
                   key={wordItem.word}
                   className={cn(
-                    "flex items-center px-3 py-1 rounded-[20px] text-sm font-semibold transition-all duration-300 cursor-pointer shadow-sm whitespace-nowrap uppercase tracking-wide",
-                    isFound 
-                      ? "bg-green-600/90 text-white line-through transform scale-95" 
-                      : "bg-yellow-100/95 text-red-900 hover:bg-yellow-200 active:scale-95"
+                    "bollywood-word-pill flex items-center px-3 py-1 rounded-[20px] text-xs font-semibold transition-all duration-300 cursor-pointer shadow-lg whitespace-nowrap uppercase tracking-wide",
+                    isFound && "found"
                   )}
-                  style={{ fontSize: '14px', padding: '4px 12px' }}
                   onClick={handleClick}
                   onMouseDown={handleMouseDown}
                   onMouseUp={handleMouseUp}
@@ -216,7 +207,7 @@ function App() {
         </div>
         
         {/* Gold scroll indicator */}
-        <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-yellow-400/60 rounded-full"></div>
+        <div className="absolute bottom-0 left-4 right-4 h-1 bg-gradient-to-r from-transparent via-yellow-400/80 to-transparent rounded-full"></div>
       </div>
 
       {/* Selection Bubble - word in progress */}
