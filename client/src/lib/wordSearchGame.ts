@@ -429,7 +429,7 @@ export class WordSearchGame {
     
     if (foundWord) {
       this.markWordAsFound(foundWord);
-      this.gameState.score += foundWord.word.length * 10;
+      this.gameState.score += 10;
       this.checkGameComplete();
       this.clearSelection();
       return true;

@@ -89,17 +89,24 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       return;
     }
 
+    // Check if user has enough points for hint
+    const currentGameState = game.getGameState();
+    const pointDeduction = 15;
+    
+    if (currentGameState.score < pointDeduction) {
+      console.log('Insufficient points for hint. Need:', pointDeduction, 'Have:', currentGameState.score);
+      setShowHint(`Not enough points! Need ${pointDeduction} points for a hint.`);
+      setTimeout(() => setShowHint(null), 2000);
+      return;
+    }
+
     console.log('Processing hint for word:', wordPlacement.word);
     console.log('Word positions:', wordPlacement.positions);
-
-    // Calculate point deduction (1.5x the word value)
-    const pointDeduction = Math.floor(wordPlacement.word.length * 10 * 1.5);
     console.log('Point deduction calculated:', pointDeduction);
     
     // Update game state to deduct points
-    const currentGameState = game.getGameState();
     const oldScore = currentGameState.score;
-    currentGameState.score = Math.max(0, currentGameState.score - pointDeduction);
+    currentGameState.score = currentGameState.score - pointDeduction;
     console.log('Score updated from', oldScore, 'to', currentGameState.score);
     setGameState({...currentGameState});
 
