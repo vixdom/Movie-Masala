@@ -82,6 +82,84 @@
   }
 }
 
+/* Safe Area Support */
+html {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Responsive Grid System */
+@media (max-width: 640px) {
+  .mobile-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 6px;
+  }
+  
+  .mobile-grid > div {
+    min-height: 44px;
+    min-width: 44px;
+    font-size: clamp(10px, 2.5vw, 14px);
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1023px) {
+  .tablet-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 8px;
+  }
+  
+  .tablet-grid > div {
+    min-height: 48px;
+    min-width: 48px;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .desktop-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 10px;
+  }
+  
+  .desktop-grid > div {
+    min-height: 52px;
+    min-width: 52px;
+    font-size: 18px;
+  }
+}
+
+/* Touch Target Optimization */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+}
+
+/* Smooth Orientation Transitions */
+.layout-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Performance Optimizations */
+.touch-target {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Landscape Mobile Layout */
+@media (orientation: landscape) and (max-height: 600px) {
+  .landscape-mobile .mobile-grid {
+    max-width: 70vh;
+    margin: 0 auto;
+  }
+  
+  .landscape-mobile .actor-pills {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}
+
 /* Bollywood Theme Custom Styles */
 .bollywood-title {
   font-family: 'Playfair Display', serif;
