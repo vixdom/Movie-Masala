@@ -273,26 +273,32 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         <div className="grid-container">
           <div className="game-grid">
             {gameState.grid.map((row, rowIndex) =>
-              row.map((cell, colIndex) => (
-                <div
-                  key={`${rowIndex}-${colIndex}`}
-                  className={cn(
-                    "grid-tile",
-                    cell.isSelected && "selected",
-                    cell.isFound && "found"
-                  )}
-                  data-row={rowIndex}
-                  data-col={colIndex}
-                  onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
-                  onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
-                  onMouseUp={handleCellMouseUp}
-                  onTouchStart={() => handleCellTouchStart(rowIndex, colIndex)}
-                  onTouchMove={handleCellTouchMove}
-                  onTouchEnd={handleCellTouchEnd}
-                >
-                  {cell.letter}
-                </div>
-              ))
+              row.map((cell, colIndex) => {
+                const positionKey = `${rowIndex}-${colIndex}`;
+                const isHinted = hintedPositions.has(positionKey);
+                
+                return (
+                  <div
+                    key={`${rowIndex}-${colIndex}`}
+                    className={cn(
+                      "grid-tile",
+                      cell.isSelected && "selected",
+                      cell.isFound && "found",
+                      isHinted && "hinted"
+                    )}
+                    data-row={rowIndex}
+                    data-col={colIndex}
+                    onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
+                    onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
+                    onMouseUp={handleCellMouseUp}
+                    onTouchStart={() => handleCellTouchStart(rowIndex, colIndex)}
+                    onTouchMove={handleCellTouchMove}
+                    onTouchEnd={handleCellTouchEnd}
+                  >
+                    {cell.letter}
+                  </div>
+                );
+              })
             )}
           </div>
         </div>
