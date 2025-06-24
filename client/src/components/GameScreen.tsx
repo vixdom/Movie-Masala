@@ -192,12 +192,12 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [handleCellMouseUp]);
 
   return (
-    <div className="h-full text-white relative overflow-hidden flex flex-col">
+    <div className="h-full text-white relative overflow-hidden">
       {/* Enhanced film-strip background overlay */}
       <div className="absolute inset-0 bg-black/40" />
       
       {/* Header - Fixed size */}
-      <header className="app-header flex-none">
+      <header className="app-header">
         {/* Back Button */}
         <Button
           onClick={onBackToHome}
@@ -225,7 +225,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       </header>
 
       {/* Hint Strip - Fixed size */}
-      <div className="hint-strip flex-none">
+      <div className="hint-strip hints">
         <div className="hint-pills-container">
           {currentWords.map((wordItem) => {
             const wordPlacement = gameState.words.find(wp => wp.word === wordItem.word);
@@ -319,22 +319,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         </div>
       )}
 
-      {/* Grid Wrapper - Flexible container that grows to fill remaining space */}
-      <div 
-        className="flex-1 flex justify-center items-end overflow-hidden px-4 pb-4" 
-        style={{outline: '2px dashed cyan'}}
-        ref={(el) => {
-          if (el) {
-            // Debug logging for container heights
-            setTimeout(() => {
-              ['#root', 'header', '.hint-strip', '.flex-1'].forEach(sel => {
-                const element = sel === '.flex-1' ? el : document.querySelector(sel);
-                console.log(sel, element ? element.clientHeight + 'px' : 'not found');
-              });
-            }, 100);
-          }
-        }}
-      >
+      {/* Grid Wrapper - Bottom half container */}
+      <div className="grid-wrapper">
         <MobileOptimizedWordSearch
           grid={gameState.grid}
           onCellMouseDown={handleCellMouseDown}

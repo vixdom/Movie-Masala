@@ -36,12 +36,31 @@
   }
 
   html, body, #root {
-    height: 100%;
+    height: 100vh;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
     overflow: hidden;
+  }
+
+  /* Portrait mobile layout */
+  @media (orientation: portrait) {
+    html, body, #root {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    header, .hints {
+      flex: 0 0 auto;
+    }
+    
+    .grid-wrapper {
+      flex: 1 1 auto;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      overflow: hidden;
+      padding: 0 8px;
+    }
   }
 
   body {
@@ -185,21 +204,25 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   }
 
-  /* Crossword-style grid styles */
-  .crossword-grid {
-    width: 100% !important;
-    max-width: 100% !important;
-    aspect-ratio: 1 / 1 !important;
-    display: grid !important;
-    grid-template-columns: repeat(12, 1fr) !important;
-    gap: 8px !important;
-    background: transparent;
-    user-select: none;
-    touch-action: none;
-    box-sizing: border-box;
-    margin: 0 auto;
-    overflow: visible;
-    outline: 2px dashed magenta !important;
+  /* Clean 12x12 crossword-style grid for mobile portrait */
+  @media (orientation: portrait) {
+    .crossword-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(12, 1fr);
+      gap: 2px;
+      width: min(90vw, 70vh);
+      height: min(90vw, 70vh);
+      aspect-ratio: 1;
+      background: rgba(0, 0, 0, 0.1);
+      border: 2px solid var(--bollywood-gold);
+      border-radius: 8px;
+      padding: 4px;
+      box-sizing: border-box;
+      user-select: none;
+      touch-action: none;
+      margin-bottom: 16px;
+    }
   }
 
   .crossword-cell {
@@ -296,22 +319,25 @@ html {
 }
 
 /* New Layout Structure */
-.app-header {
-  flex: 0 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 16px;
-  background: linear-gradient(to right, rgba(139, 0, 0, 0.95), rgba(127, 0, 0, 0.95));
-  border-bottom: 2px solid rgba(255, 215, 0, 0.5);
-  backdrop-filter: blur(4px);
-}
+/* Portrait mobile layout components */
+@media (orientation: portrait) {
+  .app-header {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: linear-gradient(to right, rgba(139, 0, 0, 0.95), rgba(127, 0, 0, 0.95));
+    border-bottom: 2px solid rgba(255, 215, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
 
-.hint-strip {
-  flex: 0 0 auto;
-  background: var(--bollywood-deep-red);
-  padding: 8px 16px;
-  border-bottom: 2px solid rgba(255, 215, 0, 0.4);
+  .hint-strip {
+    flex: 0 0 auto;
+    background: var(--bollywood-deep-red);
+    padding: 8px 16px;
+    border-bottom: 2px solid rgba(255, 215, 0, 0.4);
+  }
 }
 
 .hint-pills-container {
