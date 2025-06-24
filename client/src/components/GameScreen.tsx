@@ -319,8 +319,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         </div>
       )}
 
-      {/* Crossword Grid - Fills remainder of screen */}
-      <div className="flex-1 flex items-center justify-center p-4 overflow-hidden">
+      {/* Crossword Grid - Bottom aligned */}
+      <div className="flex-1 flex items-end justify-center pb-4 overflow-hidden">
         <MobileOptimizedWordSearch
           grid={gameState.grid}
           onCellMouseDown={handleCellMouseDown}
