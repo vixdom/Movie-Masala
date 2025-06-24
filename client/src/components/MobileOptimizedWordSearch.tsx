@@ -51,6 +51,8 @@ const CrosswordGridCell = memo(({
       )}
       onMouseDown={(e) => {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('Cell clicked:', rowIndex, colIndex, cell.letter);
         onMouseDown(rowIndex, colIndex);
       }}
       onMouseEnter={() => {
@@ -69,7 +71,14 @@ const CrosswordGridCell = memo(({
       }}
       onTouchStart={(e) => {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('Cell touched:', rowIndex, colIndex, cell.letter);
         onTouchStart(rowIndex, colIndex);
+      }}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Cell onClick triggered:', rowIndex, colIndex, cell.letter);
       }}
     >
       {cell.letter}
@@ -145,19 +154,20 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     <div
       ref={gridRef}
       className="crossword-grid"
+      style={{ pointerEvents: 'auto' }}
       onMouseUp={() => {
+        console.log('Grid mouseUp');
         setIsMouseDown(false);
         onCellMouseUp();
       }}
-      onMouseDown={() => {
-        setIsMouseDown(true);
-      }}
       onMouseLeave={() => {
+        console.log('Grid mouseLeave');
         setIsMouseDown(false);
         onCellMouseUp();
       }}
       onTouchMove={onCellTouchMove}
       onTouchEnd={() => {
+        console.log('Grid touchEnd');
         setIsTouching(false);
         onCellTouchEnd();
       }}
