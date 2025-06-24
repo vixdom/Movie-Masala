@@ -70,8 +70,7 @@
   }
 
   :root {
-    --header-height: 10vh;
-    --hint-strip-height: auto;
+    /* Removed hardcoded heights - using flex layout instead */
   }
 }
 
@@ -298,7 +297,7 @@ html {
 
 /* New Layout Structure */
 .app-header {
-  height: var(--header-height);
+  flex: 0 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -309,6 +308,7 @@ html {
 }
 
 .hint-strip {
+  flex: 0 0 auto;
   background: var(--bollywood-deep-red);
   padding: 8px 16px;
   border-bottom: 2px solid rgba(255, 215, 0, 0.4);

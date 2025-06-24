@@ -319,8 +319,22 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         </div>
       )}
 
-      {/* Grid Wrapper - Flexible container */}
-      <div className="flex-1 flex justify-center items-end overflow-hidden px-4 pb-4" style={{outline: '2px dashed cyan'}}>
+      {/* Grid Wrapper - Flexible container that grows to fill remaining space */}
+      <div 
+        className="flex-1 flex justify-center items-end overflow-hidden px-4 pb-4" 
+        style={{outline: '2px dashed cyan'}}
+        ref={(el) => {
+          if (el) {
+            // Debug logging for container heights
+            setTimeout(() => {
+              ['#root', 'header', '.hint-strip', '.flex-1'].forEach(sel => {
+                const element = sel === '.flex-1' ? el : document.querySelector(sel);
+                console.log(sel, element ? element.clientHeight + 'px' : 'not found');
+              });
+            }, 100);
+          }
+        }}
+      >
         <MobileOptimizedWordSearch
           grid={gameState.grid}
           onCellMouseDown={handleCellMouseDown}
