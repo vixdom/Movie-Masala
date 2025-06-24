@@ -1,0 +1,50 @@
+Hey Replit AI, the crossword-style grid still isn’t aligning. Let’s diagnose and fix in one go:
+
+1. **Confirm CSS Loading & Specificity**  
+   - Verify that your stylesheet with `.grid` and `.crossword-cell` rules is actually imported after any old tile CSS.  
+   - If not, move the `<link>` or `@import` for grid styles to the bottom or inline the rules.
+
+2. **Enforce Grid Container Settings**  
+   - Ensure your HTML uses `<div class="grid">` (not `.tile-grid` or similar).  
+   - In CSS, explicitly set:
+     ```css
+     .grid {
+       display: grid !important;
+       grid-template-columns: repeat(12, 1fr) !important;
+       grid-gap: 8px !important;
+       width: 100% !important;
+       aspect-ratio: 1 / 1 !important;
+     }
+     ```
+
+3. **Replace All Tile Markup**  
+   - Check that each cell in the HTML has `class="crossword-cell"`.  
+   - If your JS still injects `<div class="tile">`, update it to `.crossword-cell`.
+
+4. **Lock Down Cell Dimensions**  
+   - Add:
+     ```css
+     .crossword-cell {
+       width: clamp(50px, 8vw, 70px) !important;
+       height: clamp(50px, 8vw, 70px) !important;
+       box-sizing: border-box !important;
+     }
+     ```
+   - This forces each cell to be square and touch-friendly.
+
+5. **Remove Conflicting Rules**  
+   - Search your CSS for any `.tile` or old `.grid` selectors and comment them out or delete them.  
+   - If any old rule still applies, use your browser’s inspector to find and override it.
+
+6. **Quick Console Checks**  
+   - In the browser console, run:
+     ```js
+     console.log(getComputedStyle(document.querySelector('.grid')).display);
+     console.log(getComputedStyle(document.querySelector('.crossword-cell')).width);
+     ```
+   - They should read `grid` and a numeric pixel value ≥50px.
+
+7. **Final Alignment**  
+   - Once the above is confirmed, the grid should snap into a perfect 12×12 square with 8px gaps and large, centered letters.
+
+Please apply these changes and ensure no scrollbars appear. This will guarantee a true crossword-style layout with ample spacing, clean font, and full legibility.```
