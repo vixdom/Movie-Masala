@@ -57,9 +57,9 @@
       flex: 1 1 auto;
       display: flex;
       justify-content: center;
-      align-items: flex-end;
+      align-items: center;
       overflow: hidden;
-      padding: 0 8px;
+      padding: 16px 8px;
     }
   }
 
@@ -210,18 +210,15 @@
       display: grid;
       grid-template-columns: repeat(12, 1fr);
       grid-template-rows: repeat(12, 1fr);
-      gap: 2px;
-      width: min(90vw, 70vh);
-      height: min(90vw, 70vh);
+      gap: 1px;
+      width: min(85vw, 50vh);
+      height: min(85vw, 50vh);
       aspect-ratio: 1;
-      background: rgba(0, 0, 0, 0.1);
-      border: 2px solid var(--bollywood-gold);
-      border-radius: 8px;
-      padding: 4px;
+      background: transparent;
       box-sizing: border-box;
       user-select: none;
       touch-action: none;
-      margin-bottom: 16px;
+      margin-bottom: 8px;
     }
   }
 
