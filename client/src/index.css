@@ -189,14 +189,16 @@
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: 1px;
-    width: min(85vw, calc(100vh - 250px));
-    height: min(85vw, calc(100vh - 250px));
+    width: min(75vw, calc(100vh - 320px));
+    height: min(75vw, calc(100vh - 320px));
     aspect-ratio: 1;
     background: transparent;
     user-select: none;
-    touch-action: manipulation;
+    touch-action: none;
     box-sizing: border-box;
     margin: 0 auto;
+    overflow: visible;
+    padding: 2px;
   }
 
   .crossword-cell {

@@ -25,7 +25,8 @@ const CrosswordGridCell = memo(({
   onPointerEnter,
   onTouchStart,
   getWordColor,
-  highlightedWord 
+  highlightedWord,
+  setIsMouseDown
 }: {
   cell: GridCellType;
   rowIndex: number;
@@ -38,6 +39,7 @@ const CrosswordGridCell = memo(({
   onTouchStart: (row: number, col: number) => void;
   getWordColor: (wordId: string | undefined) => string;
   highlightedWord?: string | null;
+  setIsMouseDown: (value: boolean) => void;
 }) => {
   return (
     <div
@@ -53,9 +55,11 @@ const CrosswordGridCell = memo(({
         e.preventDefault();
         e.stopPropagation();
         console.log('Cell clicked:', rowIndex, colIndex, cell.letter);
+        setIsMouseDown(true);
         onMouseDown(rowIndex, colIndex);
       }}
       onMouseEnter={() => {
+        console.log('Cell mouseEnter:', rowIndex, colIndex, 'isMouseDown:', isMouseDown);
         if (isMouseDown) {
           // Gentle haptic feedback for each letter
           if (navigator.vibrate) {
@@ -145,10 +149,11 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           onTouchStart={onCellTouchStart}
           getWordColor={getWordColor}
           highlightedWord={highlightedWord}
+          setIsMouseDown={setIsMouseDown}
         />
       ))
     );
-  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord]);
+  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord, setIsMouseDown]);
 
   return (
     <div
