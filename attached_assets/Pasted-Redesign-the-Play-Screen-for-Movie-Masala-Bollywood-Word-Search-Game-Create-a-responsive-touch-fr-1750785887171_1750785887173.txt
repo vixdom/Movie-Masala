@@ -1,0 +1,38 @@
+Redesign the Play Screen for “Movie Masala” Bollywood Word Search Game
+Create a responsive, touch-friendly play screen for a Bollywood-themed word search game, using HTML5, CSS3, and vanilla JavaScript. The design should be modern minimalist with Bollywood flair, and optimized for portrait mode on mobile devices.
+Visual Style & Theme:
+	•	Use a deep navy blue or black gradient background (#0B1F3A to #1A2B4A) for a premium, cinematic look.
+	•	Accent with rich gold (#D4AF37) for borders, highlights, and interactive elements.
+	•	Subtle Bollywood-inspired patterns or motifs in the background at low opacity (10–15%) for elegance.
+	•	Use a clean, bold sans-serif font (Lato, Montserrat, or similar) for grid letters and UI, and a decorative serif (Cinzel, Playfair Display, or similar) for headings and found words.
+	•	All text and buttons must have high contrast for readability.
+Layout & Positioning:
+	•	Header: Place a compact header at the top with:
+	•	A gold clapperboard icon.
+	•	“New Game” button styled with a gold gradient and rounded corners.
+	•	Score indicator in a gold-outlined pill, right-aligned.
+	•	Word List: Below the header, display the list of actor names in a horizontally scrollable carousel of gold-bordered pill buttons. Use larger touch targets (minimum 44px height) for easy tapping.
+	•	Word Grid: Center the word search grid on the screen, maximizing its size for touch interaction. Each letter cell should be at least 44x44px, with subtle gold borders and rounded corners. Use a bold, legible font for letters.
+	•	Interaction Feedback:
+	•	When a user selects letters, highlight them with a soft gold glow or gradient fill.
+	•	When a word is found, animate the word pill and highlight the word in the grid with a gold shimmer effect.
+	•	Footer (Optional): Add a thin, subtle film strip or Bollywood motif as a footer for extra flair.
+Touch Optimization:
+	•	All interactive elements (buttons, word grid cells, word list pills) must have a minimum touch area of 44x44px.
+	•	Support smooth touch gestures for selecting words in the grid (drag to select).
+	•	Ensure horizontal scrolling of the word list is smooth and responsive.
+Animations & Effects:
+	•	On page load, fade in the header and grid with a slight upward slide.
+	•	Add a gentle, looping shimmer animation to the background.
+	•	When a word is found, animate the corresponding word pill with a gold pulse and the grid letters with a brief highlight.
+	•	Use CSS transitions for button presses and grid interactions (scale up slightly on tap).
+Accessibility:
+	•	Use proper ARIA labels for buttons and game elements.
+	•	Ensure high color contrast for all text and interactive elements.
+	•	Support keyboard navigation for accessibility.
+Technical Notes:
+	•	Use semantic HTML5 structure.
+	•	Organize CSS for easy customization.
+	•	Add comments explaining layout and animation choices.
+	•	Ensure the design is fully responsive and looks great on all mobile portrait screens.
+Summary: The final play screen should feel elegant, cinematic, and unmistakably Bollywood, with a modern minimalist touch and flawless usability on touch devices in portrait mode. All elements should be easy to tap, visually appealing, and provide delightful feedback and animations.

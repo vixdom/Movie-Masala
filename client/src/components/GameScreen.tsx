@@ -193,33 +193,30 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
 
   return (
     <div className="h-full text-white relative overflow-hidden">
-      {/* Enhanced film-strip background overlay */}
-      <div className="absolute inset-0 bg-black/40" />
-      
-      {/* Header - Fixed size */}
+      {/* Header - Premium Cinema Style */}
       <header className="app-header">
-        {/* Back Button */}
-        <Button
-          onClick={onBackToHome}
-          variant="ghost"
-          className="flex items-center gap-2 hover:bg-yellow-400/20 text-yellow-200 hover:text-white transition-all duration-300 min-h-[44px] min-w-[44px]"
-        >
-          <ChevronLeft size={20} />
-          <span className="hidden sm:inline">Home</span>
-        </Button>
-        
-        {/* Center: New Game Button */}
+        {/* Gold Clapperboard Icon & New Game Button */}
         <button 
           onClick={startNewGame}
-          className="flex items-center gap-3 bollywood-gold-accent rounded-lg px-5 py-3 hover:scale-105 transition-all duration-300 active:scale-95 shadow-xl min-h-[44px]"
-          title="Click to start new game"
+          className="flex items-center gap-3 bg-gradient-to-r from-[#D4AF37] to-[#F4E17A] text-[#0B1F3A] rounded-lg px-6 py-3 font-bold text-sm transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg min-h-[44px] relative overflow-hidden"
+          title="Start New Game"
+          style={{
+            boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+            textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
+          }}
         >
-          <span className="text-xl">🎬</span>
-          <span className="bollywood-title text-lg font-bold">New Game</span>
+          <span className="text-lg">🎬</span>
+          <span className="font-bold uppercase tracking-wide">New Game</span>
         </button>
         
-        {/* Right: Score */}
-        <div className="bollywood-gold-accent rounded-full px-5 py-3 text-sm font-bold shadow-xl min-h-[44px] flex items-center justify-center">
+        {/* Score Indicator */}
+        <div 
+          className="bg-gradient-to-r from-[#0B1F3A] to-[#1A2B4A] border-2 border-[#D4AF37] rounded-full px-6 py-3 text-sm font-bold min-h-[44px] flex items-center justify-center text-white"
+          style={{
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
+            backdropFilter: 'blur(8px)'
+          }}
+        >
           Score: {gameState.score}
         </div>
       </header>
