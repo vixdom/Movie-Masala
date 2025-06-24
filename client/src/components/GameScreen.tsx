@@ -192,12 +192,12 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [handleCellMouseUp]);
 
   return (
-    <div className="h-screen text-white relative overflow-hidden">
+    <div className="h-full text-white relative overflow-hidden flex flex-col">
       {/* Enhanced film-strip background overlay */}
       <div className="absolute inset-0 bg-black/40" />
       
-      {/* Header - Exactly 10% viewport height */}
-      <header className="app-header">
+      {/* Header - Fixed size */}
+      <header className="app-header flex-none">
         {/* Back Button */}
         <Button
           onClick={onBackToHome}
@@ -224,8 +224,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         </div>
       </header>
 
-      {/* Hint Strip - Direct under header */}
-      <div className="hint-strip">
+      {/* Hint Strip - Fixed size */}
+      <div className="hint-strip flex-none">
         <div className="hint-pills-container">
           {currentWords.map((wordItem) => {
             const wordPlacement = gameState.words.find(wp => wp.word === wordItem.word);
@@ -319,8 +319,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         </div>
       )}
 
-      {/* Crossword Grid - Center aligned */}
-      <div className="flex-1 flex items-center justify-center px-4">
+      {/* Grid Wrapper - Flexible container */}
+      <div className="flex-1 flex justify-center items-end overflow-hidden px-4 pb-4" style={{outline: '2px dashed cyan'}}>
         <MobileOptimizedWordSearch
           grid={gameState.grid}
           onCellMouseDown={handleCellMouseDown}

@@ -36,10 +36,12 @@
   }
 
   html, body, #root {
-    height: 100vh;
-    overflow: hidden;
+    height: 100%;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   body {
@@ -186,19 +188,19 @@
 
   /* Crossword-style grid styles */
   .crossword-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 1px;
-    width: min(75vw, calc(100vh - 320px));
-    height: min(75vw, calc(100vh - 320px));
-    aspect-ratio: 1;
+    width: 100% !important;
+    max-width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    display: grid !important;
+    grid-template-columns: repeat(12, 1fr) !important;
+    gap: 8px !important;
     background: transparent;
     user-select: none;
     touch-action: none;
     box-sizing: border-box;
     margin: 0 auto;
     overflow: visible;
-    padding: 2px;
+    outline: 2px dashed magenta !important;
   }
 
   .crossword-cell {
