@@ -26,7 +26,8 @@ const CrosswordGridCell = memo(({
   onTouchStart,
   getWordColor,
   highlightedWord,
-  setIsMouseDown
+  setIsMouseDown,
+  setIsTouching
 }: {
   cell: GridCellType;
   rowIndex: number;
@@ -81,7 +82,7 @@ const CrosswordGridCell = memo(({
         e.stopPropagation();
         console.log('Cell touched:', rowIndex, colIndex, cell.letter);
         setIsMouseDown(true);
-        if (setIsTouching) setIsTouching(true);
+        setIsTouching(true);
         onTouchStart(rowIndex, colIndex);
       }}
       onClick={(e) => {
