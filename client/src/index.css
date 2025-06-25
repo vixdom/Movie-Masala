@@ -288,6 +288,8 @@
       transform: scale(0.95);
     }
 
+
+
     .crossword-cell.selected {
       background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
       color: var(--navy-dark);
@@ -301,38 +303,36 @@
       position: relative;
       z-index: 10;
       transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow: hidden;
     }
 
-    .crossword-cell.selected::before {
+    .crossword-cell.selected::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        45deg,
-        transparent 40%,
-        rgba(255, 255, 255, 0.8) 50%,
-        rgba(255, 215, 0, 0.6) 55%,
-        transparent 60%
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(255, 255, 255, 0.4) 30deg,
+        rgba(255, 215, 0, 0.3) 60deg,
+        rgba(255, 255, 255, 0.4) 90deg,
+        transparent 120deg,
+        transparent 360deg
       );
-      animation: glassySweep 1s ease-in-out infinite;
+      animation: spinGlass 2s linear infinite;
       pointer-events: none;
-      z-index: 2;
-      border-radius: 2px;
-      opacity: 0.7;
+      z-index: 1;
     }
 
-    @keyframes glassySweep {
+    @keyframes spinGlass {
       0% {
-        transform: translateX(-200%) translateY(-200%) rotate(45deg);
-      }
-      50% {
-        transform: translateX(0%) translateY(0%) rotate(45deg);
+        transform: rotate(0deg);
       }
       100% {
-        transform: translateX(200%) translateY(200%) rotate(45deg);
+        transform: rotate(360deg);
       }
     }
 
