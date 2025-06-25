@@ -423,22 +423,22 @@ html {
 .hint-pills-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   max-height: none;
   overflow: visible;
-  padding: 8px 12px;
+  padding: 6px 8px;
 }
 
 .hint-pill {
   font-family: 'Lato', 'Montserrat', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 18px;
+  padding: 6px 12px;
+  border-radius: 16px;
   white-space: nowrap;
-  min-height: 36px;
+  min-height: 28px;
   flex: 0 0 auto;
   display: flex;
   align-items: center;
@@ -446,17 +446,29 @@ html {
   touch-action: manipulation;
   background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
   color: var(--navy-dark);
-  border: 2px solid var(--gold-dark);
+  border: 1px solid var(--gold-dark);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   position: relative;
   overflow: hidden;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
+  min-width: fit-content;
+  max-width: none;
+  width: auto;
   box-shadow: 
-    0 3px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  max-width: calc(25% - 6px);
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    0 2px 4px rgba(212, 175, 55, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(0);
+}
+
+.hint-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 16px rgba(0, 0, 0, 0.25),
+    0 4px 8px rgba(212, 175, 55, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .hint-pill:active {
@@ -468,6 +480,7 @@ html {
   opacity: 0.7;
   text-decoration: line-through;
   animation: foundPulse 0.5s ease-out;
+  transform: translateY(-1px);
 }
 
 @keyframes foundPulse {
