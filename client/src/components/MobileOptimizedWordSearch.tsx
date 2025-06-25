@@ -81,7 +81,7 @@ const CrosswordGridCell = memo(({
         e.stopPropagation();
         console.log('Cell touched:', rowIndex, colIndex, cell.letter);
         setIsMouseDown(true);
-        setIsTouching(true);
+        if (setIsTouching) setIsTouching(true);
         onTouchStart(rowIndex, colIndex);
       }}
       onClick={(e) => {
@@ -159,7 +159,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
         />
       ))
     );
-  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord, setIsMouseDown]);
+  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord]);
 
   return (
     <div
