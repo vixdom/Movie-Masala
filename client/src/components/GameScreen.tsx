@@ -98,6 +98,12 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       console.log('Insufficient points for hint. Need:', pointDeduction, 'Have:', currentGameState.score);
       setShowHint(`Not enough points! Need ${pointDeduction} points for a hint.`);
       setTimeout(() => setShowHint(null), 2000);
+      // Mark as already attempted to prevent multiple attempts
+      setHintedLetters(prev => {
+        const newSet = new Set(prev);
+        newSet.add(wordPlacement.id);
+        return newSet;
+      });
       return;
     }
 
@@ -124,7 +130,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       return newSet;
     });
 
-    // Mark the specific position as hinted
+    // Mark the specific position as hinted (only when successful)
     const positionKey = `${randomPosition.row}-${randomPosition.col}`;
     setHintedPositions(prev => {
       const newSet = new Set(prev);
