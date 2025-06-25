@@ -61,9 +61,9 @@ const CrosswordGridCell = memo(({
       onMouseEnter={() => {
         console.log('Cell mouseEnter:', rowIndex, colIndex, 'isMouseDown:', isMouseDown);
         if (isMouseDown) {
-          // Gentle haptic feedback for each letter
+          // Gentle haptic feedback for each letter with golden effect
           if (navigator.vibrate) {
-            navigator.vibrate(10);
+            navigator.vibrate(15);
           }
           onMouseEnter(rowIndex, colIndex);
         }
