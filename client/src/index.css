@@ -457,7 +457,8 @@ html {
   padding: 2px 12px;
   border-radius: 16px;
   white-space: nowrap;
-  min-height: 19px;
+  min-height: 10px;
+  height: 10px;
   flex: 0 0 auto;
   display: flex;
   align-items: center;
