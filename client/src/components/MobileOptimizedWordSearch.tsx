@@ -91,7 +91,7 @@ const CrosswordGridCell = memo(({
         console.log('Cell onClick triggered:', rowIndex, colIndex, cell.letter);
       }}
     >
-      {cell.letter}
+      <span className="cell-letter">{cell.letter}</span>
     </div>
   );
 });
