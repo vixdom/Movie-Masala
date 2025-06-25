@@ -40,6 +40,7 @@ const CrosswordGridCell = memo(({
   getWordColor: (wordId: string | undefined) => string;
   highlightedWord?: string | null;
   setIsMouseDown: (value: boolean) => void;
+  setIsTouching: (value: boolean) => void;
 }) => {
   return (
     <div
@@ -51,6 +52,8 @@ const CrosswordGridCell = memo(({
           'highlighted': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
         }
       )}
+      data-row={rowIndex}
+      data-col={colIndex}
       onMouseDown={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -69,7 +72,7 @@ const CrosswordGridCell = memo(({
         }
       }}
       onPointerEnter={() => {
-        if (isMouseDown) {
+        if (isMouseDown || isTouching) {
           onPointerEnter(rowIndex, colIndex);
         }
       }}
@@ -77,6 +80,8 @@ const CrosswordGridCell = memo(({
         e.preventDefault();
         e.stopPropagation();
         console.log('Cell touched:', rowIndex, colIndex, cell.letter);
+        setIsMouseDown(true);
+        setIsTouching(true);
         onTouchStart(rowIndex, colIndex);
       }}
       onClick={(e) => {
@@ -150,6 +155,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           getWordColor={getWordColor}
           highlightedWord={highlightedWord}
           setIsMouseDown={setIsMouseDown}
+          setIsTouching={setIsTouching}
         />
       ))
     );
@@ -174,6 +180,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
       onTouchEnd={() => {
         console.log('Grid touchEnd');
         setIsTouching(false);
+        setIsMouseDown(false);
         onCellTouchEnd();
       }}
     >
