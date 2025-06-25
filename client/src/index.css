@@ -303,7 +303,7 @@
       transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    .crossword-cell.selected::before {
+    .crossword-cell.selected::after {
       content: '';
       position: absolute;
       top: 0;
@@ -312,25 +312,34 @@
       height: 100%;
       background: linear-gradient(
         90deg,
-        transparent,
-        rgba(255, 255, 255, 0.4) 50%,
-        transparent
+        transparent 0%,
+        rgba(255, 255, 255, 0.6) 30%,
+        rgba(255, 215, 0, 0.4) 50%,
+        rgba(255, 255, 255, 0.6) 70%,
+        transparent 100%
       );
-      animation: glassySwipe 0.6s ease-out;
+      animation: glassySwipe 0.8s ease-out;
       pointer-events: none;
+      z-index: 1;
+      border-radius: 2px;
     }
 
     @keyframes glassySwipe {
       0% {
         left: -100%;
         opacity: 0;
+        transform: skewX(-20deg);
       }
-      50% {
+      10% {
+        opacity: 1;
+      }
+      90% {
         opacity: 1;
       }
       100% {
         left: 100%;
         opacity: 0;
+        transform: skewX(-20deg);
       }
     }
 
