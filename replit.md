@@ -91,7 +91,7 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
-- June 26, 2025: **FONT SIZE FIXED** - Set grid letter font size to fixed 18px for consistent large text across all devices
+- June 26, 2025: **FONT SIZE INCREASED** - Set grid letter font size to 22px for clearly visible text on all devices
 - June 26, 2025: **GLASSY SWEEP EFFECT** - Implemented translucent golden overlay animation for word selection (mobile implementation pending)
 - June 26, 2025: **IPHONE PWA INSTALLATION SUCCESSFUL** - Complete Safari PWA implementation working on iPhone
 - June 26, 2025: Implemented service worker for offline functionality and PWA compliance
