@@ -177,6 +177,40 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [game, playSuccess]);
 
   const handleCellTouchStart = useCallback((row: number, col: number) => {
+    // Trigger glassy sweep animation for touch start
+    const cellElement = document.querySelector(`[data-row="${row}"][data-col="${col}"]`) as HTMLElement;
+    if (cellElement && !cellElement.querySelector('.touch-glassy-sweep')) {
+      const sweepElement = document.createElement('div');
+      sweepElement.className = 'touch-glassy-sweep';
+      sweepElement.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.4) 0%, rgba(244, 225, 122, 0.6) 50%, rgba(212, 175, 55, 0.4) 100%);
+        backdrop-filter: blur(2px);
+        border-radius: inherit;
+        pointer-events: none;
+        animation: glassySweepPulse 0.8s ease-out forwards;
+        z-index: 10;
+      `;
+      
+      cellElement.appendChild(sweepElement);
+      
+      // Remove after animation
+      setTimeout(() => {
+        if (sweepElement.parentNode) {
+          sweepElement.parentNode.removeChild(sweepElement);
+        }
+      }, 800);
+      
+      // Haptic feedback
+      if (navigator.vibrate) {
+        navigator.vibrate(20);
+      }
+    }
+    
     handleCellMouseDown(row, col);
   }, [handleCellMouseDown]);
 
@@ -191,13 +225,38 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       const col = parseInt(element.getAttribute('data-col') || '0', 10);
       console.log('Touch move detected on cell:', row, col);
       
-      // Trigger glassy sweep animation directly
+      // Create and inject glassy sweep element directly
       const cellElement = element as HTMLElement;
-      if (cellElement) {
-        cellElement.classList.add('glassy-sweep-active');
+      if (cellElement && !cellElement.querySelector('.touch-glassy-sweep')) {
+        const sweepElement = document.createElement('div');
+        sweepElement.className = 'touch-glassy-sweep';
+        sweepElement.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(135deg, rgba(212, 175, 55, 0.4) 0%, rgba(244, 225, 122, 0.6) 50%, rgba(212, 175, 55, 0.4) 100%);
+          backdrop-filter: blur(2px);
+          border-radius: inherit;
+          pointer-events: none;
+          animation: glassySweepPulse 0.8s ease-out forwards;
+          z-index: 10;
+        `;
+        
+        cellElement.appendChild(sweepElement);
+        
+        // Remove after animation
         setTimeout(() => {
-          cellElement.classList.remove('glassy-sweep-active');
+          if (sweepElement.parentNode) {
+            sweepElement.parentNode.removeChild(sweepElement);
+          }
         }, 800);
+        
+        // Haptic feedback
+        if (navigator.vibrate) {
+          navigator.vibrate(15);
+        }
       }
       
       handleCellMouseEnter(row, col);
