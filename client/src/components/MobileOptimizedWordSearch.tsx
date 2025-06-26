@@ -79,6 +79,9 @@ const CrosswordGridCell = memo(({
       }}
       onPointerEnter={() => {
         if (isMouseDown || isTouching) {
+          console.log('Pointer enter on mobile cell:', rowIndex, colIndex);
+          // Use the centralized animation function
+          triggerCellAnimation(rowIndex, colIndex);
           onPointerEnter(rowIndex, colIndex);
         }
       }}
@@ -88,6 +91,11 @@ const CrosswordGridCell = memo(({
         console.log('Cell touched:', rowIndex, colIndex, cell.letter);
         setIsMouseDown(true);
         setIsTouching(true);
+        
+        // Trigger initial glassy sweep animation for touch start
+        const cellKey = `${rowIndex}-${colIndex}`;
+        console.log('Touch start - triggering glassy sweep for:', cellKey);
+        
         onTouchStart(rowIndex, colIndex);
       }}
       onClick={(e) => {
@@ -116,15 +124,28 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   const [isTouching, setIsTouching] = useState(false);
   const [selectionAnimation, setSelectionAnimation] = useState<{[key: string]: boolean}>({});
   
-  // Function to trigger animation for any cell
+  // Function to trigger animation for any cell - now with direct DOM manipulation for mobile
   const triggerCellAnimation = useCallback((row: number, col: number) => {
     const cellKey = `${row}-${col}`;
+    
+    // Set React state for animation
     setSelectionAnimation(prev => ({
       ...prev,
       [cellKey]: true
     }));
     
-    // Clear animation after it completes
+    // Also trigger CSS class directly for mobile reliability
+    const cellElement = document.querySelector(`[data-row="${row}"][data-col="${col}"]`) as HTMLElement;
+    if (cellElement) {
+      cellElement.classList.add('glassy-sweep-active');
+      console.log('Added glassy-sweep-active class to cell:', row, col);
+      
+      setTimeout(() => {
+        cellElement.classList.remove('glassy-sweep-active');
+      }, 800);
+    }
+    
+    // Clear React state animation after it completes
     setTimeout(() => {
       setSelectionAnimation(prev => {
         const newState = { ...prev };
@@ -160,6 +181,8 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     if (isMouseDown || isTouching) {
       // Trigger glassy sweep animation for this cell
       const cellKey = `${row}-${col}`;
+      console.log('Triggering glassy sweep for:', cellKey, 'touch:', isTouching, 'mouse:', isMouseDown);
+      
       setSelectionAnimation(prev => ({
         ...prev,
         [cellKey]: true
@@ -173,6 +196,11 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           return newState;
         });
       }, 800);
+      
+      // Add haptic feedback for mobile
+      if (navigator.vibrate) {
+        navigator.vibrate(15);
+      }
       
       onCellMouseEnter(row, col);
     }

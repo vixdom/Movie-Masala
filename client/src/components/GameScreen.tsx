@@ -189,6 +189,17 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     if (element?.hasAttribute('data-row') && element?.hasAttribute('data-col')) {
       const row = parseInt(element.getAttribute('data-row') || '0', 10);
       const col = parseInt(element.getAttribute('data-col') || '0', 10);
+      console.log('Touch move detected on cell:', row, col);
+      
+      // Trigger glassy sweep animation directly
+      const cellElement = element as HTMLElement;
+      if (cellElement) {
+        cellElement.classList.add('glassy-sweep-active');
+        setTimeout(() => {
+          cellElement.classList.remove('glassy-sweep-active');
+        }, 800);
+      }
+      
       handleCellMouseEnter(row, col);
     }
   }, [gameState.isSelecting, handleCellMouseEnter]);
