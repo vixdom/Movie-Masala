@@ -215,7 +215,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [handleCellMouseDown]);
 
   const handleCellTouchMove = useCallback((event: React.TouchEvent) => {
-    if (!gameState.isSelecting) return;
+    console.log('Touch move event, isSelecting:', gameState.isSelecting);
     
     const touch = event.touches[0];
     const element = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -223,10 +223,12 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     if (element?.hasAttribute('data-row') && element?.hasAttribute('data-col')) {
       const row = parseInt(element.getAttribute('data-row') || '0', 10);
       const col = parseInt(element.getAttribute('data-col') || '0', 10);
+      console.log('Touch move detected on cell:', row, col);
       
-      // Apply glassy sweep effect to dragged cells
+      // Apply glassy sweep effect to dragged cells (regardless of isSelecting for visual feedback)
       const cellElement = element as HTMLElement;
       if (cellElement && !cellElement.classList.contains('touch-glassy-active')) {
+        console.log('Adding glassy effect to cell:', row, col);
         cellElement.classList.add('touch-glassy-active');
         
         // Remove the effect after a short duration
@@ -240,7 +242,10 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         }
       }
       
-      handleCellMouseEnter(row, col);
+      // Only update selection if we're actually selecting
+      if (gameState.isSelecting) {
+        handleCellMouseEnter(row, col);
+      }
     }
   }, [gameState.isSelecting, handleCellMouseEnter]);
 

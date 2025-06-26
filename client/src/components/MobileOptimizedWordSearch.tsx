@@ -90,8 +90,31 @@ const CrosswordGridCell = memo(({
         // Apply glassy sweep effect
         const element = e.currentTarget as HTMLElement;
         element.classList.add('touch-glassy-active');
+        console.log('Touch start on cell:', rowIndex, colIndex);
         
         onTouchStart(rowIndex, colIndex);
+      }}
+      onTouchMove={(e) => {
+        if (isTouching) {
+          console.log('Touch move on cell:', rowIndex, colIndex);
+          // Apply glassy effect immediately when touching this cell
+          const element = e.currentTarget as HTMLElement;
+          if (!element.classList.contains('touch-glassy-active')) {
+            element.classList.add('touch-glassy-active');
+            console.log('Applied glassy effect to cell:', rowIndex, colIndex);
+            
+            // Remove after animation
+            setTimeout(() => {
+              element.classList.remove('touch-glassy-active');
+            }, 600);
+            
+            // Haptic feedback
+            if (navigator.vibrate) {
+              navigator.vibrate(10);
+            }
+          }
+          onTouchMove(e);
+        }
       }}
       onClick={(e) => {
         e.preventDefault();
