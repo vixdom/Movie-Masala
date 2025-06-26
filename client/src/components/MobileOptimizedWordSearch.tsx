@@ -84,15 +84,13 @@ const CrosswordGridCell = memo(({
         }
       }}
       onTouchStart={(e) => {
-        // Simple flash test - just change background color
-        const element = e.currentTarget as HTMLElement;
-        element.style.backgroundColor = 'red';
-        setTimeout(() => {
-          element.style.backgroundColor = '';
-        }, 200);
-        
         setIsMouseDown(true);
         setIsTouching(true);
+        
+        // Apply glassy sweep effect
+        const element = e.currentTarget as HTMLElement;
+        element.classList.add('touch-glassy-active');
+        
         onTouchStart(rowIndex, colIndex);
       }}
       onClick={(e) => {

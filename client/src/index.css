@@ -819,6 +819,15 @@ html {
   }
 }
 
+/* Touch glassy effect for drag flow */
+.touch-glassy-active {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.8) 0%, rgba(244, 225, 122, 0.9) 50%, rgba(212, 175, 55, 0.8) 100%) !important;
+  animation: quickGlassyPulse 0.6s ease-out !important;
+  transform: scale(1.02) !important;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5) !important;
+  z-index: 10 !important;
+}
+
 /* High DPI optimization */
 @media (-webkit-min-device-pixel-ratio: 2) {
   .grid-container {

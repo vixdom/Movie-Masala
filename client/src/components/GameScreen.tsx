@@ -223,39 +223,20 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     if (element?.hasAttribute('data-row') && element?.hasAttribute('data-col')) {
       const row = parseInt(element.getAttribute('data-row') || '0', 10);
       const col = parseInt(element.getAttribute('data-col') || '0', 10);
-      console.log('Touch move detected on cell:', row, col);
       
-      // Create and inject glassy sweep element directly
+      // Apply glassy sweep effect to dragged cells
       const cellElement = element as HTMLElement;
-      if (cellElement && !cellElement.querySelector('.touch-glassy-sweep')) {
-        const sweepElement = document.createElement('div');
-        sweepElement.className = 'touch-glassy-sweep';
-        sweepElement.style.cssText = `
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(135deg, rgba(212, 175, 55, 0.4) 0%, rgba(244, 225, 122, 0.6) 50%, rgba(212, 175, 55, 0.4) 100%);
-          backdrop-filter: blur(2px);
-          border-radius: inherit;
-          pointer-events: none;
-          animation: glassySweepPulse 0.8s ease-out forwards;
-          z-index: 10;
-        `;
+      if (cellElement && !cellElement.classList.contains('touch-glassy-active')) {
+        cellElement.classList.add('touch-glassy-active');
         
-        cellElement.appendChild(sweepElement);
-        
-        // Remove after animation
+        // Remove the effect after a short duration
         setTimeout(() => {
-          if (sweepElement.parentNode) {
-            sweepElement.parentNode.removeChild(sweepElement);
-          }
-        }, 800);
+          cellElement.classList.remove('touch-glassy-active');
+        }, 600);
         
-        // Haptic feedback
+        // Gentle haptic feedback
         if (navigator.vibrate) {
-          navigator.vibrate(15);
+          navigator.vibrate(10);
         }
       }
       
@@ -264,6 +245,11 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [gameState.isSelecting, handleCellMouseEnter]);
 
   const handleCellTouchEnd = useCallback(() => {
+    // Clear all glassy effects when touch ends
+    document.querySelectorAll('.touch-glassy-active').forEach(element => {
+      element.classList.remove('touch-glassy-active');
+    });
+    
     handleCellMouseUp();
   }, [handleCellMouseUp]);
 
