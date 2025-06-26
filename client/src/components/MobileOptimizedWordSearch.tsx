@@ -179,10 +179,11 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           highlightedWord={highlightedWord}
           setIsMouseDown={setIsMouseDown}
           setIsTouching={setIsTouching}
+          selectionAnimation={selectionAnimation}
         />
       ))
     );
-  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord]);
+  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord, selectionAnimation]);
 
   return (
     <div
