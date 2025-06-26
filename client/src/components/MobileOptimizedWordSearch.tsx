@@ -70,22 +70,6 @@ const CrosswordGridCell = memo(({
       onMouseEnter={() => {
         console.log('Cell mouseEnter:', rowIndex, colIndex, 'isMouseDown:', isMouseDown);
         if (isMouseDown) {
-          // Trigger glassy sweep animation for mouse selection
-          const cellKey = `${rowIndex}-${colIndex}`;
-          setSelectionAnimation(prev => ({
-            ...prev,
-            [cellKey]: true
-          }));
-          
-          // Clear animation after it completes
-          setTimeout(() => {
-            setSelectionAnimation(prev => {
-              const newState = { ...prev };
-              delete newState[cellKey];
-              return newState;
-            });
-          }, 800);
-          
           // Gentle haptic feedback for each letter with golden effect
           if (navigator.vibrate) {
             navigator.vibrate(15);
@@ -214,10 +198,11 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           setIsMouseDown={setIsMouseDown}
           setIsTouching={setIsTouching}
           selectionAnimation={selectionAnimation}
+          triggerAnimation={triggerCellAnimation}
         />
       ))
     );
-  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord, selectionAnimation]);
+  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord, selectionAnimation, triggerCellAnimation]);
 
   return (
     <div
