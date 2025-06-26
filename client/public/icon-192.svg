@@ -1,0 +1,30 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B1538;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B91C3C;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="192" height="192" fill="url(#bg)" rx="28"/>
+  
+  <!-- Film strip border -->
+  <rect x="10" y="10" width="172" height="172" 
+        fill="none" stroke="#FFD700" stroke-width="2" rx="20"/>
+  
+  <!-- Clapboard icon -->
+  <g transform="translate(58, 58)">
+    <rect x="0" y="16" width="76" height="46" fill="#2D2D2D" rx="3"/>
+    <rect x="0" y="6" width="76" height="12" fill="#FFD700" rx="3"/>
+    <rect x="0" y="6" width="12" height="12" fill="#1A1A1A"/>
+    <rect x="18" y="6" width="12" height="12" fill="#1A1A1A"/>
+    <rect x="36" y="6" width="12" height="12" fill="#1A1A1A"/>
+    <rect x="54" y="6" width="12" height="12" fill="#1A1A1A"/>
+    <rect x="72" y="6" width="4" height="12" fill="#1A1A1A"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="96" y="154" text-anchor="middle" 
+        font-family="serif" font-size="15" font-weight="bold" fill="#FFD700">MM</text>
+</svg>
