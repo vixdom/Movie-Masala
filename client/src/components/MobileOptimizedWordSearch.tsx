@@ -86,24 +86,41 @@ const CrosswordGridCell = memo(({
       onTouchStart={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log('Touch START detected on cell:', rowIndex, colIndex, cell.letter);
-        console.log('Touch event type:', e.type, 'touches:', e.touches.length);
         setIsMouseDown(true);
         setIsTouching(true);
         
-        // Direct animation trigger for iPhone
-        const currentElement = e.currentTarget as HTMLElement;
-        console.log('Current element for animation:', currentElement);
+        // Show visual debug indicator on screen
+        const debugDiv = document.createElement('div');
+        debugDiv.style.cssText = `
+          position: fixed;
+          top: 50px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: red;
+          color: white;
+          padding: 10px;
+          border-radius: 5px;
+          z-index: 9999;
+          font-size: 16px;
+          font-weight: bold;
+        `;
+        debugDiv.textContent = `TOUCH: ${rowIndex},${colIndex} - ${cell.letter}`;
+        document.body.appendChild(debugDiv);
         
+        // Remove debug indicator after 1 second
+        setTimeout(() => {
+          if (debugDiv.parentNode) {
+            debugDiv.parentNode.removeChild(debugDiv);
+          }
+        }, 1000);
+        
+        // Flash the cell yellow
+        const currentElement = e.currentTarget as HTMLElement;
         if (currentElement) {
-          // Simple background flash for immediate visual feedback
           const originalBg = currentElement.style.background;
-          currentElement.style.background = 'yellow';
-          console.log('Applied yellow background to test touch response');
-          
+          currentElement.style.background = 'yellow !important';
           setTimeout(() => {
             currentElement.style.background = originalBg;
-            console.log('Restored original background');
           }, 300);
         }
         
