@@ -86,13 +86,26 @@ const CrosswordGridCell = memo(({
       onTouchStart={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log('Cell touched:', rowIndex, colIndex, cell.letter);
+        console.log('Touch START detected on cell:', rowIndex, colIndex, cell.letter);
+        console.log('Touch event type:', e.type, 'touches:', e.touches.length);
         setIsMouseDown(true);
         setIsTouching(true);
         
-        // Trigger initial glassy sweep animation for touch start
-        const cellKey = `${rowIndex}-${colIndex}`;
-        console.log('Touch start - triggering glassy sweep for:', cellKey);
+        // Direct animation trigger for iPhone
+        const currentElement = e.currentTarget as HTMLElement;
+        console.log('Current element for animation:', currentElement);
+        
+        if (currentElement) {
+          // Simple background flash for immediate visual feedback
+          const originalBg = currentElement.style.background;
+          currentElement.style.background = 'yellow';
+          console.log('Applied yellow background to test touch response');
+          
+          setTimeout(() => {
+            currentElement.style.background = originalBg;
+            console.log('Restored original background');
+          }, 300);
+        }
         
         onTouchStart(rowIndex, colIndex);
       }}
