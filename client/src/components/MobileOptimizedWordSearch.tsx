@@ -84,44 +84,15 @@ const CrosswordGridCell = memo(({
         }
       }}
       onTouchStart={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
+        // Simple flash test - just change background color
+        const element = e.currentTarget as HTMLElement;
+        element.style.backgroundColor = 'red';
+        setTimeout(() => {
+          element.style.backgroundColor = '';
+        }, 200);
+        
         setIsMouseDown(true);
         setIsTouching(true);
-        
-        // Glassy sweep animation for touch start
-        const currentElement = e.currentTarget as HTMLElement;
-        if (currentElement && !currentElement.querySelector('.touch-sweep')) {
-          const sweepElement = document.createElement('div');
-          sweepElement.className = 'touch-sweep';
-          sweepElement.style.cssText = `
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.4) 0%, rgba(244, 225, 122, 0.6) 50%, rgba(212, 175, 55, 0.4) 100%);
-            backdrop-filter: blur(2px);
-            border-radius: inherit;
-            pointer-events: none;
-            animation: glassySweepPulse 0.8s ease-out forwards;
-            z-index: 10;
-          `;
-          
-          currentElement.appendChild(sweepElement);
-          
-          setTimeout(() => {
-            if (sweepElement.parentNode) {
-              sweepElement.parentNode.removeChild(sweepElement);
-            }
-          }, 800);
-          
-          // Haptic feedback
-          if (navigator.vibrate) {
-            navigator.vibrate(20);
-          }
-        }
-        
         onTouchStart(rowIndex, colIndex);
       }}
       onClick={(e) => {
