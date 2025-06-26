@@ -80,8 +80,6 @@ const CrosswordGridCell = memo(({
       onPointerEnter={() => {
         if (isMouseDown || isTouching) {
           console.log('Pointer enter on mobile cell:', rowIndex, colIndex);
-          // Use the centralized animation function
-          triggerCellAnimation(rowIndex, colIndex);
           onPointerEnter(rowIndex, colIndex);
         }
       }}
@@ -183,10 +181,18 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
       const cellKey = `${row}-${col}`;
       console.log('Triggering glassy sweep for:', cellKey, 'touch:', isTouching, 'mouse:', isMouseDown);
       
+      // Update React state
       setSelectionAnimation(prev => ({
         ...prev,
         [cellKey]: true
       }));
+      
+      // Also add CSS class directly for mobile reliability
+      const cellElement = document.querySelector(`[data-row="${row}"][data-col="${col}"]`) as HTMLElement;
+      if (cellElement) {
+        cellElement.classList.add('glassy-sweep-active');
+        console.log('Added glassy-sweep-active class to cell:', row, col);
+      }
       
       // Clear animation after it completes
       setTimeout(() => {
@@ -195,6 +201,10 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           delete newState[cellKey];
           return newState;
         });
+        
+        if (cellElement) {
+          cellElement.classList.remove('glassy-sweep-active');
+        }
       }, 800);
       
       // Add haptic feedback for mobile
