@@ -70,6 +70,22 @@ const CrosswordGridCell = memo(({
       onMouseEnter={() => {
         console.log('Cell mouseEnter:', rowIndex, colIndex, 'isMouseDown:', isMouseDown);
         if (isMouseDown) {
+          // Trigger glassy sweep animation for mouse selection
+          const cellKey = `${rowIndex}-${colIndex}`;
+          setSelectionAnimation(prev => ({
+            ...prev,
+            [cellKey]: true
+          }));
+          
+          // Clear animation after it completes
+          setTimeout(() => {
+            setSelectionAnimation(prev => {
+              const newState = { ...prev };
+              delete newState[cellKey];
+              return newState;
+            });
+          }, 800);
+          
           // Gentle haptic feedback for each letter with golden effect
           if (navigator.vibrate) {
             navigator.vibrate(15);
@@ -115,6 +131,24 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isTouching, setIsTouching] = useState(false);
   const [selectionAnimation, setSelectionAnimation] = useState<{[key: string]: boolean}>({});
+  
+  // Function to trigger animation for any cell
+  const triggerCellAnimation = useCallback((row: number, col: number) => {
+    const cellKey = `${row}-${col}`;
+    setSelectionAnimation(prev => ({
+      ...prev,
+      [cellKey]: true
+    }));
+    
+    // Clear animation after it completes
+    setTimeout(() => {
+      setSelectionAnimation(prev => {
+        const newState = { ...prev };
+        delete newState[cellKey];
+        return newState;
+      });
+    }, 800);
+  }, []);
 
   // Memoized color function for performance
   const getWordColor = useCallback((wordId: string | undefined): string => {

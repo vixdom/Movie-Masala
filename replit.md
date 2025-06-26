@@ -91,6 +91,7 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
+- June 26, 2025: **GLASSY SWEEP EFFECT** - Implemented translucent golden overlay animation for word selection
 - June 26, 2025: **IPHONE PWA INSTALLATION SUCCESSFUL** - Complete Safari PWA implementation working on iPhone
 - June 26, 2025: Implemented service worker for offline functionality and PWA compliance
 - June 26, 2025: Created minimal manifest.json with proper Apple Touch Icon configuration
