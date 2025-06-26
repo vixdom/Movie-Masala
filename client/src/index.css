@@ -232,7 +232,7 @@
       background: transparent;
       box-sizing: border-box;
       user-select: none;
-      touch-action: none;
+      touch-action: manipulation;
       position: relative;
       z-index: 5;
       animation: fadeInUp 0.8s ease-out 0.2s both;

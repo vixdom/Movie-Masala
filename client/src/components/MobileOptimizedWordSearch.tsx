@@ -89,39 +89,37 @@ const CrosswordGridCell = memo(({
         setIsMouseDown(true);
         setIsTouching(true);
         
-        // Show visual debug indicator on screen
-        const debugDiv = document.createElement('div');
-        debugDiv.style.cssText = `
-          position: fixed;
-          top: 50px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: red;
-          color: white;
-          padding: 10px;
-          border-radius: 5px;
-          z-index: 9999;
-          font-size: 16px;
-          font-weight: bold;
-        `;
-        debugDiv.textContent = `TOUCH: ${rowIndex},${colIndex} - ${cell.letter}`;
-        document.body.appendChild(debugDiv);
-        
-        // Remove debug indicator after 1 second
-        setTimeout(() => {
-          if (debugDiv.parentNode) {
-            debugDiv.parentNode.removeChild(debugDiv);
-          }
-        }, 1000);
-        
-        // Flash the cell yellow
+        // Glassy sweep animation for touch start
         const currentElement = e.currentTarget as HTMLElement;
-        if (currentElement) {
-          const originalBg = currentElement.style.background;
-          currentElement.style.background = 'yellow !important';
+        if (currentElement && !currentElement.querySelector('.touch-sweep')) {
+          const sweepElement = document.createElement('div');
+          sweepElement.className = 'touch-sweep';
+          sweepElement.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.4) 0%, rgba(244, 225, 122, 0.6) 50%, rgba(212, 175, 55, 0.4) 100%);
+            backdrop-filter: blur(2px);
+            border-radius: inherit;
+            pointer-events: none;
+            animation: glassySweepPulse 0.8s ease-out forwards;
+            z-index: 10;
+          `;
+          
+          currentElement.appendChild(sweepElement);
+          
           setTimeout(() => {
-            currentElement.style.background = originalBg;
-          }, 300);
+            if (sweepElement.parentNode) {
+              sweepElement.parentNode.removeChild(sweepElement);
+            }
+          }, 800);
+          
+          // Haptic feedback
+          if (navigator.vibrate) {
+            navigator.vibrate(20);
+          }
         }
         
         onTouchStart(rowIndex, colIndex);
