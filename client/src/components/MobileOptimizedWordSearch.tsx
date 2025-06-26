@@ -27,7 +27,8 @@ const CrosswordGridCell = memo(({
   getWordColor,
   highlightedWord,
   setIsMouseDown,
-  setIsTouching
+  setIsTouching,
+  selectionAnimation
 }: {
   cell: GridCellType;
   rowIndex: number;
@@ -42,7 +43,10 @@ const CrosswordGridCell = memo(({
   highlightedWord?: string | null;
   setIsMouseDown: (value: boolean) => void;
   setIsTouching: (value: boolean) => void;
+  selectionAnimation: {[key: string]: boolean};
 }) => {
+  const cellKey = `${rowIndex}-${colIndex}`;
+  const hasGlassySweep = selectionAnimation[cellKey];
   return (
     <div
       className={cn(
@@ -51,6 +55,7 @@ const CrosswordGridCell = memo(({
           'selected': cell.isSelected && !cell.isFound,
           'found': cell.isFound,
           'highlighted': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
+          'glassy-sweep': hasGlassySweep && cell.isSelected,
         }
       )}
       data-row={rowIndex}
@@ -109,6 +114,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   const gridRef = useRef<HTMLDivElement>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isTouching, setIsTouching] = useState(false);
+  const [selectionAnimation, setSelectionAnimation] = useState<{[key: string]: boolean}>({});
 
   // Memoized color function for performance
   const getWordColor = useCallback((wordId: string | undefined): string => {
@@ -131,12 +137,28 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     return wordColors[hash % wordColors.length];
   }, []);
 
-  // Handle pointer events for drag selection
+  // Handle pointer events for drag selection with glassy sweep animation
   const handlePointerEnter = useCallback((row: number, col: number) => {
-    if (isMouseDown) {
+    if (isMouseDown || isTouching) {
+      // Trigger glassy sweep animation for this cell
+      const cellKey = `${row}-${col}`;
+      setSelectionAnimation(prev => ({
+        ...prev,
+        [cellKey]: true
+      }));
+      
+      // Clear animation after it completes
+      setTimeout(() => {
+        setSelectionAnimation(prev => {
+          const newState = { ...prev };
+          delete newState[cellKey];
+          return newState;
+        });
+      }, 800);
+      
       onCellMouseEnter(row, col);
     }
-  }, [isMouseDown, onCellMouseEnter]);
+  }, [isMouseDown, isTouching, onCellMouseEnter]);
 
   // Optimized grid rendering with memoization
   const renderedGrid = useMemo(() => {
