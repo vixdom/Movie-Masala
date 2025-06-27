@@ -7,9 +7,6 @@ interface WordSearchProps {
   onCellMouseDown: (row: number, col: number) => void;
   onCellMouseEnter: (row: number, col: number) => void;
   onCellMouseUp: () => void;
-  onCellTouchStart: (row: number, col: number) => void;
-  onCellTouchMove: (event: React.TouchEvent) => void;
-  onCellTouchEnd: () => void;
   highlightedWord?: string | null;
 }
 
@@ -61,7 +58,6 @@ const CrosswordGridCell = memo(({
       data-row={rowIndex}
       data-col={colIndex}
       onMouseDown={(e) => {
-        e.preventDefault();
         e.stopPropagation();
         console.log('Cell clicked:', rowIndex, colIndex, cell.letter);
         setIsMouseDown(true);
@@ -95,7 +91,7 @@ const CrosswordGridCell = memo(({
         // Capture pointer to ensure we get pointer move events
         element.setPointerCapture(e.pointerId);
         
-        onTouchStart(rowIndex, colIndex);
+        onMouseDown(rowIndex, colIndex);
       }}
       onPointerMove={(e) => {
         if (isTouching && e.currentTarget.hasPointerCapture(e.pointerId)) {
@@ -143,8 +139,6 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   onCellMouseDown,
   onCellMouseEnter,
   onCellMouseUp,
-  onCellTouchStart,
-
   highlightedWord,
 }: WordSearchProps) {
   const gridRef = useRef<HTMLDivElement>(null);
@@ -260,7 +254,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           onMouseDown={onCellMouseDown}
           onMouseEnter={onCellMouseEnter}
           onPointerEnter={handlePointerEnter}
-          onTouchStart={onCellTouchStart}
+          onTouchStart={onCellMouseDown}
           getWordColor={getWordColor}
           highlightedWord={highlightedWord}
           setIsMouseDown={setIsMouseDown}
@@ -269,7 +263,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
         />
       ))
     );
-  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, onCellTouchStart, getWordColor, highlightedWord, selectionAnimation]);
+  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, getWordColor, highlightedWord, selectionAnimation]);
 
   return (
     <div

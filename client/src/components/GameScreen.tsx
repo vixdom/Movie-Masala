@@ -406,9 +406,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
           onCellMouseDown={handleCellMouseDown}
           onCellMouseEnter={handleCellMouseEnter}
           onCellMouseUp={handleCellMouseUp}
-          onCellTouchStart={handleCellTouchStart}
-          onCellTouchMove={handleCellTouchMove}
-          onCellTouchEnd={handleCellTouchEnd}
+
           highlightedWord={highlightedWord}
         />
       </div>
