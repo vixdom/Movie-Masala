@@ -367,8 +367,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
+
                 style={{ 
                   minHeight: '48px',
                   minWidth: '48px',

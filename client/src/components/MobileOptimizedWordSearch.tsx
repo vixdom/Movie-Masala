@@ -144,8 +144,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   onCellMouseEnter,
   onCellMouseUp,
   onCellTouchStart,
-  onCellTouchMove,
-  onCellTouchEnd,
+
   highlightedWord,
 }: WordSearchProps) {
   const gridRef = useRef<HTMLDivElement>(null);
@@ -287,13 +286,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
         setIsMouseDown(false);
         onCellMouseUp();
       }}
-      onTouchMove={onCellTouchMove}
-      onTouchEnd={() => {
-        console.log('Grid touchEnd');
-        setIsTouching(false);
-        setIsMouseDown(false);
-        onCellTouchEnd();
-      }}
+
     >
       {renderedGrid}
     </div>
