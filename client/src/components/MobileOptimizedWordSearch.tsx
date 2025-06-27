@@ -83,26 +83,29 @@ const CrosswordGridCell = memo(({
           onPointerEnter(rowIndex, colIndex);
         }
       }}
-      onTouchStart={(e) => {
+      onPointerDown={(e) => {
         setIsMouseDown(true);
         setIsTouching(true);
         
-        // Apply glassy sweep effect
+        // Apply glassy sweep effect immediately
         const element = e.currentTarget as HTMLElement;
         element.classList.add('touch-glassy-active');
-        console.log('Touch start on cell:', rowIndex, colIndex);
+        console.log('Pointer down on cell:', rowIndex, colIndex);
+        
+        // Capture pointer to ensure we get pointer move events
+        element.setPointerCapture(e.pointerId);
         
         onTouchStart(rowIndex, colIndex);
       }}
-      onTouchMove={(e) => {
-        // Don't call preventDefault on passive listeners
-        if (isTouching) {
-          console.log('Touch move on cell:', rowIndex, colIndex);
-          // Apply glassy effect immediately when touching this cell
+      onPointerMove={(e) => {
+        if (isTouching && e.currentTarget.hasPointerCapture(e.pointerId)) {
+          console.log('Pointer move on cell:', rowIndex, colIndex);
+          
+          // Apply glassy effect immediately when pointer moves over this cell
           const element = e.currentTarget as HTMLElement;
           if (!element.classList.contains('touch-glassy-active')) {
             element.classList.add('touch-glassy-active');
-            console.log('Applied glassy effect to cell:', rowIndex, colIndex);
+            console.log('Applied glassy effect via pointer to cell:', rowIndex, colIndex);
             
             // Remove after animation
             setTimeout(() => {
@@ -114,9 +117,15 @@ const CrosswordGridCell = memo(({
               navigator.vibrate(10);
             }
           }
-          // Trigger mouse enter for game logic
+          
+          // Trigger game logic
           onMouseEnter(rowIndex, colIndex);
         }
+      }}
+      onPointerUp={(e) => {
+        const element = e.currentTarget as HTMLElement;
+        element.releasePointerCapture(e.pointerId);
+        console.log('Pointer up on cell:', rowIndex, colIndex);
       }}
       onClick={(e) => {
         // Remove preventDefault to avoid passive listener issues on iOS
