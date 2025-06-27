@@ -35,7 +35,7 @@ export const mobileOptimizations = {
 
   // Optimize touch events for mobile
   optimizeTouchEvents: (element: HTMLElement) => {
-    element.style.touchAction = 'manipulation';
+    element.style.touchAction = 'none';
     element.style.userSelect = 'none';
     (element.style as any).webkitUserSelect = 'none';
     (element.style as any).webkitTouchCallout = 'none';

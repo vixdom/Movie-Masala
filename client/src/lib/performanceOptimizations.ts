@@ -34,6 +34,6 @@ export const isLowEndDevice = (): boolean => {
 
 // Optimize touch events for mobile
 export const optimizeTouchEvents = (element: HTMLElement): void => {
-  element.style.touchAction = 'manipulation';
+  element.style.touchAction = 'none';
   element.style.userSelect = 'none';
 };
