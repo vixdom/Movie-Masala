@@ -249,29 +249,9 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     }
   }, [gameState.isSelecting, handleCellMouseEnter]);
 
-  // Clean pointer event handling without touch conflicts
-  useEffect(() => {
-    const handleGlobalPointerUp = () => {
-      console.log('Global pointer up - cleaning glassy effects');
-      document.querySelectorAll('.touch-glassy-active').forEach(element => {
-        element.classList.remove('touch-glassy-active');
-      });
-    };
-    
-    document.addEventListener('pointerup', handleGlobalPointerUp);
-    console.log('✓ Clean pointer event setup complete');
-    
-    return () => {
-      document.removeEventListener('pointerup', handleGlobalPointerUp);
-    };
-  }, []);
+
 
   const handleCellTouchEnd = useCallback(() => {
-    // Clear all glassy effects when touch ends
-    document.querySelectorAll('.touch-glassy-active').forEach(element => {
-      element.classList.remove('touch-glassy-active');
-    });
-    
     handleCellMouseUp();
   }, [handleCellMouseUp]);
 

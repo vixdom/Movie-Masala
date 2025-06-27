@@ -20,12 +20,10 @@ const CrosswordGridCell = memo(({
   onMouseDown,
   onMouseEnter,
   onPointerEnter,
-
   getWordColor,
   highlightedWord,
   setIsMouseDown,
-  setIsTouching,
-  selectionAnimation
+  setIsTouching
 }: {
   cell: GridCellType;
   rowIndex: number;
@@ -40,10 +38,7 @@ const CrosswordGridCell = memo(({
   highlightedWord?: string | null;
   setIsMouseDown: (value: boolean) => void;
   setIsTouching: (value: boolean) => void;
-  selectionAnimation: {[key: string]: boolean};
 }) => {
-  const cellKey = `${rowIndex}-${colIndex}`;
-  const hasGlassySweep = selectionAnimation[cellKey];
   return (
     <div
       className={cn(
@@ -52,7 +47,6 @@ const CrosswordGridCell = memo(({
           'selected': cell.isSelected && !cell.isFound,
           'found': cell.isFound,
           'highlighted': highlightedWord && cell.wordId && cell.wordId.startsWith(highlightedWord + '-') && !cell.isFound,
-          'glassy-sweep': hasGlassySweep && cell.isSelected,
         }
       )}
       data-row={rowIndex}
@@ -271,11 +265,11 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           highlightedWord={highlightedWord}
           setIsMouseDown={setIsMouseDown}
           setIsTouching={setIsTouching}
-          selectionAnimation={selectionAnimation}
+
         />
       ))
     );
-  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, getWordColor, highlightedWord, selectionAnimation]);
+  }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, getWordColor, highlightedWord]);
 
   return (
     <div
