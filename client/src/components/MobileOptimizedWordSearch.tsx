@@ -95,6 +95,7 @@ const CrosswordGridCell = memo(({
         onTouchStart(rowIndex, colIndex);
       }}
       onTouchMove={(e) => {
+        // Don't call preventDefault on passive listeners
         if (isTouching) {
           console.log('Touch move on cell:', rowIndex, colIndex);
           // Apply glassy effect immediately when touching this cell
@@ -113,11 +114,12 @@ const CrosswordGridCell = memo(({
               navigator.vibrate(10);
             }
           }
-          onTouchMove(e);
+          // Trigger mouse enter for game logic
+          onMouseEnter(rowIndex, colIndex);
         }
       }}
       onClick={(e) => {
-        e.preventDefault();
+        // Remove preventDefault to avoid passive listener issues on iOS
         e.stopPropagation();
         console.log('Cell onClick triggered:', rowIndex, colIndex, cell.letter);
       }}

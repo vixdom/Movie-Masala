@@ -225,7 +225,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       const col = parseInt(element.getAttribute('data-col') || '0', 10);
       console.log('Touch move detected on cell:', row, col);
       
-      // Apply glassy sweep effect to dragged cells (regardless of isSelecting for visual feedback)
+      // Apply glassy sweep effect to dragged cells
       const cellElement = element as HTMLElement;
       if (cellElement && !cellElement.classList.contains('touch-glassy-active')) {
         console.log('Adding glassy effect to cell:', row, col);
@@ -247,6 +247,69 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         handleCellMouseEnter(row, col);
       }
     }
+  }, [gameState.isSelecting, handleCellMouseEnter]);
+
+  // Global touch move handler for iOS Safari compatibility
+  useEffect(() => {
+    let isTracking = false;
+    
+    const handleGlobalTouchStart = () => {
+      isTracking = true;
+      console.log('Global touch start - tracking enabled');
+    };
+    
+    const handleGlobalTouchMove = (event: TouchEvent) => {
+      if (!isTracking) return;
+      
+      const touch = event.touches[0];
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+      
+      if (element?.hasAttribute('data-row') && element?.hasAttribute('data-col')) {
+        const row = parseInt(element.getAttribute('data-row') || '0', 10);
+        const col = parseInt(element.getAttribute('data-col') || '0', 10);
+        console.log('Global touch move on cell:', row, col);
+        
+        // Apply glassy effect
+        const cellElement = element as HTMLElement;
+        if (cellElement && !cellElement.classList.contains('touch-glassy-active')) {
+          console.log('Global touch: Adding glassy effect to cell:', row, col);
+          cellElement.classList.add('touch-glassy-active');
+          
+          setTimeout(() => {
+            cellElement.classList.remove('touch-glassy-active');
+          }, 600);
+          
+          if (navigator.vibrate) {
+            navigator.vibrate(10);
+          }
+        }
+        
+        // Update game logic
+        if (gameState.isSelecting) {
+          handleCellMouseEnter(row, col);
+        }
+      }
+    };
+    
+    const handleGlobalTouchEnd = () => {
+      isTracking = false;
+      console.log('Global touch end - tracking disabled');
+      // Clear all glassy effects
+      document.querySelectorAll('.touch-glassy-active').forEach(element => {
+        element.classList.remove('touch-glassy-active');
+      });
+    };
+    
+    // Add event listeners with passive: false to allow preventDefault if needed
+    document.addEventListener('touchstart', handleGlobalTouchStart, { passive: true });
+    document.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
+    document.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
+    
+    return () => {
+      document.removeEventListener('touchstart', handleGlobalTouchStart);
+      document.removeEventListener('touchmove', handleGlobalTouchMove);
+      document.removeEventListener('touchend', handleGlobalTouchEnd);
+    };
   }, [gameState.isSelecting, handleCellMouseEnter]);
 
   const handleCellTouchEnd = useCallback(() => {
