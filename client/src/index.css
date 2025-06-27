@@ -332,45 +332,7 @@
     }
     
     /* Additional shimmer effect for selected cells */
-    .crossword-cell.glassy-sweep::after {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(
-        45deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.3) 25%,
-        rgba(255, 215, 0, 0.2) 50%,
-        rgba(255, 255, 255, 0.3) 75%,
-        transparent 100%
-      );
-      border-radius: 4px;
-      animation: shimmerPulse 0.8s ease-out;
-      pointer-events: none;
-      z-index: 3;
-    }
-    
-    @keyframes glassySweep {
-      0% {
-        left: -120%;
-        opacity: 0;
-        transform: skewX(-20deg);
-      }
-      15% {
-        opacity: 1;
-      }
-      85% {
-        opacity: 1;
-      }
-      100% {
-        left: 120%;
-        opacity: 0;
-        transform: skewX(-20deg);
-      }
-    }
+
     
     @keyframes shimmerPulse {
       0% {

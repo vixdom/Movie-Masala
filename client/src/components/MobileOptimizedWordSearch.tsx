@@ -33,7 +33,6 @@ const CrosswordGridCell = memo(({
   onMouseDown: (row: number, col: number) => void;
   onMouseEnter: (row: number, col: number) => void;
   onPointerEnter: (row: number, col: number) => void;
-
   getWordColor: (wordId: string | undefined) => string;
   highlightedWord?: string | null;
   setIsMouseDown: (value: boolean) => void;
@@ -52,90 +51,43 @@ const CrosswordGridCell = memo(({
       data-row={rowIndex}
       data-col={colIndex}
 
-
       onMouseDown={(e) => {
         e.stopPropagation();
         console.log('Cell clicked:', rowIndex, colIndex, cell.letter);
         setIsMouseDown(true);
         onMouseDown(rowIndex, colIndex);
       }}
-      onMouseEnter={() => {
-        console.log('Cell mouseEnter:', rowIndex, colIndex, 'isMouseDown:', isMouseDown);
+      onMouseEnter={(e) => {
+        e.stopPropagation();
         if (isMouseDown) {
-          // Gentle haptic feedback for each letter with golden effect
-          if (navigator.vibrate) {
-            navigator.vibrate(15);
-          }
           onMouseEnter(rowIndex, colIndex);
-        }
-      }}
-      onPointerEnter={() => {
-        if (isMouseDown || isTouching) {
-          console.log('Pointer enter on mobile cell:', rowIndex, colIndex);
-          onPointerEnter(rowIndex, colIndex);
         }
       }}
       onPointerDown={(e) => {
-        console.log('=== POINTER DOWN EVENT ===');
-        console.log('Event type:', e.type);
-        console.log('Pointer type:', e.pointerType);
-        console.log('Is primary:', e.isPrimary);
-        console.log('Cell:', rowIndex, colIndex);
+        e.stopPropagation();
+        console.log('Cell pointer down:', rowIndex, colIndex, cell.letter, 'PointerType:', e.pointerType);
         
-        setIsMouseDown(true);
-        setIsTouching(true);
-        
-        // Apply glassy sweep effect immediately
-        const element = e.currentTarget as HTMLElement;
-        element.classList.add('touch-glassy-active');
-        
-        // Capture pointer to ensure we get pointer move events
-        try {
-          element.setPointerCapture(e.pointerId);
-          console.log('Pointer captured successfully:', e.pointerId);
-        } catch (error) {
-          console.error('Failed to capture pointer:', error);
+        if (e.pointerType === 'touch') {
+          setIsTouching(true);
+        } else {
+          setIsMouseDown(true);
         }
-        
         onMouseDown(rowIndex, colIndex);
       }}
-      onPointerMove={(e) => {
-        if (isTouching && e.currentTarget.hasPointerCapture(e.pointerId)) {
-          console.log('Pointer move on cell:', rowIndex, colIndex);
-          
-          // Apply glassy effect immediately when pointer moves over this cell
-          const element = e.currentTarget as HTMLElement;
-          if (!element.classList.contains('touch-glassy-active')) {
-            element.classList.add('touch-glassy-active');
-            console.log('Applied glassy effect via pointer to cell:', rowIndex, colIndex);
-            
-            // Remove after animation
-            setTimeout(() => {
-              element.classList.remove('touch-glassy-active');
-            }, 600);
-            
-            // Haptic feedback
-            if (navigator.vibrate) {
-              navigator.vibrate(10);
-            }
-          }
-          
-          // Trigger game logic
-          onMouseEnter(rowIndex, colIndex);
+      onPointerEnter={(e) => {
+        e.stopPropagation();
+        if (isTouching || isMouseDown) {
+          console.log('Pointer enter during drag:', rowIndex, colIndex, 'PointerType:', e.pointerType);
+          onPointerEnter(rowIndex, colIndex);
         }
       }}
-      onPointerUp={(e) => {
-        const element = e.currentTarget as HTMLElement;
-        element.releasePointerCapture(e.pointerId);
-        console.log('Pointer up on cell:', rowIndex, colIndex);
-      }}
-      onClick={(e) => {
-        // Remove preventDefault to avoid passive listener issues on iOS
-        e.stopPropagation();
-        console.log('Cell onClick triggered:', rowIndex, colIndex, cell.letter);
+      style={{
+        background: cell.isFound && cell.wordId ? `var(--word-found-bg)` : undefined,
+        color: cell.isFound ? `var(--word-found-text)` : undefined,
+        pointerEvents: 'auto'
       }}
     >
-      <span className="cell-letter">{cell.letter}</span>
+      {cell.letter}
     </div>
   );
 });
@@ -145,43 +97,11 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   onCellMouseDown,
   onCellMouseEnter,
   onCellMouseUp,
-  highlightedWord,
+  highlightedWord
 }: WordSearchProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isTouching, setIsTouching] = useState(false);
-  const [selectionAnimation, setSelectionAnimation] = useState<{[key: string]: boolean}>({});
-  
-  // Function to trigger animation for any cell - now with direct DOM manipulation for mobile
-  const triggerCellAnimation = useCallback((row: number, col: number) => {
-    const cellKey = `${row}-${col}`;
-    
-    // Set React state for animation
-    setSelectionAnimation(prev => ({
-      ...prev,
-      [cellKey]: true
-    }));
-    
-    // Also trigger CSS class directly for mobile reliability
-    const cellElement = document.querySelector(`[data-row="${row}"][data-col="${col}"]`) as HTMLElement;
-    if (cellElement) {
-      cellElement.classList.add('glassy-sweep-active');
-      console.log('Added glassy-sweep-active class to cell:', row, col);
-      
-      setTimeout(() => {
-        cellElement.classList.remove('glassy-sweep-active');
-      }, 800);
-    }
-    
-    // Clear React state animation after it completes
-    setTimeout(() => {
-      setSelectionAnimation(prev => {
-        const newState = { ...prev };
-        delete newState[cellKey];
-        return newState;
-      });
-    }, 800);
-  }, []);
 
   // Memoized color function for performance
   const getWordColor = useCallback((wordId: string | undefined): string => {
@@ -204,51 +124,17 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     return wordColors[hash % wordColors.length];
   }, []);
 
-  // Handle pointer events for drag selection with glassy sweep animation
+  // Handle pointer events for drag selection
   const handlePointerEnter = useCallback((row: number, col: number) => {
     if (isMouseDown || isTouching) {
-      // Trigger glassy sweep animation for this cell
-      const cellKey = `${row}-${col}`;
-      console.log('Triggering glassy sweep for:', cellKey, 'touch:', isTouching, 'mouse:', isMouseDown);
-      
-      // Update React state
-      setSelectionAnimation(prev => ({
-        ...prev,
-        [cellKey]: true
-      }));
-      
-      // Also add CSS class directly for mobile reliability
-      const cellElement = document.querySelector(`[data-row="${row}"][data-col="${col}"]`) as HTMLElement;
-      if (cellElement) {
-        cellElement.classList.add('glassy-sweep-active');
-        console.log('Added glassy-sweep-active class to cell:', row, col);
-      }
-      
-      // Clear animation after it completes
-      setTimeout(() => {
-        setSelectionAnimation(prev => {
-          const newState = { ...prev };
-          delete newState[cellKey];
-          return newState;
-        });
-        
-        if (cellElement) {
-          cellElement.classList.remove('glassy-sweep-active');
-        }
-      }, 800);
-      
-      // Add haptic feedback for mobile
-      if (navigator.vibrate) {
-        navigator.vibrate(15);
-      }
-      
+      console.log('Pointer enter during selection:', row, col);
       onCellMouseEnter(row, col);
     }
   }, [isMouseDown, isTouching, onCellMouseEnter]);
 
-  // Optimized grid rendering with memoization
-  const renderedGrid = useMemo(() => {
-    return grid.map((row, rowIndex) =>
+  // Memoized grid cells for optimal performance
+  const gridCells = useMemo(() => {
+    return grid.flatMap((row, rowIndex) =>
       row.map((cell, colIndex) => (
         <CrosswordGridCell
           key={`${rowIndex}-${colIndex}`}
@@ -260,12 +146,10 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           onMouseDown={onCellMouseDown}
           onMouseEnter={onCellMouseEnter}
           onPointerEnter={handlePointerEnter}
-
           getWordColor={getWordColor}
           highlightedWord={highlightedWord}
           setIsMouseDown={setIsMouseDown}
           setIsTouching={setIsTouching}
-
         />
       ))
     );
@@ -281,14 +165,31 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
         setIsMouseDown(false);
         onCellMouseUp();
       }}
+      onPointerUp={(e) => {
+        console.log('Grid pointer up, type:', e.pointerType);
+        if (e.pointerType === 'touch') {
+          setIsTouching(false);
+        } else {
+          setIsMouseDown(false);
+        }
+        onCellMouseUp();
+      }}
       onMouseLeave={() => {
-        console.log('Grid mouseLeave');
+        console.log('Mouse left grid');
         setIsMouseDown(false);
         onCellMouseUp();
       }}
-
+      onPointerLeave={(e) => {
+        console.log('Pointer left grid, type:', e.pointerType);
+        if (e.pointerType === 'touch') {
+          setIsTouching(false);
+        } else {
+          setIsMouseDown(false);
+        }
+        onCellMouseUp();
+      }}
     >
-      {renderedGrid}
+      {gridCells}
     </div>
   );
 });
