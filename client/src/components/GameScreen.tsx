@@ -365,8 +365,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
 
       {/* Selection Bubble - word in progress */}
       {currentSelection && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 bollywood-selection-bubble text-white px-6 py-3 rounded-full shadow-lg transition-all duration-300 whitespace-nowrap max-w-[90vw] overflow-hidden">
-          <span className="text-lg font-bold tracking-widest">
+        <div className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 bollywood-selection-bubble text-white shadow-lg transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit ${currentSelection.length <= 6 ? 'rounded-full px-6 py-3' : 'rounded-xl px-8 py-4'}`}>
+          <span className="text-lg font-bold tracking-widest block">
             {currentSelection.split('').join(' ')}
           </span>
         </div>
