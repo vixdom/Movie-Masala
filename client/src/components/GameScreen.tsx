@@ -249,20 +249,51 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     }
   }, [gameState.isSelecting, handleCellMouseEnter]);
 
-  // Global pointer event cleanup for when dragging ends
+  // Comprehensive event debugging and touch event prevention
   useEffect(() => {
+    console.log('=== SETTING UP EVENT DEBUGGING ===');
+    
+    // Debug function to log all touch events
+    const debugTouchEvent = (event: TouchEvent) => {
+      console.log('🔍 TOUCH EVENT DETECTED:', {
+        type: event.type,
+        target: event.target?.constructor?.name,
+        targetTagName: (event.target as Element)?.tagName,
+        targetClasses: (event.target as Element)?.className,
+        touches: event.touches.length,
+        timeStamp: event.timeStamp
+      });
+      
+      // Attempt to prevent default on all touch events to stop conflicts
+      try {
+        event.preventDefault();
+        console.log('✅ preventDefault successful on:', event.type);
+      } catch (error) {
+        console.log('❌ preventDefault failed on:', event.type, error);
+      }
+    };
+    
     const handleGlobalPointerUp = () => {
       console.log('Global pointer up - cleaning glassy effects');
-      // Clear all glassy effects when pointer interaction ends
       document.querySelectorAll('.touch-glassy-active').forEach(element => {
         element.classList.remove('touch-glassy-active');
       });
     };
     
+    // Add event listeners with explicit passive: false to allow preventDefault
+    document.addEventListener('touchstart', debugTouchEvent, { passive: false, capture: true });
+    document.addEventListener('touchmove', debugTouchEvent, { passive: false, capture: true });
+    document.addEventListener('touchend', debugTouchEvent, { passive: false, capture: true });
     document.addEventListener('pointerup', handleGlobalPointerUp);
     
+    console.log('Event listeners added for debugging');
+    
     return () => {
+      document.removeEventListener('touchstart', debugTouchEvent, true);
+      document.removeEventListener('touchmove', debugTouchEvent, true);
+      document.removeEventListener('touchend', debugTouchEvent, true);
       document.removeEventListener('pointerup', handleGlobalPointerUp);
+      console.log('Event listeners removed');
     };
   }, []);
 

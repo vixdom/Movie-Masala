@@ -57,6 +57,24 @@ const CrosswordGridCell = memo(({
       )}
       data-row={rowIndex}
       data-col={colIndex}
+      style={{
+        touchAction: 'none'
+      }}
+      onTouchStart={(e) => {
+        console.log('⚠️ TOUCH START INTERCEPTED ON CELL - PREVENTING');
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      onTouchMove={(e) => {
+        console.log('⚠️ TOUCH MOVE INTERCEPTED ON CELL - PREVENTING');
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      onTouchEnd={(e) => {
+        console.log('⚠️ TOUCH END INTERCEPTED ON CELL - PREVENTING');
+        e.preventDefault();
+        e.stopPropagation();
+      }}
       onMouseDown={(e) => {
         e.stopPropagation();
         console.log('Cell clicked:', rowIndex, colIndex, cell.letter);
@@ -80,16 +98,26 @@ const CrosswordGridCell = memo(({
         }
       }}
       onPointerDown={(e) => {
+        console.log('=== POINTER DOWN EVENT ===');
+        console.log('Event type:', e.type);
+        console.log('Pointer type:', e.pointerType);
+        console.log('Is primary:', e.isPrimary);
+        console.log('Cell:', rowIndex, colIndex);
+        
         setIsMouseDown(true);
         setIsTouching(true);
         
         // Apply glassy sweep effect immediately
         const element = e.currentTarget as HTMLElement;
         element.classList.add('touch-glassy-active');
-        console.log('Pointer down on cell:', rowIndex, colIndex);
         
         // Capture pointer to ensure we get pointer move events
-        element.setPointerCapture(e.pointerId);
+        try {
+          element.setPointerCapture(e.pointerId);
+          console.log('Pointer captured successfully:', e.pointerId);
+        } catch (error) {
+          console.error('Failed to capture pointer:', error);
+        }
         
         onMouseDown(rowIndex, colIndex);
       }}
