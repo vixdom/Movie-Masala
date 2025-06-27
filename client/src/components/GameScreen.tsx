@@ -249,53 +249,88 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     }
   }, [gameState.isSelecting, handleCellMouseEnter]);
 
-  // Comprehensive event debugging and touch event prevention
+  // Chrome Mobile Emulation Compatible Event Handling
   useEffect(() => {
-    console.log('=== SETTING UP EVENT DEBUGGING ===');
+    let isPointerActive = false;
+    let lastActivatedCell: HTMLElement | null = null;
     
-    // Debug function to log all touch events
-    const debugTouchEvent = (event: TouchEvent) => {
-      console.log('🔍 TOUCH EVENT DETECTED:', {
-        type: event.type,
-        target: event.target?.constructor?.name,
-        targetTagName: (event.target as Element)?.tagName,
-        targetClasses: (event.target as Element)?.className,
-        touches: event.touches.length,
-        timeStamp: event.timeStamp
-      });
+    // Detect if we're in Chrome mobile emulation
+    const isChromeMobileEmulation = /Chrome/.test(navigator.userAgent) && 
+                                   window.innerWidth <= 768 &&
+                                   !('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    
+    console.log('Environment detection:', {
+      isChrome: /Chrome/.test(navigator.userAgent),
+      windowWidth: window.innerWidth,
+      hasTouchSupport: 'ontouchstart' in window,
+      maxTouchPoints: navigator.maxTouchPoints,
+      isChromeMobileEmulation
+    });
+    
+    const handleGlobalPointerMove = (event: PointerEvent) => {
+      if (!isPointerActive) return;
       
-      // Attempt to prevent default on all touch events to stop conflicts
-      try {
-        event.preventDefault();
-        console.log('✅ preventDefault successful on:', event.type);
-      } catch (error) {
-        console.log('❌ preventDefault failed on:', event.type, error);
+      const element = document.elementFromPoint(event.clientX, event.clientY);
+      if (element?.hasAttribute('data-row') && element?.hasAttribute('data-col')) {
+        const cellElement = element as HTMLElement;
+        
+        // Only apply effect if this is a different cell
+        if (cellElement !== lastActivatedCell && !cellElement.classList.contains('touch-glassy-active')) {
+          cellElement.classList.add('touch-glassy-active');
+          console.log('Applied glassy effect via global pointer move');
+          
+          // Remove after animation
+          setTimeout(() => {
+            cellElement.classList.remove('touch-glassy-active');
+          }, 600);
+          
+          lastActivatedCell = cellElement;
+          
+          // Trigger game logic
+          const row = parseInt(element.getAttribute('data-row') || '0', 10);
+          const col = parseInt(element.getAttribute('data-col') || '0', 10);
+          if (gameState.isSelecting) {
+            handleCellMouseEnter(row, col);
+          }
+        }
       }
     };
     
+    const handleGlobalPointerDown = () => {
+      isPointerActive = true;
+      lastActivatedCell = null;
+      console.log('Global pointer tracking activated');
+    };
+    
     const handleGlobalPointerUp = () => {
-      console.log('Global pointer up - cleaning glassy effects');
+      isPointerActive = false;
+      lastActivatedCell = null;
+      console.log('Global pointer tracking deactivated');
+      
+      // Clear all glassy effects
       document.querySelectorAll('.touch-glassy-active').forEach(element => {
         element.classList.remove('touch-glassy-active');
       });
     };
     
-    // Add event listeners with explicit passive: false to allow preventDefault
-    document.addEventListener('touchstart', debugTouchEvent, { passive: false, capture: true });
-    document.addEventListener('touchmove', debugTouchEvent, { passive: false, capture: true });
-    document.addEventListener('touchend', debugTouchEvent, { passive: false, capture: true });
-    document.addEventListener('pointerup', handleGlobalPointerUp);
-    
-    console.log('Event listeners added for debugging');
+    // For Chrome mobile emulation, use global pointer tracking
+    if (isChromeMobileEmulation) {
+      document.addEventListener('pointerdown', handleGlobalPointerDown);
+      document.addEventListener('pointermove', handleGlobalPointerMove);
+      document.addEventListener('pointerup', handleGlobalPointerUp);
+      
+      console.log('Chrome mobile emulation mode: Using global pointer tracking');
+    } else {
+      document.addEventListener('pointerup', handleGlobalPointerUp);
+      console.log('Real mobile device mode: Using cell-level pointer events');
+    }
     
     return () => {
-      document.removeEventListener('touchstart', debugTouchEvent, true);
-      document.removeEventListener('touchmove', debugTouchEvent, true);
-      document.removeEventListener('touchend', debugTouchEvent, true);
+      document.removeEventListener('pointerdown', handleGlobalPointerDown);
+      document.removeEventListener('pointermove', handleGlobalPointerMove);
       document.removeEventListener('pointerup', handleGlobalPointerUp);
-      console.log('Event listeners removed');
     };
-  }, []);
+  }, [gameState.isSelecting, handleCellMouseEnter]);
 
   const handleCellTouchEnd = useCallback(() => {
     // Clear all glassy effects when touch ends
