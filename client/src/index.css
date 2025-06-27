@@ -31,6 +31,8 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
+    /* Disable touch events globally to prevent passive listener conflicts */
+    touch-action: none;
   }
 
   /* Portrait mobile layout */
