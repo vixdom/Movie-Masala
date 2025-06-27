@@ -232,7 +232,7 @@
       background: transparent;
       box-sizing: border-box;
       user-select: none;
-      touch-action: manipulation;
+      touch-action: none;
       position: relative;
       z-index: 5;
       animation: fadeInUp 0.8s ease-out 0.2s both;
@@ -268,7 +268,7 @@
       border-radius: 2px;
       user-select: none;
       cursor: pointer;
-      touch-action: manipulation;
+      touch-action: none;
       transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       text-transform: uppercase;
       letter-spacing: 0.2px;

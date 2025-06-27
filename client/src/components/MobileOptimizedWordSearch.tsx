@@ -57,9 +57,7 @@ const CrosswordGridCell = memo(({
       )}
       data-row={rowIndex}
       data-col={colIndex}
-      style={{
-        touchAction: 'none'
-      }}
+
 
       onMouseDown={(e) => {
         e.stopPropagation();
