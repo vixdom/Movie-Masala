@@ -20,7 +20,7 @@ const CrosswordGridCell = memo(({
   onMouseDown,
   onMouseEnter,
   onPointerEnter,
-  onTouchStart,
+
   getWordColor,
   highlightedWord,
   setIsMouseDown,
@@ -35,7 +35,7 @@ const CrosswordGridCell = memo(({
   onMouseDown: (row: number, col: number) => void;
   onMouseEnter: (row: number, col: number) => void;
   onPointerEnter: (row: number, col: number) => void;
-  onTouchStart: (row: number, col: number) => void;
+
   getWordColor: (wordId: string | undefined) => string;
   highlightedWord?: string | null;
   setIsMouseDown: (value: boolean) => void;
@@ -254,7 +254,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           onMouseDown={onCellMouseDown}
           onMouseEnter={onCellMouseEnter}
           onPointerEnter={handlePointerEnter}
-          onTouchStart={onCellMouseDown}
+
           getWordColor={getWordColor}
           highlightedWord={highlightedWord}
           setIsMouseDown={setIsMouseDown}
