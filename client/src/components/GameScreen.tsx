@@ -153,9 +153,10 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   const handleCellMouseDown = useCallback((row: number, col: number) => {
     playHit();
     game.startSelection(row, col);
-    setGameState(game.getGameState());
+    const newGameState = game.getGameState();
+    setGameState(newGameState);
     const selection = game.getCurrentSelectionWord();
-    console.log('Selection started:', selection);
+    console.log('Selection started:', selection, 'isSelecting:', newGameState.isSelecting);
     setCurrentSelection(selection);
   }, [game, playHit]);
 
@@ -376,9 +377,14 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
 
       {/* Grid Wrapper - Bottom half container with permanent reserved space */}
       <div className="grid-wrapper relative">
-        {/* Selection Bubble - absolutely positioned in the 120px reserved space */}
+        {/* Always visible test bubble to debug positioning */}
+        <div className="fixed top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs" style={{ zIndex: 9999 }}>
+          Selecting: {gameState.isSelecting ? 'YES' : 'NO'}
+        </div>
+        
+        {/* Selection Bubble - fixed at top of screen */}
         {gameState.isSelecting && (
-          <div className="absolute left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-2xl transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit rounded-xl px-8 py-4 border-2 border-yellow-400" style={{ top: '-80px', zIndex: 100 }}>
+          <div className="fixed top-16 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-2xl transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit rounded-xl px-8 py-4 border-2 border-yellow-400" style={{ zIndex: 9999 }}>
             <span className="text-lg font-bold tracking-widest block">
               {currentSelection || 'SELECTING...'}
             </span>
