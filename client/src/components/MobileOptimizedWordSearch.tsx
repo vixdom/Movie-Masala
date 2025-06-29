@@ -1,3 +1,4 @@
+
 import React, { useRef, useCallback, useState, useMemo, memo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { GridCell as GridCellType } from '@/lib/wordSearchGame';
@@ -31,23 +32,27 @@ const CrosswordGridCell = memo(({
   highlightedWord?: string | null;
 }) => {
 
-  // Unified handler for starting selection (mouse down or touch start)
-  const handleSelectionStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+  // Mouse down handler
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation();
-    console.log('Selection start:', rowIndex, colIndex, cell.letter);
+    console.log('Mouse down:', rowIndex, colIndex, cell.letter);
     onSelectionStart(rowIndex, colIndex);
   }, [rowIndex, colIndex, cell.letter, onSelectionStart]);
 
-  // Unified handler for continuing selection (mouse enter or touch move)
-  const handleSelectionMove = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  // Mouse enter handler
+  const handleMouseEnter = useCallback((e: React.MouseEvent) => {
     if (isSelecting) {
-      console.log('Selection move:', rowIndex, colIndex);
+      console.log('Mouse enter during selection:', rowIndex, colIndex);
       onSelectionMove(rowIndex, colIndex);
     }
   }, [rowIndex, colIndex, isSelecting, onSelectionMove]);
+
+  // Touch start handler
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    e.preventDefault();
+    console.log('Touch start:', rowIndex, colIndex, cell.letter);
+    onSelectionStart(rowIndex, colIndex);
+  }, [rowIndex, colIndex, cell.letter, onSelectionStart]);
 
   return (
     <div
@@ -63,18 +68,20 @@ const CrosswordGridCell = memo(({
       data-col={colIndex}
       
       // Mouse events
-      onMouseDown={handleSelectionStart}
-      onMouseEnter={handleSelectionMove}
+      onMouseDown={handleMouseDown}
+      onMouseEnter={handleMouseEnter}
       
       // Touch events
-      onTouchStart={handleSelectionStart}
-      onTouchMove={handleSelectionMove}
+      onTouchStart={handleTouchStart}
       
       style={{
         background: cell.isFound && cell.wordId ? `var(--word-found-bg)` : undefined,
         color: cell.isFound ? `var(--word-found-text)` : undefined,
         pointerEvents: 'auto',
-        touchAction: 'none' // Prevent scrolling and other touch behaviors
+        touchAction: 'none',
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        WebkitTouchCallout: 'none'
       }}
     >
       {cell.letter}
@@ -91,6 +98,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
 }: WordSearchProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const [isSelecting, setIsSelecting] = useState(false);
+  const touchMoveThrottleRef = useRef<NodeJS.Timeout>();
 
   // Unified handlers for selection events
   const handleSelectionStart = useCallback((row: number, col: number) => {
@@ -100,8 +108,8 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   }, [onCellMouseDown]);
 
   const handleSelectionMove = useCallback((row: number, col: number) => {
-    console.log('Selection moved to:', row, col);
     if (isSelecting) {
+      console.log('Selection moved to:', row, col);
       onCellMouseEnter(row, col);
     }
   }, [isSelecting, onCellMouseEnter]);
@@ -112,25 +120,37 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     onCellMouseUp();
   }, [onCellMouseUp]);
 
-  // For touch move events that cross multiple cells
-  const handleTouchMoveAcrossCells = useCallback((e: TouchEvent) => {
+  // Improved touch move handler with throttling
+  const handleTouchMove = useCallback((e: TouchEvent) => {
     if (!isSelecting) return;
     
     e.preventDefault(); // Prevent scrolling during selection
     
-    const touch = e.touches[0];
-    if (!touch) return;
-    
-    // Find cell at touch coordinates
-    const element = document.elementFromPoint(touch.clientX, touch.clientY);
-    const cellElement = element?.closest('[data-row][data-col]') as HTMLElement;
-    
-    if (cellElement) {
-      const row = parseInt(cellElement.dataset.row || '0');
-      const col = parseInt(cellElement.dataset.col || '0');
-      handleSelectionMove(row, col);
+    // Throttle touch move events for better performance
+    if (touchMoveThrottleRef.current) {
+      clearTimeout(touchMoveThrottleRef.current);
     }
-  }, [isSelecting, handleSelectionMove]);
+    
+    touchMoveThrottleRef.current = setTimeout(() => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      
+      // Find cell at touch coordinates
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+      const cellElement = element?.closest('[data-row][data-col]') as HTMLElement;
+      
+      if (cellElement) {
+        const row = parseInt(cellElement.dataset.row || '0', 10);
+        const col = parseInt(cellElement.dataset.col || '0', 10);
+        
+        // Validate coordinates are within grid bounds
+        if (row >= 0 && row < grid.length && col >= 0 && col < grid[0].length) {
+          console.log('Touch move to valid cell:', row, col);
+          handleSelectionMove(row, col);
+        }
+      }
+    }, 16); // ~60fps throttling
+  }, [isSelecting, handleSelectionMove, grid.length]);
 
   // Memoized color function for performance
   const getWordColor = useCallback((wordId: string | undefined): string => {
@@ -177,12 +197,39 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     const gridElement = gridRef.current;
     if (!gridElement) return;
 
-    gridElement.addEventListener('touchmove', handleTouchMoveAcrossCells, { passive: false });
+    // Add touch move listener with passive: false to allow preventDefault
+    gridElement.addEventListener('touchmove', handleTouchMove, { passive: false });
     
     return () => {
-      gridElement.removeEventListener('touchmove', handleTouchMoveAcrossCells);
+      gridElement.removeEventListener('touchmove', handleTouchMove);
+      if (touchMoveThrottleRef.current) {
+        clearTimeout(touchMoveThrottleRef.current);
+      }
     };
-  }, [handleTouchMoveAcrossCells]);
+  }, [handleTouchMove]);
+
+  // Global touch end listener to ensure selection ends even if touch leaves grid
+  useEffect(() => {
+    if (!isSelecting) return;
+
+    const handleGlobalTouchEnd = (e: TouchEvent) => {
+      console.log('Global touch end detected');
+      handleSelectionEnd();
+    };
+
+    const handleGlobalTouchCancel = (e: TouchEvent) => {
+      console.log('Global touch cancel detected');
+      handleSelectionEnd();
+    };
+
+    document.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
+    document.addEventListener('touchcancel', handleGlobalTouchCancel, { passive: true });
+    
+    return () => {
+      document.removeEventListener('touchend', handleGlobalTouchEnd);
+      document.removeEventListener('touchcancel', handleGlobalTouchCancel);
+    };
+  }, [isSelecting, handleSelectionEnd]);
 
   return (
     <div
@@ -190,13 +237,14 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
       className="crossword-grid"
       style={{ 
         pointerEvents: 'auto',
-        touchAction: 'none' // Prevent scrolling during selection
+        touchAction: 'none',
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        WebkitTouchCallout: 'none'
       }}
-      // Unified selection end handlers for mouse and touch
+      // Mouse selection end handlers
       onMouseUp={handleSelectionEnd}
-      onTouchEnd={handleSelectionEnd}
       onMouseLeave={handleSelectionEnd}
-      onTouchCancel={handleSelectionEnd}
     >
       {gridCells}
     </div>
