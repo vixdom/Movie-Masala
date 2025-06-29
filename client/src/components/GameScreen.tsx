@@ -372,9 +372,9 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
 
       {/* Grid Wrapper - Bottom half container with reserved space for selection bubble */}
       <div className="grid-wrapper relative">
-        {/* Selection Bubble - absolutely positioned in reserved space */}
+        {/* Selection Bubble - absolutely positioned above grid in reserved space */}
         {currentSelection && (
-          <div className={`absolute left-1/2 transform -translate-x-1/2 z-30 bollywood-selection-bubble text-white shadow-lg transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit ${currentSelection.length <= 6 ? 'rounded-full px-6 py-3' : 'rounded-xl px-8 py-4'}`} style={{ top: '30px' }}>
+          <div className={`absolute left-1/2 transform -translate-x-1/2 bollywood-selection-bubble text-white shadow-lg transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit ${currentSelection.length <= 6 ? 'rounded-full px-6 py-3' : 'rounded-xl px-8 py-4'}`} style={{ top: '10px', zIndex: 100 }}>
             <span className="text-lg font-bold tracking-widest block">
               {currentSelection.split('').join(' ')}
             </span>
