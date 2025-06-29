@@ -376,12 +376,6 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         </div>
       )}
 
-      {/* Found Words Film Strip */}
-      <FoundWordsDisplay 
-        foundWords={game.getFoundWords()} 
-        allWords={currentWords} 
-      />
-
       {/* Grid Wrapper - Bottom half container with permanent reserved space */}
       <div className="grid-wrapper relative">
         {/* Selection Bubble - fixed at top of screen */}
