@@ -51,13 +51,26 @@ const CrosswordGridCell = memo(({
   // Touch start handler
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     console.log('Touch start:', rowIndex, colIndex, cell.letter);
+    
+    // Add visual feedback for touch
+    const target = e.currentTarget as HTMLElement;
+    target.classList.add('touch-glassy-active');
+    
+    // Haptic feedback
+    if (navigator.vibrate) {
+      navigator.vibrate(20);
+    }
+    
     onSelectionStart(rowIndex, colIndex);
   }, [rowIndex, colIndex, cell.letter, onSelectionStart]);
 
   // Touch move handler - this is key for mobile functionality
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     if (isSelecting && e.touches.length > 0) {
       const touch = e.touches[0];
       const element = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -67,6 +80,22 @@ const CrosswordGridCell = memo(({
         const row = parseInt(cellElement.dataset.row || '0', 10);
         const col = parseInt(cellElement.dataset.col || '0', 10);
         console.log('Touch move to cell:', row, col);
+        
+        // Add visual feedback to dragged cells
+        if (!cellElement.classList.contains('touch-glassy-active')) {
+          cellElement.classList.add('touch-glassy-active');
+          
+          // Remove the effect after a short duration
+          setTimeout(() => {
+            cellElement.classList.remove('touch-glassy-active');
+          }, 600);
+        }
+        
+        // Gentle haptic feedback
+        if (navigator.vibrate) {
+          navigator.vibrate(10);
+        }
+        
         onSelectionMove(row, col);
       }
     }
@@ -75,7 +104,13 @@ const CrosswordGridCell = memo(({
   // Touch end handler
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     console.log('Touch end:', rowIndex, colIndex);
+    
+    // Remove visual feedback
+    const target = e.currentTarget as HTMLElement;
+    target.classList.remove('touch-glassy-active');
+    
     onSelectionEnd();
   }, [rowIndex, colIndex, onSelectionEnd]);
 
@@ -187,28 +222,17 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     );
   }, [grid, isSelecting, handleSelectionStart, handleSelectionMove, handleSelectionEnd, getWordColor, highlightedWord]);
 
-  // Global touch end listener to ensure selection ends even if touch leaves grid
-  useEffect(() => {
-    if (!isSelecting) return;
+  // Handle mouse events for non-touch devices
+  const handleMouseUp = useCallback(() => {
+    console.log('Mouse up detected');
+    handleSelectionEnd();
+  }, [handleSelectionEnd]);
 
-    const handleGlobalTouchEnd = (e: TouchEvent) => {
-      console.log('Global touch end detected');
+  const handleMouseLeave = useCallback(() => {
+    console.log('Mouse leave detected');
+    if (isSelecting) {
       handleSelectionEnd();
-    };
-
-    const handleGlobalTouchCancel = (e: TouchEvent) => {
-      console.log('Global touch cancel detected');
-      handleSelectionEnd();
-    };
-
-    // Add listeners to document to catch touch events outside the grid
-    document.addEventListener('touchend', handleGlobalTouchEnd, { passive: false });
-    document.addEventListener('touchcancel', handleGlobalTouchCancel, { passive: false });
-    
-    return () => {
-      document.removeEventListener('touchend', handleGlobalTouchEnd);
-      document.removeEventListener('touchcancel', handleGlobalTouchCancel);
-    };
+    }
   }, [isSelecting, handleSelectionEnd]);
 
   return (
@@ -223,8 +247,8 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
         WebkitTouchCallout: 'none'
       }}
       // Mouse selection end handlers
-      onMouseUp={handleSelectionEnd}
-      onMouseLeave={handleSelectionEnd}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
     >
       {gridCells}
     </div>
