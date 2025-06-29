@@ -414,8 +414,12 @@ export class WordSearchGame {
     const start = this.gameState.selectedCells[0];
     if (!start) return;
     
+    console.log(`UpdateSelection called: from [${start.row}, ${start.col}] to [${row}, ${col}]`);
+    
     // Calculate selection path
     const cells = this.getSelectionPath(start.row, start.col, row, col);
+    console.log('Selection path calculated:', cells);
+    
     this.gameState.selectedCells = cells;
     this.updateGridSelection();
   }
