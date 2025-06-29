@@ -32,6 +32,7 @@ const CrosswordGridCell = memo(({
   getWordColor: (wordId: string | undefined) => string;
   highlightedWord?: string | null;
 }) => {
+  const cellRef = useRef<HTMLDivElement>(null);
 
   // Mouse down handler
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -48,8 +49,8 @@ const CrosswordGridCell = memo(({
     }
   }, [rowIndex, colIndex, isSelecting, onSelectionMove]);
 
-  // Touch start handler
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+  // Native touch event handlers for non-passive events
+  const handleNativeTouchStart = useCallback((e: TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
     console.log('Touch start:', rowIndex, colIndex, cell.letter);
@@ -66,8 +67,7 @@ const CrosswordGridCell = memo(({
     onSelectionStart(rowIndex, colIndex);
   }, [rowIndex, colIndex, cell.letter, onSelectionStart]);
 
-  // Touch move handler - this is key for mobile functionality
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+  const handleNativeTouchMove = useCallback((e: TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -103,8 +103,7 @@ const CrosswordGridCell = memo(({
     }
   }, [isSelecting, onSelectionMove]);
 
-  // Touch end handler
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+  const handleNativeTouchEnd = useCallback((e: TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
     console.log('Touch end:', rowIndex, colIndex);
@@ -116,8 +115,27 @@ const CrosswordGridCell = memo(({
     onSelectionEnd();
   }, [rowIndex, colIndex, onSelectionEnd]);
 
+  // Attach native event listeners with passive: false
+  useEffect(() => {
+    const cellElement = cellRef.current;
+    if (!cellElement) return;
+
+    // Add touch event listeners with passive: false to allow preventDefault
+    cellElement.addEventListener('touchstart', handleNativeTouchStart, { passive: false });
+    cellElement.addEventListener('touchmove', handleNativeTouchMove, { passive: false });
+    cellElement.addEventListener('touchend', handleNativeTouchEnd, { passive: false });
+
+    return () => {
+      // Cleanup event listeners
+      cellElement.removeEventListener('touchstart', handleNativeTouchStart);
+      cellElement.removeEventListener('touchmove', handleNativeTouchMove);
+      cellElement.removeEventListener('touchend', handleNativeTouchEnd);
+    };
+  }, [handleNativeTouchStart, handleNativeTouchMove, handleNativeTouchEnd]);
+
   return (
     <div
+      ref={cellRef}
       className={cn(
         'crossword-cell',
         {
@@ -129,14 +147,9 @@ const CrosswordGridCell = memo(({
       data-row={rowIndex}
       data-col={colIndex}
       
-      // Mouse events
+      // Mouse events only (touch events handled by native listeners)
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
-      
-      // Touch events - these are crucial for mobile
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
       
       style={{
         background: cell.isFound && cell.wordId ? `var(--word-found-bg)` : undefined,
