@@ -52,7 +52,7 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
-      padding: 60px 0 16px 0; /* Top padding permanently reserves space for selection bubble */
+      padding: 120px 0 16px 0; /* Top padding permanently positions grid two rows lower */
       min-height: 0;
     }
   }
@@ -563,7 +563,7 @@ html {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  padding: 60px 8px 8px 8px; /* Top padding permanently reserves space for selection bubble */
+  padding: 120px 8px 8px 8px; /* Top padding permanently positions grid two rows lower */
 }
 
 .grid-container {
