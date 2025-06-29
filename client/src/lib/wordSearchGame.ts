@@ -139,6 +139,127 @@ export class WordSearchGame {
     }
   }
 
+  /**
+   * Verifies that all words in the gameState.words array are correctly placed in the grid
+   * @private
+   */
+  private _verifyAllWordsPlaced(): void {
+    console.log('🔍 VERIFYING WORD PLACEMENT...');
+    
+    let successfulPlacements = 0;
+    let failedPlacements = 0;
+    const issues: string[] = [];
+    
+    for (const wordPlacement of this.gameState.words) {
+      const { word, positions, id, direction } = wordPlacement;
+      
+      // Reconstruct the word from grid positions
+      let reconstructedWord = '';
+      let positionIssues = false;
+      
+      for (let i = 0; i < positions.length; i++) {
+        const pos = positions[i];
+        
+        // Check if position is within grid bounds
+        if (pos.row < 0 || pos.row >= GRID_SIZE || pos.col < 0 || pos.col >= GRID_SIZE) {
+          issues.push(`❌ ${word}: Position ${i} (${pos.row}, ${pos.col}) is out of grid bounds`);
+          positionIssues = true;
+          continue;
+        }
+        
+        const gridLetter = this.gameState.grid[pos.row][pos.col].letter;
+        reconstructedWord += gridLetter;
+        
+        // Check if the letter matches what it should be
+        if (gridLetter !== word[i]) {
+          issues.push(`❌ ${word}: Position ${i} should be '${word[i]}' but grid has '${gridLetter}' at (${pos.row}, ${pos.col})`);
+          positionIssues = true;
+        }
+        
+        // Check if the cell has the correct wordId
+        const cellWordId = this.gameState.grid[pos.row][pos.col].wordId;
+        if (cellWordId !== id) {
+          issues.push(`⚠️ ${word}: Cell at (${pos.row}, ${pos.col}) has wordId '${cellWordId}' but should be '${id}'`);
+        }
+      }
+      
+      // Verify the reconstructed word matches the original
+      if (reconstructedWord === word && !positionIssues) {
+        successfulPlacements++;
+        console.log(`✅ ${word}: Successfully placed ${direction} at positions ${JSON.stringify(positions)}`);
+      } else {
+        failedPlacements++;
+        issues.push(`❌ ${word}: Expected '${word}' but reconstructed '${reconstructedWord}'`);
+      }
+      
+      // Verify line straightness
+      if (positions.length > 1) {
+        const isValidLine = this.validateStraightLine(word, positions, direction);
+        if (!isValidLine) {
+          issues.push(`❌ ${word}: Positions do not form a valid straight line in ${direction} direction`);
+        }
+      }
+    }
+    
+    // Summary report
+    console.log(`\n📊 WORD PLACEMENT VERIFICATION SUMMARY:`);
+    console.log(`✅ Successfully placed: ${successfulPlacements} words`);
+    console.log(`❌ Failed placements: ${failedPlacements} words`);
+    console.log(`📈 Success rate: ${((successfulPlacements / this.gameState.words.length) * 100).toFixed(1)}%`);
+    
+    if (issues.length > 0) {
+      console.log(`\n🚨 ISSUES FOUND:`);
+      issues.forEach(issue => console.log(issue));
+    } else {
+      console.log(`\n🎉 ALL WORDS VERIFIED SUCCESSFULLY!`);
+    }
+    
+    // Additional grid integrity check
+    this._verifyGridIntegrity();
+  }
+
+  /**
+   * Performs additional integrity checks on the grid
+   * @private
+   */
+  private _verifyGridIntegrity(): void {
+    let emptyCells = 0;
+    let wordCells = 0;
+    let fillerCells = 0;
+    const wordIds = new Set<string>();
+    
+    for (let row = 0; row < GRID_SIZE; row++) {
+      for (let col = 0; col < GRID_SIZE; col++) {
+        const cell = this.gameState.grid[row][col];
+        
+        if (cell.letter === '') {
+          emptyCells++;
+        } else if (cell.isPartOfWord && cell.wordId) {
+          wordCells++;
+          wordIds.add(cell.wordId);
+        } else {
+          fillerCells++;
+        }
+      }
+    }
+    
+    console.log(`\n🔬 GRID INTEGRITY CHECK:`);
+    console.log(`📊 Grid composition:`);
+    console.log(`   • Word cells: ${wordCells}`);
+    console.log(`   • Filler cells: ${fillerCells}`);
+    console.log(`   • Empty cells: ${emptyCells}`);
+    console.log(`🆔 Unique word IDs found: ${wordIds.size}`);
+    console.log(`📝 Words to place: ${this.gameState.words.length}`);
+    
+    if (emptyCells > 0) {
+      console.log(`⚠️ WARNING: ${emptyCells} empty cells found - grid may not be fully generated`);
+    }
+    
+    if (wordIds.size !== this.gameState.words.length) {
+      console.log(`⚠️ WARNING: Word ID count mismatch - expected ${this.gameState.words.length}, found ${wordIds.size}`);
+    }
+  }
+
   public generateGrid(words: string[]): void {
     let maxRetries = 10; // More retries for better success
     let bestResult: { placedWords: WordPlacement[], placedCount: number } = { placedWords: [], placedCount: 0 };
@@ -221,6 +342,9 @@ export class WordSearchGame {
     
     // Fill empty spaces with random letters
     this.fillEmptySpaces();
+    
+    // 🔍 VERIFICATION: Check all words are correctly placed
+    this._verifyAllWordsPlaced();
   }
   
   private verifyAndFixCoordinates(): void {
