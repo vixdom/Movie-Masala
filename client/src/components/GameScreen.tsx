@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { cn } from '../lib/utils';
 import { WordFoundAnimation } from './WordFoundAnimation';
 import { MobileOptimizedWordSearch } from './MobileOptimizedWordSearch';
+import { FoundWordsDisplay } from './FoundWordsDisplay';
 import { ChevronLeft } from 'lucide-react';
 
 interface GameScreenProps {
@@ -374,6 +375,12 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
           <span className="text-sm font-medium">{showHint}</span>
         </div>
       )}
+
+      {/* Found Words Film Strip */}
+      <FoundWordsDisplay 
+        foundWords={game.getFoundWords()} 
+        allWords={currentWords} 
+      />
 
       {/* Grid Wrapper - Bottom half container with permanent reserved space */}
       <div className="grid-wrapper relative">
