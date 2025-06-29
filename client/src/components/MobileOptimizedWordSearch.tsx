@@ -1,4 +1,3 @@
-
 import React, { useRef, useCallback, useState, useMemo, memo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { GridCell as GridCellType } from '@/lib/wordSearchGame';
@@ -19,6 +18,7 @@ const CrosswordGridCell = memo(({
   isSelecting,
   onSelectionStart,
   onSelectionMove,
+  onSelectionEnd,
   getWordColor,
   highlightedWord
 }: {
@@ -28,6 +28,7 @@ const CrosswordGridCell = memo(({
   isSelecting: boolean;
   onSelectionStart: (row: number, col: number) => void;
   onSelectionMove: (row: number, col: number) => void;
+  onSelectionEnd: () => void;
   getWordColor: (wordId: string | undefined) => string;
   highlightedWord?: string | null;
 }) => {
@@ -54,6 +55,30 @@ const CrosswordGridCell = memo(({
     onSelectionStart(rowIndex, colIndex);
   }, [rowIndex, colIndex, cell.letter, onSelectionStart]);
 
+  // Touch move handler - this is key for mobile functionality
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    e.preventDefault();
+    if (isSelecting && e.touches.length > 0) {
+      const touch = e.touches[0];
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+      const cellElement = element?.closest('[data-row][data-col]') as HTMLElement;
+      
+      if (cellElement) {
+        const row = parseInt(cellElement.dataset.row || '0', 10);
+        const col = parseInt(cellElement.dataset.col || '0', 10);
+        console.log('Touch move to cell:', row, col);
+        onSelectionMove(row, col);
+      }
+    }
+  }, [isSelecting, onSelectionMove]);
+
+  // Touch end handler
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    e.preventDefault();
+    console.log('Touch end:', rowIndex, colIndex);
+    onSelectionEnd();
+  }, [rowIndex, colIndex, onSelectionEnd]);
+
   return (
     <div
       className={cn(
@@ -71,8 +96,10 @@ const CrosswordGridCell = memo(({
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       
-      // Touch events
+      // Touch events - these are crucial for mobile
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
       
       style={{
         background: cell.isFound && cell.wordId ? `var(--word-found-bg)` : undefined,
@@ -98,7 +125,6 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
 }: WordSearchProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const [isSelecting, setIsSelecting] = useState(false);
-  const touchMoveThrottleRef = useRef<NodeJS.Timeout>();
 
   // Unified handlers for selection events
   const handleSelectionStart = useCallback((row: number, col: number) => {
@@ -119,38 +145,6 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     setIsSelecting(false);
     onCellMouseUp();
   }, [onCellMouseUp]);
-
-  // Improved touch move handler with throttling
-  const handleTouchMove = useCallback((e: TouchEvent) => {
-    if (!isSelecting) return;
-    
-    e.preventDefault(); // Prevent scrolling during selection
-    
-    // Throttle touch move events for better performance
-    if (touchMoveThrottleRef.current) {
-      clearTimeout(touchMoveThrottleRef.current);
-    }
-    
-    touchMoveThrottleRef.current = setTimeout(() => {
-      const touch = e.touches[0];
-      if (!touch) return;
-      
-      // Find cell at touch coordinates
-      const element = document.elementFromPoint(touch.clientX, touch.clientY);
-      const cellElement = element?.closest('[data-row][data-col]') as HTMLElement;
-      
-      if (cellElement) {
-        const row = parseInt(cellElement.dataset.row || '0', 10);
-        const col = parseInt(cellElement.dataset.col || '0', 10);
-        
-        // Validate coordinates are within grid bounds
-        if (row >= 0 && row < grid.length && col >= 0 && col < grid[0].length) {
-          console.log('Touch move to valid cell:', row, col);
-          handleSelectionMove(row, col);
-        }
-      }
-    }, 16); // ~60fps throttling
-  }, [isSelecting, handleSelectionMove, grid.length]);
 
   // Memoized color function for performance
   const getWordColor = useCallback((wordId: string | undefined): string => {
@@ -185,28 +179,13 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           isSelecting={isSelecting}
           onSelectionStart={handleSelectionStart}
           onSelectionMove={handleSelectionMove}
+          onSelectionEnd={handleSelectionEnd}
           getWordColor={getWordColor}
           highlightedWord={highlightedWord}
         />
       ))
     );
-  }, [grid, isSelecting, handleSelectionStart, handleSelectionMove, getWordColor, highlightedWord]);
-
-  // Add touch event listeners for cross-cell movement
-  useEffect(() => {
-    const gridElement = gridRef.current;
-    if (!gridElement) return;
-
-    // Add touch move listener with passive: false to allow preventDefault
-    gridElement.addEventListener('touchmove', handleTouchMove, { passive: false });
-    
-    return () => {
-      gridElement.removeEventListener('touchmove', handleTouchMove);
-      if (touchMoveThrottleRef.current) {
-        clearTimeout(touchMoveThrottleRef.current);
-      }
-    };
-  }, [handleTouchMove]);
+  }, [grid, isSelecting, handleSelectionStart, handleSelectionMove, handleSelectionEnd, getWordColor, highlightedWord]);
 
   // Global touch end listener to ensure selection ends even if touch leaves grid
   useEffect(() => {
@@ -222,8 +201,9 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
       handleSelectionEnd();
     };
 
-    document.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
-    document.addEventListener('touchcancel', handleGlobalTouchCancel, { passive: true });
+    // Add listeners to document to catch touch events outside the grid
+    document.addEventListener('touchend', handleGlobalTouchEnd, { passive: false });
+    document.addEventListener('touchcancel', handleGlobalTouchCancel, { passive: false });
     
     return () => {
       document.removeEventListener('touchend', handleGlobalTouchEnd);
