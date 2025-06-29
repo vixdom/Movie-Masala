@@ -1,5 +1,5 @@
 // Movie Masala Service Worker
-const CACHE_NAME = 'movie-masala-v2';
+const CACHE_NAME = 'movie-masala-v3';
 const urlsToCache = [
   '/',
   '/manifest.json',
@@ -9,6 +9,9 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', function(event) {
+  // Skip waiting to activate immediately
+  self.skipWaiting();
+  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
@@ -17,13 +20,37 @@ self.addEventListener('install', function(event) {
   );
 });
 
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+  // Take control immediately
+  return self.clients.claim();
+});
+
 self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
+    // For HTML requests, always try network first to get latest updates
+    fetch(event.request).then(function(response) {
+      // If network succeeds, update cache and return response
+      if (response.status === 200) {
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then(function(cache) {
+          cache.put(event.request, responseClone);
+        });
       }
-    )
+      return response;
+    }).catch(function() {
+      // If network fails, fall back to cache
+      return caches.match(event.request);
+    })
   );
 });
