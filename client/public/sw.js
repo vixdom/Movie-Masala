@@ -1,5 +1,5 @@
 // Movie Masala Service Worker
-const CACHE_NAME = 'movie-masala-v8';
+const CACHE_NAME = 'movie-masala-v10';
 const urlsToCache = [
   '/',
   '/manifest.json',
@@ -37,6 +37,20 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
+  // Only handle supported schemes (http/https) and skip browser extension requests
+  if (!event.request.url.startsWith('http://') && 
+      !event.request.url.startsWith('https://')) {
+    return;
+  }
+
+  // Skip caching for extension requests or non-GET requests
+  if (event.request.method !== 'GET' ||
+      event.request.url.includes('chrome-extension') ||
+      event.request.url.includes('moz-extension') ||
+      event.request.url.includes('safari-extension')) {
+    return;
+  }
+
   event.respondWith(
     // For HTML requests, always try network first to get latest updates
     fetch(event.request).then(function(response) {
