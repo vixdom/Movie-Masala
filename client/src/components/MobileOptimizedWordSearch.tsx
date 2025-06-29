@@ -71,11 +71,6 @@ const CrosswordGridCell = memo(({
         
         if (e.pointerType === 'touch') {
           setIsTouching(true);
-          // Reset last touch cell when starting new selection
-          if (typeof setIsTouching === 'function') {
-            const lastTouchCellRef = (document as any).lastTouchCellRef;
-            if (lastTouchCellRef) lastTouchCellRef.current = null;
-          }
         } else {
           setIsMouseDown(true);
         }
@@ -234,6 +229,13 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
       gridElement.removeEventListener('touchmove', handleTouchMove);
     };
   }, [handleTouchMove]);
+
+  // Reset touch tracking when touch state changes
+  useEffect(() => {
+    if (isTouching) {
+      lastTouchCellRef.current = null;
+    }
+  }, [isTouching]);
 
   return (
     <div
