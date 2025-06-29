@@ -79,8 +79,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     const randomTheme = getRandomTheme();
     setCurrentTheme(randomTheme);
     
-    // Get themed words from the randomly selected theme
-    const themedWords = getWordsByTheme(randomTheme.id, 12);
+    // Get exactly 10 themed words from the randomly selected theme
+    const themedWords = getWordsByTheme(randomTheme.id, 10);
     const convertedWords = themedWords.map(tw => ({
       word: tw.word,
       category: tw.category as 'actor' | 'actress' | 'director' | 'song',

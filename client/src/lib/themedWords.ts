@@ -427,7 +427,7 @@ export const themedWords: ThemedWordItem[] = [
   { word: 'NAWAZUDDINSIDDIQUI', category: 'actors', theme: 'character-artists' }
 ];
 
-export function getWordsByTheme(themeId: string, count: number = 12): ThemedWordItem[] {
+export function getWordsByTheme(themeId: string, count: number = 10): ThemedWordItem[] {
   const themeWords = themedWords.filter(word => word.theme === themeId);
   const shuffled = themeWords.sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
