@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { WordSearchGame } from '../lib/wordSearchGame';
 import { getGameWords } from '../lib/bollywoodWords';
+import { getWordsByTheme, getAllThemes, getRandomTheme, Theme } from '../lib/themedWords';
 import { Button } from './ui/button';
 import { cn } from '../lib/utils';
 import { WordFoundAnimation } from './WordFoundAnimation';
@@ -17,7 +18,7 @@ interface GameScreenProps {
 export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameScreenProps) {
   const [game] = useState(() => new WordSearchGame());
   const [gameState, setGameState] = useState(game.getGameState());
-  const [currentWords, setCurrentWords] = useState(getGameWords(10));
+  const [currentWords, setCurrentWords] = useState<any[]>([]);
   const [highlightedWord, setHighlightedWord] = useState<string | null>(null);
   const [currentSelection, setCurrentSelection] = useState<string>('');
   const [wordFoundAnimation, setWordFoundAnimation] = useState<string | null>(null);
@@ -25,6 +26,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [hintedLetters, setHintedLetters] = useState<Set<string>>(new Set());
   const [hintedPositions, setHintedPositions] = useState<Set<string>>(new Set());
+  const [currentTheme, setCurrentTheme] = useState<Theme>(getRandomTheme());
+  const [availableThemes] = useState<Theme[]>(getAllThemes());
 
   // Audio setup
   const playSuccess = useCallback(() => {
@@ -72,9 +75,16 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [isSoundMuted]);
 
   const startNewGame = useCallback(() => {
-    const newWords = getGameWords(10);
-    setCurrentWords(newWords);
-    game.generateGrid(newWords.map(w => w.word));
+    // Get themed words instead of legacy words
+    const themedWords = getWordsByTheme(currentTheme.id, 12);
+    const convertedWords = themedWords.map(tw => ({
+      word: tw.word,
+      category: tw.category as 'actor' | 'actress' | 'director' | 'song',
+      hint: tw.hint
+    }));
+    
+    setCurrentWords(convertedWords);
+    game.generateGrid(themedWords.map(w => w.word));
     setGameState(game.getGameState());
     setHighlightedWord(null);
     setCurrentSelection('');
@@ -82,7 +92,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     setShowHint(null);
     setHintedLetters(new Set());
     setHintedPositions(new Set());
-  }, [game]);
+  }, [game, currentTheme]);
 
   const revealHintLetter = useCallback((wordPlacement: any) => {
     console.log('revealHintLetter called with:', wordPlacement);
