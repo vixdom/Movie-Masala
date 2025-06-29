@@ -154,14 +154,18 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     playHit();
     game.startSelection(row, col);
     setGameState(game.getGameState());
-    setCurrentSelection(game.getCurrentSelectionWord());
+    const selection = game.getCurrentSelectionWord();
+    console.log('Selection started:', selection);
+    setCurrentSelection(selection);
   }, [game, playHit]);
 
   const handleCellMouseEnter = useCallback((row: number, col: number) => {
     if (gameState.isSelecting) {
       game.updateSelection(row, col);
       setGameState(game.getGameState());
-      setCurrentSelection(game.getCurrentSelectionWord());
+      const selection = game.getCurrentSelectionWord();
+      console.log('Selection updated:', selection);
+      setCurrentSelection(selection);
     }
   }, [game, gameState.isSelecting]);
 
@@ -373,7 +377,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       {/* Grid Wrapper - Bottom half container with permanent reserved space */}
       <div className="grid-wrapper relative">
         {/* Selection Bubble - absolutely positioned in the 120px reserved space */}
-        {currentSelection && (
+        {currentSelection && currentSelection.length > 0 && (
           <div className={`absolute left-1/2 transform -translate-x-1/2 bollywood-selection-bubble text-white shadow-lg transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit ${currentSelection.length <= 6 ? 'rounded-full px-6 py-3' : 'rounded-xl px-8 py-4'}`} style={{ top: '-80px', zIndex: 100 }}>
             <span className="text-lg font-bold tracking-widest block">
               {currentSelection.split('').join(' ')}
