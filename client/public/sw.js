@@ -1,5 +1,5 @@
 // Movie Masala Service Worker
-const CACHE_NAME = 'movie-masala-v6';
+const CACHE_NAME = 'movie-masala-v7';
 const urlsToCache = [
   '/',
   '/manifest.json',

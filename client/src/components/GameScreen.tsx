@@ -177,6 +177,13 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       playSuccess();
       setWordFoundAnimation('Word Found!');
       setTimeout(() => setWordFoundAnimation(null), 2000);
+    } else {
+      // Brief flash for wrong selection, then clear
+      setTimeout(() => {
+        setGameState(game.getGameState());
+        setCurrentSelection('');
+      }, 200);
+      return;
     }
     setGameState(game.getGameState());
     setCurrentSelection('');
