@@ -79,16 +79,27 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     const randomTheme = getRandomTheme();
     setCurrentTheme(randomTheme);
     
-    // Get exactly 10 themed words from the randomly selected theme
-    const themedWords = getWordsByTheme(randomTheme.id, 10);
-    const convertedWords = themedWords.map(tw => ({
-      word: tw.word,
-      category: tw.category as 'actor' | 'actress' | 'director' | 'song',
-      hint: tw.hint
-    }));
+    // Get 20 themed words from the randomly selected theme (more than needed for replacement options)
+    const themedWords = getWordsByTheme(randomTheme.id, 20);
+    const wordStrings = themedWords.map(w => w.word);
     
-    setCurrentWords(convertedWords);
-    game.generateGrid(themedWords.map(w => w.word));
+    // Generate grid and get back the actual successfully placed words
+    const successfullyPlacedWords = game.generateGrid(wordStrings);
+    
+    // Create word objects only for successfully placed words
+    const placedWordObjects = themedWords.filter(tw => successfullyPlacedWords.includes(tw.word))
+      .map(tw => ({
+        word: tw.word,
+        category: tw.category as 'actor' | 'actress' | 'director' | 'song',
+        hint: tw.hint
+      }));
+    
+    console.log(`🎯 GAME SETUP COMPLETE:`);
+    console.log(`📝 Words requested: 10`);
+    console.log(`✅ Words successfully placed: ${successfullyPlacedWords.length}`);
+    console.log(`📋 Final word list:`, successfullyPlacedWords);
+    
+    setCurrentWords(placedWordObjects);
     setGameState(game.getGameState());
     setHighlightedWord(null);
     setCurrentSelection('');

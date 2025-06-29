@@ -139,7 +139,7 @@ export const themedWords: ThemedWordItem[] = [
   { word: 'AAMIRKHAN', category: 'actors', theme: '80s-90s' },
   { word: 'SAIFALI', category: 'actors', theme: '80s-90s' },
   { word: 'SRIDEVI', category: 'actresses', theme: '80s-90s' },
-  { word: 'MADHURIDIXFIT', category: 'actresses', theme: '80s-90s' },
+  { word: 'MADHURIDIXXIT', category: 'actresses', theme: '80s-90s' },
   { word: 'JUHICHAWLA', category: 'actresses', theme: '80s-90s' },
   { word: 'KAJOL', category: 'actresses', theme: '80s-90s' },
   { word: 'KARISMAKAPOOR', category: 'actresses', theme: '80s-90s' },
@@ -427,10 +427,10 @@ export const themedWords: ThemedWordItem[] = [
   { word: 'NAWAZUDDINSIDDIQUI', category: 'actors', theme: 'character-artists' }
 ];
 
-export function getWordsByTheme(themeId: string, count: number = 10): ThemedWordItem[] {
+export function getWordsByTheme(themeId: string, count: number = 20): ThemedWordItem[] {
   const themeWords = themedWords.filter(word => word.theme === themeId);
   const shuffled = themeWords.sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  return shuffled.slice(0, Math.min(count, themeWords.length));
 }
 
 export function getAllThemes(): Theme[] {

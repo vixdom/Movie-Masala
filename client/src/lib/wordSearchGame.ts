@@ -144,7 +144,10 @@ export class WordSearchGame {
    * @private
    */
   private _verifyAllWordsPlaced(): void {
-    console.log('🔍 VERIFYING WORD PLACEMENT...');
+    // Only log in development for better mobile performance
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 VERIFYING WORD PLACEMENT...');
+    }
     
     let successfulPlacements = 0;
     let failedPlacements = 0;
@@ -186,7 +189,9 @@ export class WordSearchGame {
       // Verify the reconstructed word matches the original
       if (reconstructedWord === word && !positionIssues) {
         successfulPlacements++;
-        console.log(`✅ ${word}: Successfully placed ${direction} at positions ${JSON.stringify(positions)}`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`✅ ${word}: Successfully placed ${direction} at positions ${JSON.stringify(positions)}`);
+        }
       } else {
         failedPlacements++;
         issues.push(`❌ ${word}: Expected '${word}' but reconstructed '${reconstructedWord}'`);
@@ -201,21 +206,23 @@ export class WordSearchGame {
       }
     }
     
-    // Summary report
-    console.log(`\n📊 WORD PLACEMENT VERIFICATION SUMMARY:`);
-    console.log(`✅ Successfully placed: ${successfulPlacements} words`);
-    console.log(`❌ Failed placements: ${failedPlacements} words`);
-    console.log(`📈 Success rate: ${((successfulPlacements / this.gameState.words.length) * 100).toFixed(1)}%`);
-    
-    if (issues.length > 0) {
-      console.log(`\n🚨 ISSUES FOUND:`);
-      issues.forEach(issue => console.log(issue));
-    } else {
-      console.log(`\n🎉 ALL WORDS VERIFIED SUCCESSFULLY!`);
+    // Summary report (only log in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`\n📊 WORD PLACEMENT VERIFICATION SUMMARY:`);
+      console.log(`✅ Successfully placed: ${successfulPlacements} words`);
+      console.log(`❌ Failed placements: ${failedPlacements} words`);
+      console.log(`📈 Success rate: ${((successfulPlacements / this.gameState.words.length) * 100).toFixed(1)}%`);
+      
+      if (issues.length > 0) {
+        console.log(`\n🚨 ISSUES FOUND:`);
+        issues.forEach(issue => console.log(issue));
+      } else {
+        console.log(`\n🎉 ALL WORDS VERIFIED SUCCESSFULLY!`);
+      }
+      
+      // Additional grid integrity check
+      this._verifyGridIntegrity();
     }
-    
-    // Additional grid integrity check
-    this._verifyGridIntegrity();
   }
 
   /**
@@ -223,108 +230,149 @@ export class WordSearchGame {
    * @private
    */
   private _verifyGridIntegrity(): void {
-    let emptyCells = 0;
-    let wordCells = 0;
-    let fillerCells = 0;
-    const wordIds = new Set<string>();
-    
-    for (let row = 0; row < GRID_SIZE; row++) {
-      for (let col = 0; col < GRID_SIZE; col++) {
-        const cell = this.gameState.grid[row][col];
-        
-        if (cell.letter === '') {
-          emptyCells++;
-        } else if (cell.isPartOfWord && cell.wordId) {
-          wordCells++;
-          wordIds.add(cell.wordId);
-        } else {
-          fillerCells++;
+    // Only log in development for better mobile performance
+    if (process.env.NODE_ENV === 'development') {
+      let emptyCells = 0;
+      let wordCells = 0;
+      let fillerCells = 0;
+      const wordIds = new Set<string>();
+      
+      for (let row = 0; row < GRID_SIZE; row++) {
+        for (let col = 0; col < GRID_SIZE; col++) {
+          const cell = this.gameState.grid[row][col];
+          
+          if (cell.letter === '') {
+            emptyCells++;
+          } else if (cell.isPartOfWord && cell.wordId) {
+            wordCells++;
+            wordIds.add(cell.wordId);
+          } else {
+            fillerCells++;
+          }
         }
       }
-    }
-    
-    console.log(`\n🔬 GRID INTEGRITY CHECK:`);
-    console.log(`📊 Grid composition:`);
-    console.log(`   • Word cells: ${wordCells}`);
-    console.log(`   • Filler cells: ${fillerCells}`);
-    console.log(`   • Empty cells: ${emptyCells}`);
-    console.log(`🆔 Unique word IDs found: ${wordIds.size}`);
-    console.log(`📝 Words to place: ${this.gameState.words.length}`);
-    
-    if (emptyCells > 0) {
-      console.log(`⚠️ WARNING: ${emptyCells} empty cells found - grid may not be fully generated`);
-    }
-    
-    if (wordIds.size !== this.gameState.words.length) {
-      console.log(`⚠️ WARNING: Word ID count mismatch - expected ${this.gameState.words.length}, found ${wordIds.size}`);
+      
+      console.log(`\n🔬 GRID INTEGRITY CHECK:`);
+      console.log(`📊 Grid composition:`);
+      console.log(`   • Word cells: ${wordCells}`);
+      console.log(`   • Filler cells: ${fillerCells}`);
+      console.log(`   • Empty cells: ${emptyCells}`);
+      console.log(`🆔 Unique word IDs found: ${wordIds.size}`);
+      console.log(`📝 Words to place: ${this.gameState.words.length}`);
+      
+      if (emptyCells > 0) {
+        console.log(`⚠️ WARNING: ${emptyCells} empty cells found - grid may not be fully generated`);
+      }
+      
+      if (wordIds.size !== this.gameState.words.length) {
+        console.log(`⚠️ WARNING: Word ID count mismatch - expected ${this.gameState.words.length}, found ${wordIds.size}`);
+      }
     }
   }
 
-  public generateGrid(words: string[]): void {
-    let maxRetries = 10; // More retries for better success
-    let bestResult: { placedWords: WordPlacement[], placedCount: number } = { placedWords: [], placedCount: 0 };
+  public generateGrid(words: string[]): string[] {
+    const targetWordCount = 10; // Exactly 10 words in the final game
+    
+    // Create an expanded word pool by shuffling and taking more words than needed
+    const expandedWordPool = [...words].sort(() => Math.random() - 0.5).slice(0, Math.min(words.length, targetWordCount * 2));
+    
+    let maxRetries = 15; // More retries for guaranteed success
+    let bestResult: { placedWords: WordPlacement[], placedWordsStrings: string[], placedCount: number } = { 
+      placedWords: [], 
+      placedWordsStrings: [],
+      placedCount: 0 
+    };
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`🎯 STARTING GRID GENERATION:`);
+      console.log(`📝 Target words: ${targetWordCount}`);
+      console.log(`🎲 Available word pool: ${expandedWordPool.length} words`);
+    }
     
     for (let retry = 0; retry < maxRetries; retry++) {
       // Reset game state
       this.gameState = this.initializeGame();
       
-      // Sort words by length (shorter first for easier placement)
-      const sortedWords = [...words].sort((a, b) => a.length - b.length);
+      // Track successfully placed words
+      const successfullyPlacedWords: string[] = [];
+      const placedWordObjects: WordPlacement[] = [];
       
-      // Enforce direction variety with guaranteed distribution
-      const directionAssignments = this.getBalancedDirections(sortedWords);
+      // Create a copy of the word pool for this attempt
+      const availableWords = [...expandedWordPool];
       
-      // Place each word systematically
-      for (let i = 0; i < sortedWords.length; i++) {
-        const word = sortedWords[i];
-        const preferredDirections = directionAssignments[i];
-        let placed = false;
+      // Attempt to place exactly targetWordCount words
+      for (let wordIndex = 0; wordIndex < targetWordCount && availableWords.length > 0; wordIndex++) {
+        let wordPlaced = false;
+        let attempts = 0;
+        const maxWordAttempts = availableWords.length; // Try all available words if needed
         
-        // Try each preferred direction systematically
-        for (const direction of preferredDirections) {
-          if (placed) break;
+        while (!wordPlaced && attempts < maxWordAttempts && availableWords.length > 0) {
+          // Take the first word from available words
+          const currentWordIndex = attempts % availableWords.length;
+          const currentWord = availableWords[currentWordIndex];
           
-          // Try different starting positions for this direction
-          const positions = this.generatePositions(word.length, direction);
+          // Sort words by length (longer first for better grid utilization)
+          const directionAssignments = this.getBalancedDirections([currentWord]);
+          const preferredDirections = directionAssignments[0];
           
-          for (const pos of positions) {
-            if (this.canPlaceWord(word, pos.row, pos.col, direction)) {
-              const placement = this.placeWord(word, pos.row, pos.col, direction);
-              this.gameState.words.push(placement);
-              placed = true;
-              break;
-            }
-          }
-        }
-        
-        // If still not placed, try any direction
-        if (!placed) {
-          for (const direction of DIRECTIONS) {
-            if (placed) break;
-            const positions = this.generatePositions(word.length, direction);
+          // Try to place this word
+          for (const direction of preferredDirections) {
+            if (wordPlaced) break;
+            
+            const positions = this.generatePositions(currentWord.length, direction);
             
             for (const pos of positions) {
-              if (this.canPlaceWord(word, pos.row, pos.col, direction)) {
-                const placement = this.placeWord(word, pos.row, pos.col, direction);
-                this.gameState.words.push(placement);
-                placed = true;
+              if (this.canPlaceWord(currentWord, pos.row, pos.col, direction)) {
+                const placement = this.placeWord(currentWord, pos.row, pos.col, direction);
+                placedWordObjects.push(placement);
+                successfullyPlacedWords.push(currentWord);
+                
+                // Remove this word from available words
+                availableWords.splice(currentWordIndex, 1);
+                wordPlaced = true;
                 break;
               }
             }
           }
+          
+          attempts++;
+          
+          // If this word couldn't be placed, try the next available word
+          if (!wordPlaced && attempts < maxWordAttempts) {
+            continue;
+          }
+        }
+        
+        // If we couldn't place any word, this attempt failed
+        if (!wordPlaced) {
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`❌ Attempt ${retry + 1}: Could only place ${successfullyPlacedWords.length} words`);
+          }
+          break;
         }
       }
       
+      // Update game state with placed words
+      this.gameState.words = placedWordObjects;
+      
       // Check if this attempt is better
-      if (this.gameState.words.length > bestResult.placedCount) {
+      if (successfullyPlacedWords.length > bestResult.placedCount) {
         bestResult = {
-          placedWords: [...this.gameState.words],
-          placedCount: this.gameState.words.length
+          placedWords: [...placedWordObjects],
+          placedWordsStrings: [...successfullyPlacedWords],
+          placedCount: successfullyPlacedWords.length
         };
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`✅ Attempt ${retry + 1}: Successfully placed ${successfullyPlacedWords.length} words`);
+        }
       }
       
-      // If we placed all words, we're done
-      if (this.gameState.words.length === words.length) {
+      // If we achieved the target, we're done
+      if (successfullyPlacedWords.length === targetWordCount) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`🎉 SUCCESS: Placed all ${targetWordCount} words in attempt ${retry + 1}`);
+        }
         break;
       }
     }
@@ -332,9 +380,11 @@ export class WordSearchGame {
     // Use the best result
     this.gameState.words = bestResult.placedWords;
     
-    // Only log in development for better mobile performance
     if (process.env.NODE_ENV === 'development') {
-      console.log(`Placed ${this.gameState.words.length} out of ${words.length} words`);
+      console.log(`\n📊 FINAL RESULT:`);
+      console.log(`✅ Successfully placed: ${bestResult.placedCount} out of ${targetWordCount} target words`);
+      console.log(`📈 Success rate: ${((bestResult.placedCount / targetWordCount) * 100).toFixed(1)}%`);
+      console.log(`📝 Final word list:`, bestResult.placedWordsStrings);
     }
     
     // Verify and fix coordinate consistency
@@ -345,6 +395,9 @@ export class WordSearchGame {
     
     // 🔍 VERIFICATION: Check all words are correctly placed
     this._verifyAllWordsPlaced();
+    
+    // Return the actual successfully placed words
+    return bestResult.placedWordsStrings;
   }
   
   private verifyAndFixCoordinates(): void {
@@ -414,7 +467,9 @@ export class WordSearchGame {
       const expectedCol = firstPos.col + (deltaCol * i);
       
       if (positions[i].row !== expectedRow || positions[i].col !== expectedCol) {
-        console.error(`Line validation failed for ${word}: position ${i} should be (${expectedRow}, ${expectedCol}) but got (${positions[i].row}, ${positions[i].col})`);
+        if (process.env.NODE_ENV === 'development') {
+          console.error(`Line validation failed for ${word}: position ${i} should be (${expectedRow}, ${expectedCol}) but got (${positions[i].row}, ${positions[i].col})`);
+        }
         return false;
       }
     }
@@ -439,7 +494,9 @@ export class WordSearchGame {
     
     const isValidDirection = validDirections.some(([dr, dc]) => dr === deltaRow && dc === deltaCol);
     if (!isValidDirection) {
-      console.error(`Invalid direction pattern: deltaRow=${deltaRow}, deltaCol=${deltaCol}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Invalid direction pattern: deltaRow=${deltaRow}, deltaCol=${deltaCol}`);
+      }
       return false;
     }
     
@@ -449,7 +506,9 @@ export class WordSearchGame {
       const expectedCol = positions[0].col + (deltaCol * i);
       
       if (positions[i].row !== expectedRow || positions[i].col !== expectedCol) {
-        console.error(`Position ${i} deviation: expected (${expectedRow}, ${expectedCol}), got (${positions[i].row}, ${positions[i].col})`);
+        if (process.env.NODE_ENV === 'development') {
+          console.error(`Position ${i} deviation: expected (${expectedRow}, ${expectedCol}), got (${positions[i].row}, ${positions[i].col})`);
+        }
         return false;
       }
     }
@@ -523,8 +582,6 @@ export class WordSearchGame {
     
     return assignments;
   }
-  
-
 
   public startSelection(row: number, col: number): void {
     this.gameState.isSelecting = true;
