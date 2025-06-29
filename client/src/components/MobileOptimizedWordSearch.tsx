@@ -38,11 +38,7 @@ const CrosswordGridCell = memo(({
   setIsMouseDown: (value: boolean) => void;
   setIsTouching: (value: boolean) => void;
 }) => {
-  // Debug logging for cell state
-  const isSelectedForDebug = cell.isSelected && !cell.isFound;
-  if (isSelectedForDebug) {
-    console.log(`Cell [${rowIndex}, ${colIndex}] is selected: isSelected=${cell.isSelected}, isFound=${cell.isFound}`);
-  }
+
 
   return (
     <div

@@ -450,11 +450,7 @@
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6) !important;
 }
 
-/* Debug: Make sure selected class is visible */
-.crossword-cell.selected {
-  outline: 5px solid red !important;
-  outline-offset: 2px !important;
-}
+/* Clean selected cell styling without debug outline */
 
 /* Enhanced golden sweep overlay */
 .crossword-cell.selected::before {
