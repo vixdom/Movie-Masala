@@ -176,12 +176,15 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [game, playHit]);
 
   const handleCellMouseEnter = useCallback((row: number, col: number) => {
+    console.log('handleCellMouseEnter called:', row, col, 'isSelecting:', gameState.isSelecting);
     if (gameState.isSelecting) {
       game.updateSelection(row, col);
       setGameState(game.getGameState());
       const selection = game.getCurrentSelectionWord();
       console.log('Selection updated:', selection);
       setCurrentSelection(selection);
+    } else {
+      console.log('Not selecting, ignoring mouse enter');
     }
   }, [game, gameState.isSelecting]);
 

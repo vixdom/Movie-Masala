@@ -71,6 +71,11 @@ const CrosswordGridCell = memo(({
         
         if (e.pointerType === 'touch') {
           setIsTouching(true);
+          // Reset last touch cell when starting new selection
+          if (typeof setIsTouching === 'function') {
+            const lastTouchCellRef = (document as any).lastTouchCellRef;
+            if (lastTouchCellRef) lastTouchCellRef.current = null;
+          }
         } else {
           setIsMouseDown(true);
         }
@@ -105,6 +110,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isTouching, setIsTouching] = useState(false);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const lastTouchCellRef = useRef<{ row: number; col: number } | null>(null);
 
   // Memoized color function for performance
   const getWordColor = useCallback((wordId: string | undefined): string => {
@@ -135,14 +141,34 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     }
   }, [isMouseDown, isTouching, onCellMouseEnter]);
 
-  // Get cell at touch coordinates
+  // Get cell at touch coordinates with improved detection
   const getCellAtPosition = useCallback((x: number, y: number) => {
     if (!gridRef.current) return null;
     
-    const element = document.elementFromPoint(x, y);
+    // Get element at exact coordinates
+    let element = document.elementFromPoint(x, y);
     if (!element) return null;
     
-    const cellElement = element.closest('[data-row][data-col]') as HTMLElement;
+    // If we hit a pseudo-element or overlay, try to find the parent cell
+    let cellElement = element.closest('[data-row][data-col]') as HTMLElement;
+    
+    // If still no cell found, try expanding search area slightly
+    if (!cellElement) {
+      // Try points in a small radius around the touch point
+      const offsets = [
+        [0, 0], [-2, 0], [2, 0], [0, -2], [0, 2],
+        [-2, -2], [2, -2], [-2, 2], [2, 2]
+      ];
+      
+      for (const [dx, dy] of offsets) {
+        const testElement = document.elementFromPoint(x + dx, y + dy);
+        if (testElement) {
+          cellElement = testElement.closest('[data-row][data-col]') as HTMLElement;
+          if (cellElement) break;
+        }
+      }
+    }
+    
     if (!cellElement) return null;
     
     const row = parseInt(cellElement.dataset.row || '0');
@@ -162,8 +188,15 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     
     const cell = getCellAtPosition(touch.clientX, touch.clientY);
     if (cell) {
-      console.log('Touch move to cell:', cell.row, cell.col);
-      onCellMouseEnter(cell.row, cell.col);
+      // Only trigger if we moved to a different cell
+      const lastCell = lastTouchCellRef.current;
+      if (!lastCell || lastCell.row !== cell.row || lastCell.col !== cell.col) {
+        console.log('Touch move to NEW cell:', cell.row, cell.col);
+        lastTouchCellRef.current = cell;
+        onCellMouseEnter(cell.row, cell.col);
+      }
+    } else {
+      console.log('Touch move - no cell found at coordinates:', touch.clientX, touch.clientY);
     }
   }, [isTouching, getCellAtPosition, onCellMouseEnter]);
 
