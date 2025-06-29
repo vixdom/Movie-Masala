@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState, useMemo, memo } from 'react';
+import React, { useRef, useCallback, useState, useMemo, memo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { GridCell as GridCellType } from '@/lib/wordSearchGame';
 
@@ -104,6 +104,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   const gridRef = useRef<HTMLDivElement>(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isTouching, setIsTouching] = useState(false);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   // Memoized color function for performance
   const getWordColor = useCallback((wordId: string | undefined): string => {
@@ -134,6 +135,38 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     }
   }, [isMouseDown, isTouching, onCellMouseEnter]);
 
+  // Get cell at touch coordinates
+  const getCellAtPosition = useCallback((x: number, y: number) => {
+    if (!gridRef.current) return null;
+    
+    const element = document.elementFromPoint(x, y);
+    if (!element) return null;
+    
+    const cellElement = element.closest('[data-row][data-col]') as HTMLElement;
+    if (!cellElement) return null;
+    
+    const row = parseInt(cellElement.dataset.row || '0');
+    const col = parseInt(cellElement.dataset.col || '0');
+    
+    return { row, col };
+  }, []);
+
+  // Handle touch move for better mobile selection
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    if (!isTouching) return;
+    
+    e.preventDefault(); // Prevent scrolling during selection
+    
+    const touch = e.touches[0];
+    if (!touch) return;
+    
+    const cell = getCellAtPosition(touch.clientX, touch.clientY);
+    if (cell) {
+      console.log('Touch move to cell:', cell.row, cell.col);
+      onCellMouseEnter(cell.row, cell.col);
+    }
+  }, [isTouching, getCellAtPosition, onCellMouseEnter]);
+
   // Memoized grid cells for optimal performance
   const gridCells = useMemo(() => {
     return grid.flatMap((row, rowIndex) =>
@@ -156,6 +189,18 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
       ))
     );
   }, [grid, isMouseDown, isTouching, onCellMouseDown, onCellMouseEnter, handlePointerEnter, getWordColor, highlightedWord]);
+
+  // Add touch event listeners for better mobile support
+  useEffect(() => {
+    const gridElement = gridRef.current;
+    if (!gridElement) return;
+
+    gridElement.addEventListener('touchmove', handleTouchMove, { passive: false });
+    
+    return () => {
+      gridElement.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, [handleTouchMove]);
 
   return (
     <div
