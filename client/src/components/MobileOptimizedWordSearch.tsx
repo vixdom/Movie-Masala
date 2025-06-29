@@ -59,7 +59,7 @@ const CrosswordGridCell = memo(({
     target.classList.add('touch-glassy-active');
     
     // Haptic feedback
-    if (navigator.vibrate) {
+    if ('vibrate' in navigator) {
       navigator.vibrate(20);
     }
     
@@ -73,8 +73,10 @@ const CrosswordGridCell = memo(({
     
     if (isSelecting && e.touches.length > 0) {
       const touch = e.touches[0];
-      const element = document.elementFromPoint(touch.clientX, touch.clientY);
-      const cellElement = element?.closest('[data-row][data-col]') as HTMLElement;
+      
+      // Get element under the touch point
+      const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+      const cellElement = elementUnderTouch?.closest('[data-row][data-col]') as HTMLElement;
       
       if (cellElement) {
         const row = parseInt(cellElement.dataset.row || '0', 10);
@@ -92,7 +94,7 @@ const CrosswordGridCell = memo(({
         }
         
         // Gentle haptic feedback
-        if (navigator.vibrate) {
+        if ('vibrate' in navigator) {
           navigator.vibrate(10);
         }
         
@@ -139,11 +141,13 @@ const CrosswordGridCell = memo(({
       style={{
         background: cell.isFound && cell.wordId ? `var(--word-found-bg)` : undefined,
         color: cell.isFound ? `var(--word-found-text)` : undefined,
-        pointerEvents: 'auto',
         touchAction: 'none',
         userSelect: 'none',
         WebkitUserSelect: 'none',
-        WebkitTouchCallout: 'none'
+        WebkitTouchCallout: 'none',
+        pointerEvents: 'auto',
+        position: 'relative',
+        zIndex: 1
       }}
     >
       {cell.letter}
@@ -235,16 +239,54 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     }
   }, [isSelecting, handleSelectionEnd]);
 
+  // Add global touch event listeners to handle touch moves outside the grid
+  useEffect(() => {
+    const handleGlobalTouchMove = (e: TouchEvent) => {
+      if (isSelecting) {
+        e.preventDefault();
+        
+        if (e.touches.length > 0) {
+          const touch = e.touches[0];
+          const element = document.elementFromPoint(touch.clientX, touch.clientY);
+          const cellElement = element?.closest('[data-row][data-col]') as HTMLElement;
+          
+          if (cellElement) {
+            const row = parseInt(cellElement.dataset.row || '0', 10);
+            const col = parseInt(cellElement.dataset.col || '0', 10);
+            handleSelectionMove(row, col);
+          }
+        }
+      }
+    };
+
+    const handleGlobalTouchEnd = () => {
+      if (isSelecting) {
+        handleSelectionEnd();
+      }
+    };
+
+    // Add global listeners with passive: false to allow preventDefault
+    document.addEventListener('touchmove', handleGlobalTouchMove, { passive: false });
+    document.addEventListener('touchend', handleGlobalTouchEnd, { passive: false });
+
+    return () => {
+      document.removeEventListener('touchmove', handleGlobalTouchMove);
+      document.removeEventListener('touchend', handleGlobalTouchEnd);
+    };
+  }, [isSelecting, handleSelectionMove, handleSelectionEnd]);
+
   return (
     <div
       ref={gridRef}
       className="crossword-grid"
       style={{ 
-        pointerEvents: 'auto',
         touchAction: 'none',
         userSelect: 'none',
         WebkitUserSelect: 'none',
-        WebkitTouchCallout: 'none'
+        WebkitTouchCallout: 'none',
+        pointerEvents: 'auto',
+        position: 'relative',
+        zIndex: 5
       }}
       // Mouse selection end handlers
       onMouseUp={handleMouseUp}
