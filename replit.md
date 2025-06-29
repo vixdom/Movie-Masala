@@ -91,6 +91,10 @@ Always confirm before creating checkpoints - user is paying for them.
 
 ## Recent Changes
 
+- June 29, 2025: **COMPREHENSIVE THEMED WORD SYSTEM** - Integrated 15 unique Bollywood themes with 300+ celebrity names
+- June 29, 2025: **RANDOM THEME SELECTION** - Each new game automatically selects a random theme (Golden Era, Modern Stars, Comedy Kings, etc.)
+- June 29, 2025: **THEME DISPLAY** - Current theme prominently shown in purple badge in header with description tooltip
+- June 29, 2025: **CELEBRITY DATABASE EXPANSION** - Added actors, actresses, directors, singers, composers across all Bollywood eras
 - June 26, 2025: **FONT SIZE INCREASED** - Set grid letter font size to 22px for clearly visible text on all devices
 - June 26, 2025: **GLASSY SWEEP EFFECT** - Implemented translucent golden overlay animation for word selection (mobile implementation pending)
 - June 26, 2025: **IPHONE PWA INSTALLATION SUCCESSFUL** - Complete Safari PWA implementation working on iPhone

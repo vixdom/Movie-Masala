@@ -75,8 +75,12 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [isSoundMuted]);
 
   const startNewGame = useCallback(() => {
-    // Get themed words instead of legacy words
-    const themedWords = getWordsByTheme(currentTheme.id, 12);
+    // Select a random theme for each new game
+    const randomTheme = getRandomTheme();
+    setCurrentTheme(randomTheme);
+    
+    // Get themed words from the randomly selected theme
+    const themedWords = getWordsByTheme(randomTheme.id, 12);
     const convertedWords = themedWords.map(tw => ({
       word: tw.word,
       category: tw.category as 'actor' | 'actress' | 'director' | 'song',
@@ -92,32 +96,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     setShowHint(null);
     setHintedLetters(new Set());
     setHintedPositions(new Set());
-  }, [game, currentTheme]);
-
-  const changeTheme = useCallback(() => {
-    const currentIndex = availableThemes.findIndex(theme => theme.id === currentTheme.id);
-    const nextIndex = (currentIndex + 1) % availableThemes.length;
-    const newTheme = availableThemes[nextIndex];
-    setCurrentTheme(newTheme);
-    
-    // Start new game with new theme
-    const themedWords = getWordsByTheme(newTheme.id, 12);
-    const convertedWords = themedWords.map(tw => ({
-      word: tw.word,
-      category: tw.category as 'actor' | 'actress' | 'director' | 'song',
-      hint: tw.hint
-    }));
-    
-    setCurrentWords(convertedWords);
-    game.generateGrid(themedWords.map(w => w.word));
-    setGameState(game.getGameState());
-    setHighlightedWord(null);
-    setCurrentSelection('');
-    setWordFoundAnimation(null);
-    setShowHint(null);
-    setHintedLetters(new Set());
-    setHintedPositions(new Set());
-  }, [game, currentTheme, availableThemes]);
+  }, [game]);
 
   const revealHintLetter = useCallback((wordPlacement: any) => {
     console.log('revealHintLetter called with:', wordPlacement);
@@ -307,46 +286,30 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     <div className="h-full text-white relative overflow-hidden">
       {/* Header - Premium Cinema Style */}
       <header className="app-header">
-        {/* Left side buttons */}
-        <div className="flex items-center gap-3">
-          {/* Gold Clapperboard Icon & New Game Button */}
-          <button 
-            onClick={startNewGame}
-            className="flex items-center gap-2 bg-gradient-to-r from-[#D4AF37] to-[#F4E17A] text-[#0B1F3A] rounded-lg px-4 py-3 font-bold text-sm transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg min-h-[44px] relative overflow-hidden"
-            title="Start New Game"
-            style={{
-              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-              textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
-            }}
-          >
-            <span className="text-lg">🎬</span>
-            <span className="font-bold uppercase tracking-wide">New Game</span>
-          </button>
-
-          {/* Theme Selector Button */}
-          <button 
-            onClick={changeTheme}
-            className="flex items-center gap-2 bg-gradient-to-r from-[#8B4513] to-[#A0522D] text-white rounded-lg px-4 py-3 font-bold text-xs transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg min-h-[44px] relative overflow-hidden"
-            title={`Current: ${currentTheme.name}`}
-            style={{
-              boxShadow: '0 4px 12px rgba(139, 69, 19, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-              textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
-            }}
-          >
-            <span className="text-sm">🎭</span>
-            <span className="font-bold uppercase tracking-wide">Theme</span>
-          </button>
-        </div>
+        {/* Gold Clapperboard Icon & New Game Button */}
+        <button 
+          onClick={startNewGame}
+          className="flex items-center gap-3 bg-gradient-to-r from-[#D4AF37] to-[#F4E17A] text-[#0B1F3A] rounded-lg px-6 py-3 font-bold text-sm transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg min-h-[44px] relative overflow-hidden"
+          title="Start New Game"
+          style={{
+            boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+            textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
+          }}
+        >
+          <span className="text-lg">🎬</span>
+          <span className="font-bold uppercase tracking-wide">New Game</span>
+        </button>
 
         {/* Current Theme Display & Score */}
         <div className="flex items-center gap-3">
           {/* Theme Name */}
           <div 
-            className="bg-gradient-to-r from-[#4A0E4E] to-[#6A1B9A] border border-[#D4AF37] rounded-lg px-3 py-2 text-xs font-medium min-h-[44px] flex items-center justify-center text-white"
+            className="bg-gradient-to-r from-[#4A0E4E] to-[#6A1B9A] border border-[#D4AF37] rounded-lg px-4 py-2 text-xs font-medium min-h-[44px] flex items-center justify-center text-white"
             style={{
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
               backdropFilter: 'blur(8px)'
             }}
+            title={currentTheme.description}
           >
             <span className="text-center leading-tight">{currentTheme.name}</span>
           </div>
