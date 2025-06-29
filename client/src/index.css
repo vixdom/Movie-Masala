@@ -50,9 +50,9 @@
       flex: 1 1 auto;
       display: flex;
       justify-content: center;
-      align-items: flex-end;
+      align-items: center;
       overflow: hidden;
-      padding: 0 0 16px 0;
+      padding: 60px 0 16px 0; /* Top padding permanently reserves space for selection bubble */
       min-height: 0;
     }
   }
@@ -563,7 +563,7 @@ html {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  padding: 8px;
+  padding: 60px 8px 8px 8px; /* Top padding permanently reserves space for selection bubble */
 }
 
 .grid-container {

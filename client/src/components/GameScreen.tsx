@@ -363,17 +363,6 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         </div>
       </div>
 
-      {/* Selection Bubble - word in progress - positioned between pills and grid */}
-      <div className="flex justify-center py-2 relative z-30">
-        {currentSelection && (
-          <div className={`bollywood-selection-bubble text-white shadow-lg transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit ${currentSelection.length <= 6 ? 'rounded-full px-6 py-3' : 'rounded-xl px-8 py-4'}`}>
-            <span className="text-lg font-bold tracking-widest block">
-              {currentSelection.split('').join(' ')}
-            </span>
-          </div>
-        )}
-      </div>
-
       {/* Hint Display - long press result */}
       {showHint && (
         <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 z-30 bollywood-hint-bubble text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 max-w-xs text-center">
@@ -381,8 +370,17 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         </div>
       )}
 
-      {/* Grid Wrapper - Bottom half container */}
-      <div className="grid-wrapper">
+      {/* Grid Wrapper - Bottom half container with reserved space for selection bubble */}
+      <div className="grid-wrapper relative">
+        {/* Selection Bubble - positioned in reserved space at top of grid area */}
+        {currentSelection && (
+          <div className={`absolute left-1/2 transform -translate-x-1/2 z-30 bollywood-selection-bubble text-white shadow-lg transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit ${currentSelection.length <= 6 ? 'rounded-full px-6 py-3' : 'rounded-xl px-8 py-4'}`} style={{ top: '10px' }}>
+            <span className="text-lg font-bold tracking-widest block">
+              {currentSelection.split('').join(' ')}
+            </span>
+          </div>
+        )}
+        
         <MobileOptimizedWordSearch
           grid={gameState.grid}
           onCellMouseDown={handleCellMouseDown}
