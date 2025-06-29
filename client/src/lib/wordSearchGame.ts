@@ -490,11 +490,22 @@ export class WordSearchGame {
     }
     
     // Mark selected cells
+    console.log('Updating grid selection with cells:', this.gameState.selectedCells);
     for (const cell of this.gameState.selectedCells) {
       if (cell.row >= 0 && cell.row < GRID_SIZE && cell.col >= 0 && cell.col < GRID_SIZE) {
         this.gameState.grid[cell.row][cell.col].isSelected = true;
+        console.log(`Marked cell [${cell.row}, ${cell.col}] as selected`);
       }
     }
+    
+    // Log how many cells are selected
+    let selectedCount = 0;
+    for (let row = 0; row < GRID_SIZE; row++) {
+      for (let col = 0; col < GRID_SIZE; col++) {
+        if (this.gameState.grid[row][col].isSelected) selectedCount++;
+      }
+    }
+    console.log(`Total selected cells in grid: ${selectedCount}`);
   }
 
   private getSelectedWord(): string {
