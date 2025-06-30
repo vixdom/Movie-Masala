@@ -472,44 +472,44 @@
   box-sizing: border-box;
 }
 
-/* Selection Film Reel (Active - Appears during selection) */
+/* Selection Film Reel (Active - High Transparency for Clear Letters) */
 .film-reel-cell.selection-reel {
   background: linear-gradient(
     to bottom,
-    rgba(255, 215, 0, 0.95) 0%,
-    rgba(212, 175, 55, 0.9) 15%,
-    rgba(255, 245, 157, 0.95) 40%,
-    rgba(255, 255, 255, 0.9) 50%,
-    rgba(255, 245, 157, 0.95) 60%,
-    rgba(212, 175, 55, 0.9) 85%,
-    rgba(255, 215, 0, 0.95) 100%
+    rgba(255, 215, 0, 0.3) 0%,
+    rgba(212, 175, 55, 0.25) 15%,
+    rgba(255, 245, 157, 0.3) 40%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 245, 157, 0.3) 60%,
+    rgba(212, 175, 55, 0.25) 85%,
+    rgba(255, 215, 0, 0.3) 100%
   );
-  border: 2px solid rgba(184, 148, 31, 0.9);
+  border: 2px solid rgba(184, 148, 31, 0.4);
   box-shadow: 
-    0 0 25px rgba(255, 215, 0, 0.8),
-    0 0 40px rgba(255, 215, 0, 0.6),
-    inset 0 2px 0 rgba(255, 255, 255, 0.6),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(2px);
+    0 0 15px rgba(255, 215, 0, 0.4),
+    0 0 25px rgba(255, 215, 0, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(1px);
   z-index: 25;
 }
 
-/* Found Word Film Reel (Permanent - Outlines completed words) */
+/* Found Word Film Reel (Permanent - High Transparency for Clear Letters) */
 .film-reel-cell.found-reel {
   background: linear-gradient(
     to bottom,
-    rgba(255, 215, 0, 0.85) 0%,
-    rgba(212, 175, 55, 0.8) 20%,
-    rgba(255, 245, 157, 0.85) 50%,
-    rgba(212, 175, 55, 0.8) 80%,
-    rgba(255, 215, 0, 0.85) 100%
+    rgba(255, 215, 0, 0.2) 0%,
+    rgba(212, 175, 55, 0.18) 20%,
+    rgba(255, 245, 157, 0.2) 50%,
+    rgba(212, 175, 55, 0.18) 80%,
+    rgba(255, 215, 0, 0.2) 100%
   );
-  border: 1px solid rgba(184, 148, 31, 0.9);
+  border: 1px solid rgba(184, 148, 31, 0.3);
   box-shadow: 
-    0 0 12px rgba(255, 215, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(1px);
+    0 0 8px rgba(255, 215, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(0.5px);
   z-index: 18;
 }
 
@@ -522,8 +522,8 @@
     90deg,
     transparent 0px,
     transparent 8%,
-    rgba(0, 0, 0, 0.8) 8%,
-    rgba(0, 0, 0, 0.8) 16%,
+    rgba(0, 0, 0, 0.6) 8%,
+    rgba(0, 0, 0, 0.6) 16%,
     transparent 16%,
     transparent 24%
   );
@@ -545,6 +545,32 @@
   left: 8%;
   right: 8%;
   height: 4px;
+}
+
+/* Directional Orientation for Vertical and Diagonal Words */
+.film-reel-cell.vertical {
+  transform-origin: center center;
+  transform: rotate(90deg);
+}
+
+.film-reel-cell.diagonal-down {
+  transform-origin: center center;
+  transform: rotate(45deg);
+}
+
+.film-reel-cell.diagonal-up {
+  transform-origin: center center;
+  transform: rotate(-45deg);
+}
+
+.film-reel-cell.diagonal-down-left {
+  transform-origin: center center;
+  transform: rotate(135deg);
+}
+
+.film-reel-cell.diagonal-up-left {
+  transform-origin: center center;
+  transform: rotate(-135deg);
 }
 
 /* Extending Animation for Selection */
@@ -579,8 +605,8 @@
       90deg,
       transparent 0px,
       transparent 8%,
-      rgba(0, 0, 0, 0.8) 8%,
-      rgba(0, 0, 0, 0.8) 16%,
+      rgba(0, 0, 0, 0.6) 8%,
+      rgba(0, 0, 0, 0.6) 16%,
       transparent 16%,
       transparent 24%
     );
@@ -590,71 +616,56 @@
       90deg,
       transparent 0px,
       transparent 8%,
-      rgba(255, 215, 0, 1) 8%,
-      rgba(255, 255, 255, 1) 16%,
+      rgba(255, 215, 0, 0.8) 8%,
+      rgba(255, 255, 255, 0.8) 16%,
       transparent 16%,
       transparent 24%
     );
-    box-shadow: 0 0 15px rgba(255, 215, 0, 1);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
   }
 }
 
-/* Shimmer Effect for Found Words */
+/* Reduced Shimmer Effect for Found Words - 0.5s duration, lower intensity */
 .film-reel-cell.shimmer {
-  animation: foundWordShimmer 2s ease-in-out;
+  animation: foundWordShimmer 0.5s ease-in-out;
 }
 
 @keyframes foundWordShimmer {
   0%, 100% {
     background: linear-gradient(
       to bottom,
-      rgba(255, 215, 0, 0.85) 0%,
-      rgba(212, 175, 55, 0.8) 20%,
-      rgba(255, 245, 157, 0.85) 50%,
-      rgba(212, 175, 55, 0.8) 80%,
-      rgba(255, 215, 0, 0.85) 100%
+      rgba(255, 215, 0, 0.2) 0%,
+      rgba(212, 175, 55, 0.18) 20%,
+      rgba(255, 245, 157, 0.2) 50%,
+      rgba(212, 175, 55, 0.18) 80%,
+      rgba(255, 215, 0, 0.2) 100%
     );
     box-shadow: 
-      0 0 12px rgba(255, 215, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-  }
-  25%, 75% {
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 245, 157, 1) 0%,
-      rgba(255, 255, 255, 0.95) 20%,
-      rgba(255, 215, 0, 1) 50%,
-      rgba(255, 255, 255, 0.95) 80%,
-      rgba(255, 245, 157, 1) 100%
-    );
-    box-shadow: 
-      0 0 25px rgba(255, 215, 0, 0.8),
-      0 0 35px rgba(255, 215, 0, 0.6),
-      inset 0 2px 0 rgba(255, 255, 255, 0.6),
-      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+      0 0 8px rgba(255, 215, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08);
   }
   50% {
     background: linear-gradient(
       to bottom,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 245, 157, 1) 20%,
-      rgba(255, 215, 0, 1) 50%,
-      rgba(255, 245, 157, 1) 80%,
-      rgba(255, 255, 255, 1) 100%
+      rgba(255, 245, 157, 0.4) 0%,
+      rgba(255, 255, 255, 0.35) 20%,
+      rgba(255, 215, 0, 0.4) 50%,
+      rgba(255, 255, 255, 0.35) 80%,
+      rgba(255, 245, 157, 0.4) 100%
     );
     box-shadow: 
-      0 0 30px rgba(255, 215, 0, 1),
-      0 0 50px rgba(255, 215, 0, 0.8),
-      inset 0 3px 0 rgba(255, 255, 255, 0.8),
-      inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+      0 0 15px rgba(255, 215, 0, 0.4),
+      0 0 20px rgba(255, 215, 0, 0.3),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.05);
   }
 }
 
-/* Enhanced shimmer perforations */
+/* Enhanced shimmer perforations - reduced intensity */
 .film-reel-cell.shimmer::before,
 .film-reel-cell.shimmer::after {
-  animation: shimmerPerforations 2s ease-in-out;
+  animation: shimmerPerforations 0.5s ease-in-out;
 }
 
 @keyframes shimmerPerforations {
@@ -663,8 +674,8 @@
       90deg,
       transparent 0px,
       transparent 8%,
-      rgba(0, 0, 0, 0.8) 8%,
-      rgba(0, 0, 0, 0.8) 16%,
+      rgba(0, 0, 0, 0.6) 8%,
+      rgba(0, 0, 0, 0.6) 16%,
       transparent 16%,
       transparent 24%
     );
@@ -674,12 +685,12 @@
       90deg,
       transparent 0px,
       transparent 8%,
-      rgba(255, 215, 0, 1) 8%,
-      rgba(255, 255, 255, 1) 16%,
+      rgba(255, 215, 0, 0.7) 8%,
+      rgba(255, 255, 255, 0.7) 16%,
       transparent 16%,
       transparent 24%
     );
-    box-shadow: 0 0 20px rgba(255, 215, 0, 1);
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
   }
 }
 
