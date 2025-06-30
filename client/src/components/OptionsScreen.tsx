@@ -1,4 +1,5 @@
 import { Button } from './ui/button';
+import { ResponsiveGameLayout } from './ResponsiveGameLayout';
 import { ChevronLeft } from 'lucide-react';
 
 interface OptionsScreenProps {
@@ -9,17 +10,17 @@ interface OptionsScreenProps {
 
 export function OptionsScreen({ onBackToHome, isSoundMuted, onToggleSound }: OptionsScreenProps) {
   return (
-    <div className="h-screen text-white relative overflow-hidden">
+    <ResponsiveGameLayout className="h-screen text-white relative overflow-hidden">
       {/* Enhanced film-strip background overlay */}
       <div className="absolute inset-0 bg-black/40" />
       
-      {/* Header - Exactly 10% viewport height */}
+      {/* Responsive Header */}
       <header className="app-header">
         {/* Back Button */}
         <Button
           onClick={onBackToHome}
           variant="ghost"
-          className="flex items-center gap-2 hover:bg-yellow-400/20 text-yellow-200 hover:text-white transition-all duration-300 min-h-[44px] min-w-[44px]"
+          className="flex items-center gap-2 hover:bg-yellow-400/20 text-yellow-200 hover:text-white transition-all duration-300 min-h-[var(--touch-target-min)] min-w-[var(--touch-target-min)]"
         >
           <ChevronLeft size={20} />
           <span className="hidden sm:inline">Back</span>
@@ -35,8 +36,8 @@ export function OptionsScreen({ onBackToHome, isSoundMuted, onToggleSound }: Opt
         <div className="w-16"></div>
       </header>
 
-      {/* Main Content */}
-      <div className="flex flex-col items-center justify-start h-[90vh] px-4 pt-12">
+      {/* Main Content - Responsive */}
+      <div className="flex flex-col items-center justify-start flex-1 px-4 pt-12">
         <div className="w-full max-w-md space-y-8">
           {/* Sound Settings */}
           <div className="bg-black/30 backdrop-blur-sm rounded-lg p-6 border border-yellow-400/30">
@@ -49,7 +50,7 @@ export function OptionsScreen({ onBackToHome, isSoundMuted, onToggleSound }: Opt
               <Button
                 onClick={onToggleSound}
                 variant={isSoundMuted ? "outline" : "default"}
-                className={`min-h-[44px] transition-all duration-300 ${
+                className={`min-h-[var(--touch-target-min)] transition-all duration-300 ${
                   isSoundMuted 
                     ? "bg-transparent border-red-400/60 text-red-300 hover:bg-red-400/20" 
                     : "bollywood-gold-accent hover:scale-105"
@@ -69,7 +70,7 @@ export function OptionsScreen({ onBackToHome, isSoundMuted, onToggleSound }: Opt
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-white font-medium">Difficulty</span>
-                <select className="bg-black/50 border border-yellow-400/40 rounded px-3 py-2 text-white min-h-[44px]">
+                <select className="bg-black/50 border border-yellow-400/40 rounded px-3 py-2 text-white min-h-[var(--touch-target-min)]">
                   <option value="easy">Easy</option>
                   <option value="medium" selected>Medium</option>
                   <option value="hard">Hard</option>
@@ -80,7 +81,7 @@ export function OptionsScreen({ onBackToHome, isSoundMuted, onToggleSound }: Opt
                 <span className="text-white font-medium">Show Hints</span>
                 <Button
                   variant="default"
-                  className="bollywood-gold-accent min-h-[44px]"
+                  className="bollywood-gold-accent min-h-[var(--touch-target-min)]"
                 >
                   ✓ Enabled
                 </Button>
@@ -102,6 +103,6 @@ export function OptionsScreen({ onBackToHome, isSoundMuted, onToggleSound }: Opt
           </div>
         </div>
       </div>
-    </div>
+    </ResponsiveGameLayout>
   );
 }

@@ -7,6 +7,7 @@ import { cn } from '../lib/utils';
 import { WordFoundAnimation } from './WordFoundAnimation';
 import { MobileOptimizedWordSearch } from './MobileOptimizedWordSearch';
 import { FoundWordsDisplay } from './FoundWordsDisplay';
+import { ResponsiveGameLayout } from './ResponsiveGameLayout';
 import { ChevronLeft } from 'lucide-react';
 
 interface GameScreenProps {
@@ -29,25 +30,34 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   const [currentTheme, setCurrentTheme] = useState<Theme>(getRandomTheme());
   const [availableThemes] = useState<Theme[]>(getAllThemes());
 
-  // Audio setup
+  // Audio setup with enhanced mobile compatibility
   const playSuccess = useCallback(() => {
     if (isSoundMuted) return;
     try {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(180, audioContext.currentTime + 0.3);
-      
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-      
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.3);
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioContext) {
+        const audioContext = new AudioContext();
+        
+        // Resume context if suspended (required for mobile)
+        if (audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(180, audioContext.currentTime + 0.3);
+        
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+      }
     } catch (error) {
       console.log('Audio not available');
     }
@@ -56,19 +66,27 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   const playHit = useCallback(() => {
     if (isSoundMuted) return;
     try {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-      
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.1);
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioContext) {
+        const audioContext = new AudioContext();
+        
+        if (audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
+        gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+      }
     } catch (error) {
       console.log('Audio not available');
     }
@@ -217,93 +235,27 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     setCurrentSelection('');
   }, [game, playSuccess]);
 
-  const handleCellTouchStart = useCallback((row: number, col: number) => {
-    // Trigger glassy sweep animation for touch start
-    const cellElement = document.querySelector(`[data-row="${row}"][data-col="${col}"]`) as HTMLElement;
-    if (cellElement && !cellElement.querySelector('.touch-glassy-sweep')) {
-      const sweepElement = document.createElement('div');
-      sweepElement.className = 'touch-glassy-sweep';
-      sweepElement.style.cssText = `
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(212, 175, 55, 0.4) 0%, rgba(244, 225, 122, 0.6) 50%, rgba(212, 175, 55, 0.4) 100%);
-        backdrop-filter: blur(2px);
-        border-radius: inherit;
-        pointer-events: none;
-        animation: glassySweepPulse 0.8s ease-out forwards;
-        z-index: 10;
-      `;
-      
-      cellElement.appendChild(sweepElement);
-      
-      // Remove after animation
-      setTimeout(() => {
-        if (sweepElement.parentNode) {
-          sweepElement.parentNode.removeChild(sweepElement);
-        }
-      }, 800);
-      
-      // Haptic feedback
-      if (navigator.vibrate) {
-        navigator.vibrate(20);
-      }
-    }
-    
-    handleCellMouseDown(row, col);
-  }, [handleCellMouseDown]);
-
-  const handleCellTouchMove = useCallback((event: React.TouchEvent) => {
-    console.log('Touch move event, isSelecting:', gameState.isSelecting);
-    
-    const touch = event.touches[0];
-    const element = document.elementFromPoint(touch.clientX, touch.clientY);
-    
-    if (element?.hasAttribute('data-row') && element?.hasAttribute('data-col')) {
-      const row = parseInt(element.getAttribute('data-row') || '0', 10);
-      const col = parseInt(element.getAttribute('data-col') || '0', 10);
-      console.log('Touch move detected on cell:', row, col);
-      
-      // Apply glassy sweep effect to dragged cells
-      const cellElement = element as HTMLElement;
-      if (cellElement && !cellElement.classList.contains('touch-glassy-active')) {
-        console.log('Adding glassy effect to cell:', row, col);
-        cellElement.classList.add('touch-glassy-active');
-        
-        // Remove the effect after a short duration
-        setTimeout(() => {
-          cellElement.classList.remove('touch-glassy-active');
-        }, 600);
-        
-        // Gentle haptic feedback
-        if (navigator.vibrate) {
-          navigator.vibrate(10);
-        }
-      }
-      
-      // Only update selection if we're actually selecting
-      if (gameState.isSelecting) {
-        handleCellMouseEnter(row, col);
-      }
-    }
-  }, [gameState.isSelecting, handleCellMouseEnter]);
-
-
-
-  const handleCellTouchEnd = useCallback(() => {
-    handleCellMouseUp();
-  }, [handleCellMouseUp]);
-
   return (
-    <div className="h-full text-white relative overflow-hidden">
-      {/* Header - Premium Cinema Style */}
+    <ResponsiveGameLayout className="h-full text-white relative overflow-hidden">
+      {/* Enhanced film-strip background overlay */}
+      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+      
+      {/* Responsive Header */}
       <header className="app-header">
-        {/* Gold Clapperboard Icon & New Game Button */}
+        {/* Back Button */}
+        <Button
+          onClick={onBackToHome}
+          variant="ghost"
+          className="flex items-center gap-2 hover:bg-yellow-400/20 text-yellow-200 hover:text-white transition-all duration-300 min-h-[var(--touch-target-min)] min-w-[var(--touch-target-min)]"
+        >
+          <ChevronLeft size={20} />
+          <span className="hidden sm:inline">Back</span>
+        </Button>
+
+        {/* New Game Button */}
         <button 
           onClick={startNewGame}
-          className="flex items-center gap-3 bg-gradient-to-r from-[#D4AF37] to-[#F4E17A] text-[#0B1F3A] rounded-lg px-6 py-3 font-bold text-sm transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg min-h-[44px] relative overflow-hidden"
+          className="flex items-center gap-3 bg-gradient-to-r from-[#D4AF37] to-[#F4E17A] text-[#0B1F3A] rounded-lg px-6 py-3 font-bold text-sm transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg min-h-[var(--touch-target-min)] relative overflow-hidden"
           title="Start New Game"
           style={{
             boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
@@ -314,11 +266,11 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
           <span className="font-bold uppercase tracking-wide">New Game</span>
         </button>
 
-        {/* Current Theme Display & Score */}
+        {/* Theme & Score Display */}
         <div className="flex items-center gap-3">
-          {/* Theme Name */}
+          {/* Current Theme Display */}
           <div 
-            className="bg-gradient-to-r from-[#4A0E4E] to-[#6A1B9A] border border-[#D4AF37] rounded-lg px-4 py-2 text-xs font-medium min-h-[44px] flex items-center justify-center text-white"
+            className="bg-gradient-to-r from-[#4A0E4E] to-[#6A1B9A] border border-[#D4AF37] rounded-lg px-4 py-2 text-xs font-medium min-h-[var(--touch-target-min)] flex items-center justify-center text-white"
             style={{
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
               backdropFilter: 'blur(8px)'
@@ -330,7 +282,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
           
           {/* Score Indicator */}
           <div 
-            className="bg-gradient-to-r from-[#0B1F3A] to-[#1A2B4A] border-2 border-[#D4AF37] rounded-full px-6 py-3 text-sm font-bold min-h-[44px] flex items-center justify-center text-white"
+            className="bg-gradient-to-r from-[#0B1F3A] to-[#1A2B4A] border-2 border-[#D4AF37] rounded-full px-6 py-3 text-sm font-bold min-h-[var(--touch-target-min)] flex items-center justify-center text-white"
             style={{
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
               backdropFilter: 'blur(8px)'
@@ -341,7 +293,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         </div>
       </header>
 
-      {/* Hint Strip - Fixed size */}
+      {/* Responsive Hint Strip */}
       <div className="hint-strip hints">
         <div className="hint-pills-container">
           {currentWords.map((wordItem) => {
@@ -374,16 +326,6 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
               }
             };
 
-            const handleTouchStart = () => {
-              console.log('Word pill touchstart:', wordItem.word);
-              handleMouseDown();
-            };
-
-            const handleTouchEnd = () => {
-              console.log('Word pill touchend:', wordItem.word);
-              handleMouseUp();
-            };
-
             const handleClick = () => {
               console.log('Word pill clicked:', wordItem.word);
               if (wordPlacement && !isFound) {
@@ -403,10 +345,11 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
-
+                onTouchStart={handleMouseDown}
+                onTouchEnd={handleMouseUp}
                 style={{ 
-                  minHeight: '48px',
-                  minWidth: '48px',
+                  minHeight: 'var(--touch-target-min)',
+                  minWidth: 'var(--touch-target-min)',
                   zIndex: 50,
                   position: 'relative',
                   pointerEvents: 'auto'
@@ -419,16 +362,16 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         </div>
       </div>
 
-      {/* Hint Display - long press result */}
+      {/* Hint Display */}
       {showHint && (
         <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 z-30 bollywood-hint-bubble text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 max-w-xs text-center">
           <span className="text-sm font-medium">{showHint}</span>
         </div>
       )}
 
-      {/* Grid Wrapper - Bottom half container with permanent reserved space */}
+      {/* Responsive Grid Wrapper */}
       <div className="grid-wrapper relative">
-        {/* Selection Bubble - fixed at top of screen */}
+        {/* Selection Bubble */}
         {gameState.isSelecting && (
           <div className="fixed top-16 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-2xl transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit rounded-xl px-8 py-4 border-2 border-yellow-400" style={{ zIndex: 9999 }}>
             <span className="text-lg font-bold tracking-widest block">
@@ -449,6 +392,6 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
 
       {/* Word Found Animation */}
       <WordFoundAnimation word={wordFoundAnimation} />
-    </div>
+    </ResponsiveGameLayout>
   );
 }
