@@ -448,7 +448,7 @@
 }
 
 /* ==============================================
-   Golden Film Reel Selection Effect */
+   Authentic Golden Film Reel Effects */
 
 /* Film Reel Overlay Container */
 .film-reel-overlay {
@@ -462,42 +462,43 @@
   overflow: hidden;
 }
 
-/* Golden Film Strip - Selection Effect */
+/* Authentic Film Strip - Main Body */
 .film-strip {
   position: absolute;
   background: linear-gradient(
-    to right,
-    rgba(212, 175, 55, 0.9),
-    rgba(255, 215, 0, 0.95),
-    rgba(244, 225, 122, 0.9),
-    rgba(255, 215, 0, 0.95),
-    rgba(212, 175, 55, 0.9)
+    to bottom,
+    rgba(255, 215, 0, 0.95) 0%,
+    rgba(212, 175, 55, 0.9) 20%,
+    rgba(255, 245, 157, 0.95) 50%,
+    rgba(212, 175, 55, 0.9) 80%,
+    rgba(255, 215, 0, 0.95) 100%
   );
-  border: 2px solid rgba(184, 148, 31, 0.8);
-  border-radius: 4px;
+  border: 1px solid rgba(184, 148, 31, 0.8);
+  border-radius: 2px;
   box-shadow: 
     0 0 20px rgba(255, 215, 0, 0.6),
-    inset 0 2px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(2px);
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(1px);
   transition: all 0.15s ease-out;
+  z-index: 25;
 }
 
-/* Film Strip - Found Word Outline */
+/* Film Strip - Found Word Outline (Permanent) */
 .film-strip-found {
   position: absolute;
   background: linear-gradient(
-    to right,
-    rgba(212, 175, 55, 0.85),
-    rgba(255, 215, 0, 0.9),
-    rgba(244, 225, 122, 0.85),
-    rgba(255, 215, 0, 0.9),
-    rgba(212, 175, 55, 0.85)
+    to bottom,
+    rgba(255, 215, 0, 0.85) 0%,
+    rgba(212, 175, 55, 0.8) 20%,
+    rgba(255, 245, 157, 0.85) 50%,
+    rgba(212, 175, 55, 0.8) 80%,
+    rgba(255, 215, 0, 0.85) 100%
   );
-  border: 1.5px solid rgba(184, 148, 31, 0.9);
-  border-radius: 3px;
+  border: 1px solid rgba(184, 148, 31, 0.9);
+  border-radius: 2px;
   box-shadow: 
-    0 0 15px rgba(255, 215, 0, 0.5),
+    0 0 12px rgba(255, 215, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(1px);
@@ -512,79 +513,85 @@
 @keyframes foundWordShimmer {
   0%, 100% {
     box-shadow: 
-      0 0 15px rgba(255, 215, 0, 0.5),
+      0 0 12px rgba(255, 215, 0, 0.4),
       inset 0 1px 0 rgba(255, 255, 255, 0.3),
       inset 0 -1px 0 rgba(0, 0, 0, 0.15);
     background: linear-gradient(
-      to right,
-      rgba(212, 175, 55, 0.85),
-      rgba(255, 215, 0, 0.9),
-      rgba(244, 225, 122, 0.85),
-      rgba(255, 215, 0, 0.9),
-      rgba(212, 175, 55, 0.85)
+      to bottom,
+      rgba(255, 215, 0, 0.85) 0%,
+      rgba(212, 175, 55, 0.8) 20%,
+      rgba(255, 245, 157, 0.85) 50%,
+      rgba(212, 175, 55, 0.8) 80%,
+      rgba(255, 215, 0, 0.85) 100%
     );
   }
   25%, 75% {
     box-shadow: 
       0 0 25px rgba(255, 215, 0, 0.8),
       0 0 35px rgba(255, 215, 0, 0.6),
-      inset 0 2px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+      inset 0 2px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
     background: linear-gradient(
-      to right,
-      rgba(255, 215, 0, 0.95),
-      rgba(255, 255, 255, 1),
-      rgba(255, 245, 157, 0.95),
-      rgba(255, 255, 255, 1),
-      rgba(255, 215, 0, 0.95)
+      to bottom,
+      rgba(255, 245, 157, 1) 0%,
+      rgba(255, 255, 255, 0.95) 20%,
+      rgba(255, 215, 0, 1) 50%,
+      rgba(255, 255, 255, 0.95) 80%,
+      rgba(255, 245, 157, 1) 100%
     );
   }
   50% {
     box-shadow: 
       0 0 30px rgba(255, 215, 0, 1),
       0 0 50px rgba(255, 215, 0, 0.8),
-      inset 0 3px 0 rgba(255, 255, 255, 0.7),
-      inset 0 -3px 0 rgba(0, 0, 0, 0.1);
+      inset 0 3px 0 rgba(255, 255, 255, 0.8),
+      inset 0 -3px 0 rgba(0, 0, 0, 0.05);
     background: linear-gradient(
-      to right,
-      rgba(255, 245, 157, 1),
-      rgba(255, 255, 255, 1),
-      rgba(255, 215, 0, 1),
-      rgba(255, 255, 255, 1),
-      rgba(255, 245, 157, 1)
+      to bottom,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 245, 157, 1) 20%,
+      rgba(255, 215, 0, 1) 50%,
+      rgba(255, 245, 157, 1) 80%,
+      rgba(255, 255, 255, 1) 100%
     );
   }
 }
 
-/* Film Perforations */
+/* Film Perforations - Authentic Corner Style */
 .film-strip::before,
 .film-strip::after,
 .film-strip-found::before,
 .film-strip-found::after {
   content: '';
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 60%;
   background: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 2px,
-    rgba(0, 0, 0, 0.4) 2px,
-    rgba(0, 0, 0, 0.4) 4px
+    90deg,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.6) 3px,
+    rgba(0, 0, 0, 0.6) 6px,
+    transparent 6px,
+    transparent 9px
   );
   border-radius: 1px;
 }
 
+/* Top perforations */
 .film-strip::before,
 .film-strip-found::before {
-  left: 1px;
+  top: -1px;
+  left: 10%;
+  right: 10%;
+  height: 3px;
 }
 
+/* Bottom perforations */
 .film-strip::after,
 .film-strip-found::after {
-  right: 1px;
+  bottom: -1px;
+  left: 10%;
+  right: 10%;
+  height: 3px;
 }
 
 /* Film Strip Animation */
@@ -609,21 +616,63 @@
 
 /* Sparkle Effect for Film Reel */
 .film-strip.sparkle::before {
-  animation: sparkleLeft 0.4s ease-out;
+  animation: sparkleTop 0.4s ease-out;
 }
 
 .film-strip.sparkle::after {
-  animation: sparkleRight 0.4s ease-out;
+  animation: sparkleBottom 0.4s ease-out;
 }
 
-@keyframes sparkleLeft {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
+@keyframes sparkleTop {
+  0%, 100% { 
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(0, 0, 0, 0.6) 3px,
+      rgba(0, 0, 0, 0.6) 6px,
+      transparent 6px,
+      transparent 9px
+    );
+  }
+  50% { 
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(255, 215, 0, 0.9) 3px,
+      rgba(255, 215, 0, 0.9) 6px,
+      transparent 6px,
+      transparent 9px
+    );
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  }
 }
 
-@keyframes sparkleRight {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
+@keyframes sparkleBottom {
+  0%, 100% { 
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(0, 0, 0, 0.6) 3px,
+      rgba(0, 0, 0, 0.6) 6px,
+      transparent 6px,
+      transparent 9px
+    );
+  }
+  50% { 
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(255, 215, 0, 0.9) 3px,
+      rgba(255, 215, 0, 0.9) 6px,
+      transparent 6px,
+      transparent 9px
+    );
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  }
 }
 
 /* ==============================================

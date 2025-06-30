@@ -38,7 +38,7 @@ export const FilmReelOverlay: React.FC<FilmReelOverlayProps> = ({
     return () => clearInterval(shimmerInterval);
   }, [foundWords]);
 
-  // Calculate film reel segments for selection
+  // Calculate authentic film reel segments for selection (extending reel)
   const selectionFilmReelSegments = useMemo(() => {
     if (selectedCells.length < 2 || !isSelecting) return [];
 
@@ -71,9 +71,9 @@ export const FilmReelOverlay: React.FC<FilmReelOverlayProps> = ({
         x: centerStartX,
         y: centerStartY,
         width: distance,
-        height: 8, // Slightly thicker for selection
+        height: 12, // Thicker for active selection
         angle,
-        delay: i * 0.05, // Stagger animation
+        delay: i * 0.03, // Stagger animation for extending effect
         isSelection: true
       });
     }
@@ -81,7 +81,7 @@ export const FilmReelOverlay: React.FC<FilmReelOverlayProps> = ({
     return segments;
   }, [selectedCells, isSelecting]);
 
-  // Calculate film reel outlines for found words
+  // Calculate authentic film reel outlines for found words (permanent borders)
   const foundWordFilmReelSegments = useMemo(() => {
     if (foundWords.length === 0) return [];
 
@@ -117,7 +117,7 @@ export const FilmReelOverlay: React.FC<FilmReelOverlayProps> = ({
           x: centerStartX,
           y: centerStartY,
           width: distance,
-          height: 6, // Slightly thinner for found words
+          height: 8, // Thinner for found word outline
           angle,
           delay: 0,
           isSelection: false,
