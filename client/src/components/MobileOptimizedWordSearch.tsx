@@ -1,6 +1,7 @@
 import React, { useRef, useCallback, useState, useMemo, memo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { GridCell as GridCellType } from '@/lib/wordSearchGame';
+import { FilmReelOverlay } from './FilmReelOverlay';
 
 interface WordSearchProps {
   grid: GridCellType[][];
@@ -20,7 +21,8 @@ const CrosswordGridCell = memo(({
   onSelectionMove,
   onSelectionEnd,
   getWordColor,
-  highlightedWord
+  highlightedWord,
+  selectedCells
 }: {
   cell: GridCellType;
   rowIndex: number;
@@ -31,23 +33,44 @@ const CrosswordGridCell = memo(({
   onSelectionEnd: () => void;
   getWordColor: (wordId: string | undefined) => string;
   highlightedWord?: string | null;
+  selectedCells: { row: number; col: number }[];
 }) => {
   const cellRef = useRef<HTMLDivElement>(null);
+  const lastHapticTime = useRef<number>(0);
+
+  // Check if this cell is currently selected
+  const isCurrentlySelected = selectedCells.some(
+    selectedCell => selectedCell.row === rowIndex && selectedCell.col === colIndex
+  );
+
+  // Haptic feedback function with throttling
+  const triggerHaptic = useCallback((intensity: number = 20) => {
+    const now = Date.now();
+    // Throttle haptic feedback to prevent overwhelming sensations
+    if (now - lastHapticTime.current > 50) { // 50ms minimum between haptics
+      if ('vibrate' in navigator) {
+        navigator.vibrate(intensity);
+      }
+      lastHapticTime.current = now;
+    }
+  }, []);
 
   // Mouse down handler
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     console.log('Mouse down:', rowIndex, colIndex, cell.letter);
+    triggerHaptic(25); // Slightly stronger for selection start
     onSelectionStart(rowIndex, colIndex);
-  }, [rowIndex, colIndex, cell.letter, onSelectionStart]);
+  }, [rowIndex, colIndex, cell.letter, onSelectionStart, triggerHaptic]);
 
   // Mouse enter handler
   const handleMouseEnter = useCallback((e: React.MouseEvent) => {
-    if (isSelecting) {
+    if (isSelecting && !isCurrentlySelected) {
       console.log('Mouse enter during selection:', rowIndex, colIndex);
+      triggerHaptic(15); // Gentle haptic for each new letter
       onSelectionMove(rowIndex, colIndex);
     }
-  }, [rowIndex, colIndex, isSelecting, onSelectionMove]);
+  }, [rowIndex, colIndex, isSelecting, onSelectionMove, triggerHaptic, isCurrentlySelected]);
 
   // Native touch event handlers for non-passive events
   const handleNativeTouchStart = useCallback((e: TouchEvent) => {
@@ -59,13 +82,11 @@ const CrosswordGridCell = memo(({
     const target = e.currentTarget as HTMLElement;
     target.classList.add('touch-glassy-active');
     
-    // Haptic feedback
-    if ('vibrate' in navigator) {
-      navigator.vibrate(20);
-    }
+    // Strong haptic for touch start
+    triggerHaptic(25);
     
     onSelectionStart(rowIndex, colIndex);
-  }, [rowIndex, colIndex, cell.letter, onSelectionStart]);
+  }, [rowIndex, colIndex, cell.letter, onSelectionStart, triggerHaptic]);
 
   const handleNativeTouchMove = useCallback((e: TouchEvent) => {
     e.preventDefault();
@@ -81,27 +102,31 @@ const CrosswordGridCell = memo(({
       if (cellElement) {
         const row = parseInt(cellElement.dataset.row || '0', 10);
         const col = parseInt(cellElement.dataset.col || '0', 10);
-        console.log('Touch move to cell:', row, col);
         
-        // Add visual feedback to dragged cells
-        if (!cellElement.classList.contains('touch-glassy-active')) {
-          cellElement.classList.add('touch-glassy-active');
+        // Only trigger haptic and move if this is a new cell
+        const isNewCell = !selectedCells.some(selected => selected.row === row && selected.col === col);
+        
+        if (isNewCell) {
+          console.log('Touch move to NEW cell:', row, col);
           
-          // Remove the effect after a short duration
-          setTimeout(() => {
-            cellElement.classList.remove('touch-glassy-active');
-          }, 600);
+          // Add visual feedback to dragged cells
+          if (!cellElement.classList.contains('touch-glassy-active')) {
+            cellElement.classList.add('touch-glassy-active');
+            
+            // Remove the effect after a short duration
+            setTimeout(() => {
+              cellElement.classList.remove('touch-glassy-active');
+            }, 600);
+          }
+          
+          // Gentle haptic feedback for each new letter crossed
+          triggerHaptic(12);
+          
+          onSelectionMove(row, col);
         }
-        
-        // Gentle haptic feedback
-        if ('vibrate' in navigator) {
-          navigator.vibrate(10);
-        }
-        
-        onSelectionMove(row, col);
       }
     }
-  }, [isSelecting, onSelectionMove]);
+  }, [isSelecting, onSelectionMove, triggerHaptic, selectedCells]);
 
   const handleNativeTouchEnd = useCallback((e: TouchEvent) => {
     e.preventDefault();
@@ -112,8 +137,11 @@ const CrosswordGridCell = memo(({
     const target = e.currentTarget as HTMLElement;
     target.classList.remove('touch-glassy-active');
     
+    // Final haptic for selection end
+    triggerHaptic(30);
+    
     onSelectionEnd();
-  }, [rowIndex, colIndex, onSelectionEnd]);
+  }, [rowIndex, colIndex, onSelectionEnd, triggerHaptic]);
 
   // Attach native event listeners with passive: false
   useEffect(() => {
@@ -177,17 +205,33 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
 }: WordSearchProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const [isSelecting, setIsSelecting] = useState(false);
+  const [selectedCells, setSelectedCells] = useState<{ row: number; col: number }[]>([]);
 
   // Unified handlers for selection events
   const handleSelectionStart = useCallback((row: number, col: number) => {
     console.log('Selection started at:', row, col);
     setIsSelecting(true);
+    setSelectedCells([{ row, col }]);
     onCellMouseDown(row, col);
   }, [onCellMouseDown]);
 
   const handleSelectionMove = useCallback((row: number, col: number) => {
     if (isSelecting) {
       console.log('Selection moved to:', row, col);
+      
+      // Update selected cells for film reel effect
+      setSelectedCells(prevCells => {
+        // Check if this cell is already selected to avoid duplicates
+        const alreadySelected = prevCells.some(cell => cell.row === row && cell.col === col);
+        if (alreadySelected) {
+          return prevCells;
+        }
+        
+        // Add the new cell to the path
+        const newCells = [...prevCells, { row, col }];
+        return newCells;
+      });
+      
       onCellMouseEnter(row, col);
     }
   }, [isSelecting, onCellMouseEnter]);
@@ -195,6 +239,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   const handleSelectionEnd = useCallback(() => {
     console.log('Selection ended');
     setIsSelecting(false);
+    setSelectedCells([]);
     onCellMouseUp();
   }, [onCellMouseUp]);
 
@@ -234,10 +279,11 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           onSelectionEnd={handleSelectionEnd}
           getWordColor={getWordColor}
           highlightedWord={highlightedWord}
+          selectedCells={selectedCells}
         />
       ))
     );
-  }, [grid, isSelecting, handleSelectionStart, handleSelectionMove, handleSelectionEnd, getWordColor, highlightedWord]);
+  }, [grid, isSelecting, handleSelectionStart, handleSelectionMove, handleSelectionEnd, getWordColor, highlightedWord, selectedCells]);
 
   // Handle mouse events for non-touch devices
   const handleMouseUp = useCallback(() => {
@@ -266,7 +312,12 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
           if (cellElement) {
             const row = parseInt(cellElement.dataset.row || '0', 10);
             const col = parseInt(cellElement.dataset.col || '0', 10);
-            handleSelectionMove(row, col);
+            
+            // Only move selection if this is a new cell
+            const isNewCell = !selectedCells.some(selected => selected.row === row && selected.col === col);
+            if (isNewCell) {
+              handleSelectionMove(row, col);
+            }
           }
         }
       }
@@ -286,7 +337,7 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
       document.removeEventListener('touchmove', handleGlobalTouchMove);
       document.removeEventListener('touchend', handleGlobalTouchEnd);
     };
-  }, [isSelecting, handleSelectionMove, handleSelectionEnd]);
+  }, [isSelecting, handleSelectionMove, handleSelectionEnd, selectedCells]);
 
   return (
     <div
@@ -306,6 +357,13 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
       onMouseLeave={handleMouseLeave}
     >
       {gridCells}
+      
+      {/* Golden Film Reel Overlay */}
+      <FilmReelOverlay 
+        selectedCells={selectedCells}
+        gridRef={gridRef}
+        isSelecting={isSelecting}
+      />
     </div>
   );
 });

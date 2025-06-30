@@ -448,6 +448,108 @@
 }
 
 /* ==============================================
+   Golden Film Reel Selection Effect */
+
+/* Film Reel Overlay Container */
+.film-reel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 20;
+  overflow: hidden;
+}
+
+/* Golden Film Strip */
+.film-strip {
+  position: absolute;
+  background: linear-gradient(
+    to right,
+    rgba(212, 175, 55, 0.9),
+    rgba(255, 215, 0, 0.95),
+    rgba(244, 225, 122, 0.9),
+    rgba(255, 215, 0, 0.95),
+    rgba(212, 175, 55, 0.9)
+  );
+  border: 2px solid rgba(184, 148, 31, 0.8);
+  border-radius: 4px;
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.6),
+    inset 0 2px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(2px);
+  transition: all 0.15s ease-out;
+}
+
+/* Film Perforations */
+.film-strip::before,
+.film-strip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 60%;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 3px,
+    rgba(0, 0, 0, 0.4) 3px,
+    rgba(0, 0, 0, 0.4) 6px
+  );
+  border-radius: 2px;
+}
+
+.film-strip::before {
+  left: 2px;
+}
+
+.film-strip::after {
+  right: 2px;
+}
+
+/* Film Strip Animation */
+@keyframes extendFilmReel {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.film-strip.extending {
+  animation: extendFilmReel 0.3s ease-out;
+}
+
+/* Sparkle Effect for Film Reel */
+.film-strip.sparkle::before {
+  animation: sparkleLeft 0.4s ease-out;
+}
+
+.film-strip.sparkle::after {
+  animation: sparkleRight 0.4s ease-out;
+}
+
+@keyframes sparkleLeft {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
+}
+
+@keyframes sparkleRight {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
+}
+
+/* ==============================================
    Golden Selection Effect - Global CSS (Works on all orientations) */
 .crossword-cell.selected {
   background: linear-gradient(135deg, #D4AF37 0%, #F4E17A 30%, #FFD700 50%, #F4E17A 70%, #D4AF37 100%) !important;
