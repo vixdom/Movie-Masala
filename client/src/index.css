@@ -462,7 +462,7 @@
   overflow: hidden;
 }
 
-/* Golden Film Strip */
+/* Golden Film Strip - Selection Effect */
 .film-strip {
   position: absolute;
   background: linear-gradient(
@@ -483,31 +483,108 @@
   transition: all 0.15s ease-out;
 }
 
+/* Film Strip - Found Word Outline */
+.film-strip-found {
+  position: absolute;
+  background: linear-gradient(
+    to right,
+    rgba(212, 175, 55, 0.85),
+    rgba(255, 215, 0, 0.9),
+    rgba(244, 225, 122, 0.85),
+    rgba(255, 215, 0, 0.9),
+    rgba(212, 175, 55, 0.85)
+  );
+  border: 1.5px solid rgba(184, 148, 31, 0.9);
+  border-radius: 3px;
+  box-shadow: 
+    0 0 15px rgba(255, 215, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(1px);
+  z-index: 18;
+}
+
+/* Shimmer Effect for Found Words */
+.film-strip-found.shimmer {
+  animation: foundWordShimmer 2s ease-in-out;
+}
+
+@keyframes foundWordShimmer {
+  0%, 100% {
+    box-shadow: 
+      0 0 15px rgba(255, 215, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    background: linear-gradient(
+      to right,
+      rgba(212, 175, 55, 0.85),
+      rgba(255, 215, 0, 0.9),
+      rgba(244, 225, 122, 0.85),
+      rgba(255, 215, 0, 0.9),
+      rgba(212, 175, 55, 0.85)
+    );
+  }
+  25%, 75% {
+    box-shadow: 
+      0 0 25px rgba(255, 215, 0, 0.8),
+      0 0 35px rgba(255, 215, 0, 0.6),
+      inset 0 2px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+    background: linear-gradient(
+      to right,
+      rgba(255, 215, 0, 0.95),
+      rgba(255, 255, 255, 1),
+      rgba(255, 245, 157, 0.95),
+      rgba(255, 255, 255, 1),
+      rgba(255, 215, 0, 0.95)
+    );
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(255, 215, 0, 1),
+      0 0 50px rgba(255, 215, 0, 0.8),
+      inset 0 3px 0 rgba(255, 255, 255, 0.7),
+      inset 0 -3px 0 rgba(0, 0, 0, 0.1);
+    background: linear-gradient(
+      to right,
+      rgba(255, 245, 157, 1),
+      rgba(255, 255, 255, 1),
+      rgba(255, 215, 0, 1),
+      rgba(255, 255, 255, 1),
+      rgba(255, 245, 157, 1)
+    );
+  }
+}
+
 /* Film Perforations */
 .film-strip::before,
-.film-strip::after {
+.film-strip::after,
+.film-strip-found::before,
+.film-strip-found::after {
   content: '';
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 8px;
+  width: 6px;
   height: 60%;
   background: repeating-linear-gradient(
     to bottom,
     transparent 0,
-    transparent 3px,
-    rgba(0, 0, 0, 0.4) 3px,
-    rgba(0, 0, 0, 0.4) 6px
+    transparent 2px,
+    rgba(0, 0, 0, 0.4) 2px,
+    rgba(0, 0, 0, 0.4) 4px
   );
-  border-radius: 2px;
+  border-radius: 1px;
 }
 
-.film-strip::before {
-  left: 2px;
+.film-strip::before,
+.film-strip-found::before {
+  left: 1px;
 }
 
-.film-strip::after {
-  right: 2px;
+.film-strip::after,
+.film-strip-found::after {
+  right: 1px;
 }
 
 /* Film Strip Animation */

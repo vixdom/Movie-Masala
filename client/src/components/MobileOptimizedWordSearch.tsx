@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState, useMemo, memo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { GridCell as GridCellType } from '@/lib/wordSearchGame';
+import { GridCell as GridCellType, WordPlacement } from '@/lib/wordSearchGame';
 import { FilmReelOverlay } from './FilmReelOverlay';
 
 interface WordSearchProps {
@@ -9,6 +9,7 @@ interface WordSearchProps {
   onCellMouseEnter: (row: number, col: number) => void;
   onCellMouseUp: () => void;
   highlightedWord?: string | null;
+  foundWords?: WordPlacement[];
 }
 
 // Crossword-style cell component for sleek grid layout
@@ -201,7 +202,8 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
   onCellMouseDown,
   onCellMouseEnter,
   onCellMouseUp,
-  highlightedWord
+  highlightedWord,
+  foundWords = []
 }: WordSearchProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const [isSelecting, setIsSelecting] = useState(false);
@@ -358,11 +360,12 @@ export const MobileOptimizedWordSearch = memo(function WordSearch({
     >
       {gridCells}
       
-      {/* Golden Film Reel Overlay */}
+      {/* Golden Film Reel Overlay - Enhanced with Found Words */}
       <FilmReelOverlay 
         selectedCells={selectedCells}
         gridRef={gridRef}
         isSelecting={isSelecting}
+        foundWords={foundWords}
       />
     </div>
   );

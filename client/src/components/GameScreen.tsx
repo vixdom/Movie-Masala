@@ -443,6 +443,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
           onCellMouseEnter={handleCellMouseEnter}
           onCellMouseUp={handleCellMouseUp}
           highlightedWord={highlightedWord}
+          foundWords={game.getFoundWords()}
         />
       </div>
 
