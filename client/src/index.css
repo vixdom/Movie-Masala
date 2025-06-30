@@ -150,12 +150,12 @@
 
   /* Portrait Mobile Header */
   .app-header {
-    height: var(--header-height);
-    min-height: 50px;
+    height: clamp(60px, 8vh, 80px);
+    min-height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: 8px 12px;
     background: rgba(11, 31, 58, 0.95);
     border-bottom: 2px solid var(--border-gold);
     backdrop-filter: blur(12px);
@@ -163,6 +163,7 @@
     z-index: 10;
     animation: slideInDown 0.6s ease-out;
     flex-shrink: 0;
+    gap: 8px;
   }
 
   @keyframes slideInDown {
@@ -178,9 +179,9 @@
 
   /* Portrait Mobile Hint Strip */
   .hint-strip {
-    height: var(--hint-height);
-    min-height: 60px;
-    max-height: 100px;
+    height: clamp(80px, 12vh, 120px);
+    min-height: 80px;
+    max-height: 120px;
     background: rgba(26, 43, 74, 0.9);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-bottom: 1px solid var(--border-gold);
@@ -195,13 +196,13 @@
   .hint-pills-container {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-xs);
+    gap: 6px;
     justify-content: center;
     align-items: flex-start;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: var(--spacing-xs);
+    padding: 4px;
     /* Custom scrollbar for mobile */
     scrollbar-width: thin;
     scrollbar-color: var(--gold-primary) transparent;
@@ -223,13 +224,13 @@
   /* Portrait Mobile Hint Pills */
   .hint-pill {
     font-family: 'Lato', 'Montserrat', sans-serif;
-    font-size: clamp(7px, 1.8vw, 11px);
+    font-size: clamp(10px, 2.2vw, 14px);
     font-weight: 600;
-    padding: clamp(1px, 0.3vw, 3px) clamp(6px, 1.5vw, 10px);
+    padding: clamp(4px, 0.8vw, 6px) clamp(8px, 2vw, 12px);
     border-radius: clamp(6px, 1.5vw, 10px);
     white-space: nowrap;
-    height: clamp(18px, 3.5vw, 26px);
-    min-height: 18px;
+    height: clamp(24px, 4.5vw, 32px);
+    min-height: 24px;
     line-height: 1.2;
     flex: 0 0 auto;
     display: flex;
@@ -283,7 +284,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: var(--spacing-sm);
+    padding: 8px;
     overflow: hidden;
     position: relative;
     min-height: 0; /* Important for flex child */
@@ -295,8 +296,8 @@
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(12, 1fr);
     gap: var(--grid-gap);
-    width: min(95vw, 85vh, 400px);
-    height: min(95vw, 85vh, 400px);
+    width: min(92vw, calc(100vh - 160px), 500px);
+    height: min(92vw, calc(100vh - 160px), 500px);
     max-width: 100%;
     max-height: 100%;
     aspect-ratio: 1;
@@ -332,7 +333,7 @@
     justify-content: center;
     font-family: 'Lato', 'Montserrat', sans-serif;
     font-weight: 700;
-    font-size: clamp(10px, 2.8vw, 18px);
+    font-size: clamp(12px, 3.2vw, 22px);
     color: var(--text-primary);
     background: rgba(26, 43, 74, 0.9);
     border: 1px solid var(--border-gold);
@@ -354,8 +355,8 @@
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     /* Minimum touch target for portrait mobile */
-    min-width: 20px;
-    min-height: 20px;
+    min-width: 24px;
+    min-height: 24px;
   }
 
   .crossword-cell:hover,
@@ -490,10 +491,10 @@
 /* Portrait Mobile Specific Breakpoints */
 @media (max-width: 480px) and (orientation: portrait) {
   :root {
-    --header-height: clamp(45px, 7vh, 60px);
-    --hint-height: clamp(55px, 9vh, 85px);
+    --header-height: clamp(50px, 7vh, 65px);
+    --hint-height: clamp(70px, 10vh, 90px);
     --grid-gap: clamp(1px, 0.2vw, 3px);
-    --font-size-base: clamp(9px, 1.8vw, 13px);
+    --font-size-base: clamp(10px, 2vw, 14px);
     --font-size-title: clamp(16px, 4vw, 22px);
     --spacing-xs: clamp(2px, 0.4vw, 5px);
     --spacing-sm: clamp(3px, 0.8vw, 10px);
@@ -501,33 +502,48 @@
   }
 
   .crossword-grid {
-    width: min(98vw, 80vh, 350px);
-    height: min(98vw, 80vh, 350px);
+    width: min(90vw, calc(100vh - 140px), 420px);
+    height: min(90vw, calc(100vh - 140px), 420px);
   }
 
   .hint-pill {
-    font-size: clamp(6px, 1.6vw, 9px);
-    padding: clamp(1px, 0.2vw, 2px) clamp(5px, 1.2vw, 8px);
-    height: clamp(16px, 3vw, 22px);
+    font-size: clamp(8px, 1.8vw, 12px);
+    padding: clamp(3px, 0.5vw, 5px) clamp(6px, 1.4vw, 10px);
+    height: clamp(20px, 3.5vw, 28px);
   }
 
   .crossword-cell {
-    font-size: clamp(8px, 2.5vw, 14px);
-    min-width: 18px;
-    min-height: 18px;
+    font-size: clamp(10px, 2.8vw, 16px);
+    min-width: 22px;
+    min-height: 22px;
+  }
+
+  /* Make header elements stack better on very small screens */
+  .app-header {
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 6px 8px;
+    height: clamp(55px, 8vh, 70px);
+  }
+
+  /* Reduce theme badge size on small screens */
+  .app-header > div:nth-child(3) > div:first-child {
+    font-size: clamp(8px, 1.6vw, 11px) !important;
+    padding: clamp(2px, 0.4vw, 4px) clamp(6px, 1.2vw, 8px) !important;
+    min-height: clamp(20px, 3vw, 26px) !important;
   }
 }
 
 @media (min-width: 481px) and (max-width: 768px) and (orientation: portrait) {
   :root {
-    --header-height: clamp(50px, 8vh, 65px);
-    --hint-height: clamp(65px, 10vh, 95px);
+    --header-height: clamp(60px, 8vh, 75px);
+    --hint-height: clamp(80px, 11vh, 110px);
     --grid-gap: clamp(2px, 0.3vw, 4px);
   }
 
   .crossword-grid {
-    width: min(90vw, 75vh, 450px);
-    height: min(90vw, 75vh, 450px);
+    width: min(85vw, calc(100vh - 160px), 500px);
+    height: min(85vw, calc(100vh - 160px), 500px);
   }
 }
 
