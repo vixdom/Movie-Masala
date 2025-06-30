@@ -38,124 +38,74 @@ export const FilmReelOverlay: React.FC<FilmReelOverlayProps> = ({
     return () => clearInterval(shimmerInterval);
   }, [foundWords]);
 
-  // Calculate authentic film reel segments for selection (extending reel)
-  const selectionFilmReelSegments = useMemo(() => {
-    if (selectedCells.length < 2 || !isSelecting) return [];
+  // Create film reel cells for current selection (extending reel)
+  const selectionFilmReelCells = useMemo(() => {
+    if (selectedCells.length === 0 || !isSelecting) return [];
 
-    const segments = [];
-    
-    for (let i = 0; i < selectedCells.length - 1; i++) {
-      const start = selectedCells[i];
-      const end = selectedCells[i + 1];
-      
-      // Calculate position and dimensions for the film strip segment
-      const startX = start.col * (100 / 12); // 12 columns
-      const startY = start.row * (100 / 12); // 12 rows
-      const endX = end.col * (100 / 12);
-      const endY = end.row * (100 / 12);
-      
-      // Calculate center points
-      const centerStartX = startX + (100 / 12) / 2;
-      const centerStartY = startY + (100 / 12) / 2;
-      const centerEndX = endX + (100 / 12) / 2;
-      const centerEndY = endY + (100 / 12) / 2;
-      
-      // Calculate angle and distance
-      const deltaX = centerEndX - centerStartX;
-      const deltaY = centerEndY - centerStartY;
-      const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-      
-      segments.push({
-        id: `selection-segment-${i}`,
-        x: centerStartX,
-        y: centerStartY,
-        width: distance,
-        height: 12, // Thicker for active selection
-        angle,
-        delay: i * 0.03, // Stagger animation for extending effect
-        isSelection: true
-      });
-    }
-    
-    return segments;
+    return selectedCells.map((cell, index) => ({
+      id: `selection-cell-${cell.row}-${cell.col}`,
+      row: cell.row,
+      col: cell.col,
+      x: cell.col * (100 / 12), // 12 columns
+      y: cell.row * (100 / 12), // 12 rows
+      width: 100 / 12, // Full cell width
+      height: 100 / 12, // Full cell height
+      delay: index * 0.05, // Stagger animation for extending effect
+      isSelection: true
+    }));
   }, [selectedCells, isSelecting]);
 
-  // Calculate authentic film reel outlines for found words (permanent borders)
-  const foundWordFilmReelSegments = useMemo(() => {
+  // Create film reel cells for found words (permanent golden cells)
+  const foundWordFilmReelCells = useMemo(() => {
     if (foundWords.length === 0) return [];
 
-    const segments = [];
+    const cells = [];
     
     foundWords.forEach(word => {
-      const positions = word.positions;
-      
-      for (let i = 0; i < positions.length - 1; i++) {
-        const start = positions[i];
-        const end = positions[i + 1];
-        
-        // Calculate position and dimensions for the film strip segment
-        const startX = start.col * (100 / 12); // 12 columns
-        const startY = start.row * (100 / 12); // 12 rows
-        const endX = end.col * (100 / 12);
-        const endY = end.row * (100 / 12);
-        
-        // Calculate center points
-        const centerStartX = startX + (100 / 12) / 2;
-        const centerStartY = startY + (100 / 12) / 2;
-        const centerEndX = endX + (100 / 12) / 2;
-        const centerEndY = endY + (100 / 12) / 2;
-        
-        // Calculate angle and distance
-        const deltaX = centerEndX - centerStartX;
-        const deltaY = centerEndY - centerStartY;
-        const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        
-        segments.push({
-          id: `found-segment-${word.id}-${i}`,
-          x: centerStartX,
-          y: centerStartY,
-          width: distance,
-          height: 8, // Thinner for found word outline
-          angle,
+      word.positions.forEach((position, index) => {
+        cells.push({
+          id: `found-cell-${word.id}-${position.row}-${position.col}`,
+          row: position.row,
+          col: position.col,
+          x: position.col * (100 / 12), // 12 columns
+          y: position.row * (100 / 12), // 12 rows
+          width: 100 / 12, // Full cell width
+          height: 100 / 12, // Full cell height
           delay: 0,
           isSelection: false,
           wordId: word.id,
           isShimmering: shimmeringWords.has(word.id)
         });
-      }
+      });
     });
     
-    return segments;
+    return cells;
   }, [foundWords, shimmeringWords]);
 
-  // Combine all segments
-  const allSegments = [...foundWordFilmReelSegments, ...selectionFilmReelSegments];
+  // Combine all film reel cells
+  const allFilmReelCells = [...foundWordFilmReelCells, ...selectionFilmReelCells];
 
-  if (allSegments.length === 0) {
+  if (allFilmReelCells.length === 0) {
     return null;
   }
 
   return (
     <div className="film-reel-overlay">
-      {allSegments.map((segment) => (
+      {allFilmReelCells.map((cell) => (
         <div
-          key={segment.id}
-          className={`${
-            segment.isSelection 
-              ? `film-strip extending ${selectionFilmReelSegments.indexOf(segment) === selectionFilmReelSegments.length - 1 ? 'sparkle' : ''}` 
-              : `film-strip-found ${segment.isShimmering ? 'shimmer' : ''}`
+          key={cell.id}
+          className={`film-reel-cell ${
+            cell.isSelection 
+              ? 'selection-reel extending sparkle' 
+              : `found-reel ${cell.isShimmering ? 'shimmer' : ''}`
           }`}
           style={{
-            left: `${segment.x}%`,
-            top: `${segment.y}%`,
-            width: `${segment.width}%`,
-            height: `${segment.height}px`,
-            transform: `rotate(${segment.angle}deg)`,
-            transformOrigin: '0 50%',
-            animationDelay: segment.isSelection ? `${segment.delay}s` : '0s',
-            zIndex: segment.isSelection ? 25 : 18
+            left: `${cell.x}%`,
+            top: `${cell.y}%`,
+            width: `${cell.width}%`,
+            height: `${cell.height}%`,
+            animationDelay: cell.isSelection ? `${cell.delay}s` : '0s',
+            zIndex: cell.isSelection ? 25 : 18
           }}
         />
       ))}
