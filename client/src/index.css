@@ -148,6 +148,22 @@
     transform: translateY(-1px);
   }
 
+  /* Pulsating Play Button */
+  @keyframes pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 30px 5px rgba(255, 215, 0, 0.5);
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-pulse {
+    animation: pulse 2s infinite ease-in-out;
+  }
+
   /* Portrait Mobile Header */
   .app-header {
     height: clamp(60px, 8vh, 80px);
