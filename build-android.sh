@@ -5,7 +5,7 @@ echo "----------------------------------------"
 
 # Step 1: Build web assets
 echo "📦 Building web assets..."
-if ! npm run build; then
+if ! npm run build; then # Changed from: if [ $? -ne 0 ]; then
   echo "❌ Web build failed. Exiting."
   exit 1
 fi
@@ -13,7 +13,7 @@ echo "✅ Web build complete!"
 
 # Step 2: Sync with Android
 echo "🔄 Syncing with Android..."
-if ! npx @capacitor/cli sync android; then
+if ! npx @capacitor/cli sync android; then # Changed from: if [ $? -ne 0 ]; then
   echo "❌ Capacitor sync failed. Exiting."
   exit 1
 fi
@@ -49,14 +49,14 @@ fi
 
 # Build App Bundle (AAB) for Play Store
 echo "🏗️ Building Android App Bundle (AAB) for Play Store..."
-if ! ./gradlew bundleRelease; then
+if ! ./gradlew bundleRelease; then # Changed from: if [ $? -ne 0 ]; then
   echo "❌ AAB build failed. Trying debug build..."
   ./gradlew bundleDebug
 fi
 
 # Build APK for direct testing
 echo "🏗️ Building APK for testing..."
-if ! ./gradlew assembleRelease; then
+if ! ./gradlew assembleRelease; then # Changed from: if [ $? -ne 0 ]; then
   echo "❌ Release APK build failed. Building debug APK instead..."
   ./gradlew assembleDebug
 fi
