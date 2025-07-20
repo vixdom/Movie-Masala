@@ -224,7 +224,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
           
           {/* Score Indicator */}
           <div 
-            className="bg-gradient-to-r from-[#0B1F3A] to-[#1A2B4A] border-2 border-[#D4AF37] rounded-full px-6 py-3 text-sm font-bold min-h-[var(--touch-target-min)] flex items-center justify-center text-white"
+            className="bg-gradient-to-r from-[#0B1F3A] to-[#1A2B4A] rounded-full px-6 py-3 text-sm font-bold min-h-[var(--touch-target-min)] flex items-center justify-center text-white"
             style={{
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
               backdropFilter: 'blur(8px)'
