@@ -171,14 +171,22 @@ export const useAudio = create<AudioState>((set, get) => ({
       } else {
         // Fallback: enhanced vibration only
         set({ 
-          hitSound: { play: () => navigator.vibrate && navigator.vibrate(12) },
-          successSound: { play: () => navigator.vibrate && navigator.vibrate([25, 100, 15, 100, 10]) }
+          hitSound: { 
+            play: () => navigator.vibrate && navigator.vibrate(50) // Gentle 50ms tap
+          },
+          successSound: { 
+            play: () => navigator.vibrate && navigator.vibrate([45, 120, 40, 80, 45, 100, 60]) // Joyful drumroll pattern
+          }
         });
       }
     } catch (error) {
       // Final fallback with enhanced haptics
-      set({ 
-        hitSound: { play: () => navigator.vibrate && navigator.vibrate(12) },
+          hitSound: { 
+            play: () => navigator.vibrate && navigator.vibrate(50) // Gentle 50ms tap
+          },
+          successSound: { 
+            play: () => navigator.vibrate && navigator.vibrate([45, 120, 40, 80, 45, 100, 60]) // Joyful drumroll pattern
+          }
         successSound: { play: () => navigator.vibrate && navigator.vibrate([25, 100, 15, 100, 10]) }
       });
     }
