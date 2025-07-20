@@ -19,7 +19,7 @@ interface GameScreenProps {
 
 export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameScreenProps) {
   // Audio store
-  const { playHit, playSuccess, isMuted } = useAudio();
+  const { playHit, playSuccess, playHintReveal, isMuted } = useAudio();
   
   const [game] = useState(() => new WordSearchGame());
   const [gameState, setGameState] = useState(game.getGameState());
@@ -125,12 +125,15 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       return newSet;
     });
     
+    // Play hint reveal sound
+    playHintReveal();
+    
     // Show hint message
     const hintMessage = `Letter "${wordPlacement.word[randomIndex]}" revealed at row ${randomPosition.row + 1}, column ${randomPosition.col + 1}. Points deducted: ${pointDeduction}`;
     console.log('Setting hint message:', hintMessage);
     setShowHint(hintMessage);
     setTimeout(() => setShowHint(null), 3000);
-  }, [game, hintedLetters]);
+  }, [game, hintedLetters, playHintReveal]);
 
   useEffect(() => {
     startNewGame();
