@@ -1,13 +1,22 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { HomeScreen } from './components/HomeScreen';
 import { GameScreen } from './components/GameScreen';
 import { OptionsScreen } from './components/OptionsScreen';
+import { useAudio } from './lib/stores/useAudio';
 
 type Screen = 'home' | 'game' | 'options';
 
 function App() {
+  // Initialize audio when app starts
+  const { initializeAudio } = useAudio();
+  
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [isSoundMuted, setIsSoundMuted] = useState(false);
+
+  // Initialize audio system on app mount
+  useEffect(() => {
+    initializeAudio();
+  }, [initializeAudio]);
 
   const navigateToGame = useCallback(() => {
     console.log('Navigating to game screen');
