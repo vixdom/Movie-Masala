@@ -17,7 +17,7 @@ export function WordFoundAnimation({ word }: WordFoundAnimationProps) {
       )}>
         <div className="flex items-center space-x-2">
           <span className="text-3xl">🎉</span>
-          <span>Found: {word}</span>
+          <span>Found {word}!</span>
           <span className="text-3xl">🎉</span>
         </div>
       </div>

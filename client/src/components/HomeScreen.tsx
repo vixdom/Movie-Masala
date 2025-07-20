@@ -44,7 +44,7 @@ export function HomeScreen({ onNavigateToGame, onNavigateToOptions }: HomeScreen
           {/* Subtitle/Tagline - Responsive */}
           <p className="text-xl md:text-2xl font-medium text-yellow-200 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-lg" 
              style={{ fontFamily: "'Playfair Display', serif" }}>
-            Find your favorite stars, one name at a time.
+            Find hidden Bollywood names in this word search puzzle.
           </p>
         </div>
 
