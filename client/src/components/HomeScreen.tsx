@@ -37,7 +37,7 @@ export function HomeScreen({ onNavigateToGame, onNavigateToOptions }: HomeScreen
             <span className="text-6xl md:text-7xl">🎬</span>
             <h1 className="bollywood-title text-4xl md:text-6xl lg:text-7xl font-bold text-yellow-300 drop-shadow-2xl" 
                 style={{ fontFamily: "'Cinzel', serif" }}>
-              Movie Masala
+              Bolly Word
             </h1>
           </div>
           

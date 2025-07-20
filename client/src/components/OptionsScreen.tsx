@@ -96,7 +96,7 @@ export function OptionsScreen({ onBackToHome, isSoundMuted, onToggleSound }: Opt
             </h3>
             
             <div className="text-sm text-gray-300 space-y-2">
-              <p><strong>Movie Masala</strong> v1.0</p>
+              <p><strong>Bolly Word</strong> v1.0</p>
               <p>A Bollywood-themed word search game featuring your favorite stars and movies.</p>
               <p className="text-yellow-200">Find hidden names in the grid and test your Bollywood knowledge!</p>
             </div>
