@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { WordSearchGame } from '../lib/wordSearchGame';
 import { getGameWords } from '../lib/bollywoodWords';
 import { getWordsByTheme, getAllThemes, getRandomTheme, Theme } from '../lib/themedWords';
+import { useAudio } from '../lib/stores/useAudio';
 import { Button } from './ui/button';
 import { cn } from '../lib/utils';
 import { WordFoundAnimation } from './WordFoundAnimation';
@@ -17,6 +18,9 @@ interface GameScreenProps {
 }
 
 export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameScreenProps) {
+  // Audio store
+  const { playHit, playSuccess, isMuted } = useAudio();
+  
   const [game] = useState(() => new WordSearchGame());
   const [gameState, setGameState] = useState(game.getGameState());
   const [currentWords, setCurrentWords] = useState<any[]>([]);
@@ -29,68 +33,6 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   const [hintedPositions, setHintedPositions] = useState<Set<string>>(new Set());
   const [currentTheme, setCurrentTheme] = useState<Theme>(getRandomTheme());
   const [availableThemes] = useState<Theme[]>(getAllThemes());
-
-  // Audio setup with enhanced mobile compatibility
-  const playSuccess = useCallback(() => {
-    if (isSoundMuted) return;
-    try {
-      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioContext) {
-        const audioContext = new AudioContext();
-        
-        // Resume context if suspended (required for mobile)
-        if (audioContext.state === 'suspended') {
-          audioContext.resume();
-        }
-        
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(180, audioContext.currentTime + 0.3);
-        
-        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-        
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.3);
-      }
-    } catch (error) {
-      console.log('Audio not available');
-    }
-  }, [isSoundMuted]);
-
-  const playHit = useCallback(() => {
-    if (isSoundMuted) return;
-    try {
-      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioContext) {
-        const audioContext = new AudioContext();
-        
-        if (audioContext.state === 'suspended') {
-          audioContext.resume();
-        }
-        
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
-        gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-        
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.1);
-      }
-    } catch (error) {
-      console.log('Audio not available');
-    }
-  }, [isSoundMuted]);
 
   const startNewGame = useCallback(() => {
     // Select a random theme for each new game
@@ -282,7 +224,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
           
           {/* Score Indicator */}
           <div 
-            className="bg-gradient-to-r from-[#0B1F3A] to-[#1A2B4A] border-2 border-[#D4AF37] rounded-full px-6 py-3 text-sm font-bold min-h-[var(--touch-target-min)] flex items-center justify-center text-white"
+            className="bg-gradient-to-r from-[#0B1F3A] to-[#1A2B4A] rounded-full px-6 py-3 text-sm font-bold min-h-[var(--touch-target-min)] flex items-center justify-center text-white"
             style={{
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
               backdropFilter: 'blur(8px)'

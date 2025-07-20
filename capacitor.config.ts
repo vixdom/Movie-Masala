@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.moviemasala.wordsearch',
-  appName: 'Movie Masala',
+  appName: 'Bolly Word',
   webDir: 'dist/public',
   server: {
     androidScheme: 'https'

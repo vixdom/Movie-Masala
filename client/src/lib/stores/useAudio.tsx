@@ -37,7 +37,7 @@ export const useAudio = create<AudioState>((set, get) => ({
       if (AudioContext) {
         const audioContext = new AudioContext();
         
-        // Gentle 'bup' sound in ASMR frequency range
+        // ASMR-inspired gentle 'ding' sound (airplane call button style)
         const createASMRHitSound = () => ({
           play: () => {
             try {
@@ -48,40 +48,55 @@ export const useAudio = create<AudioState>((set, get) => ({
               const oscillator = audioContext.createOscillator();
               const gainNode = audioContext.createGain();
               const filterNode = audioContext.createBiquadFilter();
+              const reverbNode = audioContext.createConvolver();
               
               oscillator.connect(filterNode);
-              filterNode.connect(gainNode);
+              filterNode.connect(reverbNode);
+              reverbNode.connect(gainNode);
               gainNode.connect(audioContext.destination);
               
-              // Soft ASMR tone in 200Hz range
-              oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
-              oscillator.frequency.exponentialRampToValueAtTime(180, audioContext.currentTime + 0.06);
-              oscillator.type = 'sine';
+              // Gentle airplane call button 'ding' - 600Hz base frequency
+              oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+              oscillator.frequency.exponentialRampToValueAtTime(500, audioContext.currentTime + 0.3);
+              oscillator.type = 'triangle'; // Warmer than sine, softer than square
               
-              // Soft low-pass filter for gentle sound
+              // Soft low-pass filter for ASMR warmth
               filterNode.type = 'lowpass';
-              filterNode.frequency.setValueAtTime(600, audioContext.currentTime);
+              filterNode.frequency.setValueAtTime(1200, audioContext.currentTime);
+              filterNode.Q.setValueAtTime(1, audioContext.currentTime);
               
-              // Very gentle volume for ASMR effect
-              gainNode.gain.setValueAtTime(0.12, audioContext.currentTime);
-              gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.06);
+              // Create simple reverb for spaciousness
+              const impulseLength = audioContext.sampleRate * 0.5;
+              const impulse = audioContext.createBuffer(2, impulseLength, audioContext.sampleRate);
+              for (let channel = 0; channel < 2; channel++) {
+                const channelData = impulse.getChannelData(channel);
+                for (let i = 0; i < impulseLength; i++) {
+                  channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / impulseLength, 2) * 0.1;
+                }
+              }
+              reverbNode.buffer = impulse;
+              
+              // Gentle ASMR envelope - slow attack, long decay
+              gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+              gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.05); // Gentle attack
+              gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.8); // Long, peaceful decay
               
               oscillator.start();
-              oscillator.stop(audioContext.currentTime + 0.06);
+              oscillator.stop(audioContext.currentTime + 0.8);
               
-              // Gentle haptic bump
+              // Subtle haptic feedback
               if (navigator.vibrate) {
-                navigator.vibrate(15);
+                navigator.vibrate(12);
               }
             } catch (e) {
               if (navigator.vibrate) {
-                navigator.vibrate(15);
+                navigator.vibrate(12);
               }
             }
           }
         });
 
-        // Pleasant chime for word completion
+        // Soothing success chime sequence (ASMR spa-like)
         const createChimeSound = () => ({
           play: () => {
             try {
@@ -89,36 +104,61 @@ export const useAudio = create<AudioState>((set, get) => ({
                 audioContext.resume();
               }
               
-              // Create multiple oscillators for rich chime sound
-              const createChimeNote = (freq: number, delay: number) => {
+              // Create gentle, cascading chime notes
+              const createSpaChimeNote = (freq: number, delay: number, duration: number = 1.2) => {
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
+                const filterNode = audioContext.createBiquadFilter();
+                const reverbNode = audioContext.createConvolver();
                 
-                oscillator.connect(gainNode);
+                oscillator.connect(filterNode);
+                filterNode.connect(reverbNode);
+                reverbNode.connect(gainNode);
                 gainNode.connect(audioContext.destination);
                 
                 oscillator.frequency.setValueAtTime(freq, audioContext.currentTime + delay);
-                oscillator.type = 'triangle';
+                oscillator.type = 'sine'; // Pure, clean sine waves for ultimate smoothness
                 
-                gainNode.gain.setValueAtTime(0.18, audioContext.currentTime + delay);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + delay + 0.35);
+                // Warm low-pass filtering
+                filterNode.type = 'lowpass';
+                filterNode.frequency.setValueAtTime(2000, audioContext.currentTime + delay);
+                filterNode.Q.setValueAtTime(0.7, audioContext.currentTime + delay);
+                
+                // Create lush reverb for spa-like ambience
+                const impulseLength = audioContext.sampleRate * 0.8;
+                const impulse = audioContext.createBuffer(2, impulseLength, audioContext.sampleRate);
+                for (let channel = 0; channel < 2; channel++) {
+                  const channelData = impulse.getChannelData(channel);
+                  for (let i = 0; i < impulseLength; i++) {
+                    channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / impulseLength, 3) * 0.15;
+                  }
+                }
+                reverbNode.buffer = impulse;
+                
+                // Extremely gentle, spa-like envelope
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime + delay);
+                gainNode.gain.linearRampToValueAtTime(0.06, audioContext.currentTime + delay + 0.1); // Soft attack
+                gainNode.gain.linearRampToValueAtTime(0.04, audioContext.currentTime + delay + 0.3); // Gentle sustain
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + delay + duration); // Long, peaceful release
                 
                 oscillator.start(audioContext.currentTime + delay);
-                oscillator.stop(audioContext.currentTime + delay + 0.35);
+                oscillator.stop(audioContext.currentTime + delay + duration);
               };
               
-              // Pleasant chord progression: C5-E5-G5
-              createChimeNote(523, 0);    // C5
-              createChimeNote(659, 0.08); // E5
-              createChimeNote(784, 0.16); // G5
+              // Gentle cascading chimes in the requested 500-800Hz range
+              // Based on a peaceful pentatonic scale for maximum harmony
+              createSpaChimeNote(523, 0, 1.5);    // C5 (523Hz) - Base note
+              createSpaChimeNote(659, 0.15, 1.4); // E5 (659Hz) - Harmony
+              createSpaChimeNote(784, 0.3, 1.3);  // G5 (784Hz) - Perfect fifth
+              createSpaChimeNote(523, 0.45, 1.2); // C5 again - Gentle echo
               
-              // 'Clap' haptic pattern
+              // Gentle, rhythmic haptic pattern
               if (navigator.vibrate) {
-                navigator.vibrate([80, 40, 80]);
+                navigator.vibrate([25, 100, 15, 100, 10]); // Gentle wave pattern
               }
             } catch (e) {
               if (navigator.vibrate) {
-                navigator.vibrate([80, 40, 80]);
+                navigator.vibrate([25, 100, 15, 100, 10]);
               }
             }
           }
@@ -131,15 +171,23 @@ export const useAudio = create<AudioState>((set, get) => ({
       } else {
         // Fallback: enhanced vibration only
         set({ 
-          hitSound: { play: () => navigator.vibrate && navigator.vibrate(15) },
-          successSound: { play: () => navigator.vibrate && navigator.vibrate([80, 40, 80]) }
+          hitSound: { 
+            play: () => navigator.vibrate && navigator.vibrate(50) // Gentle 50ms tap
+          },
+          successSound: { 
+            play: () => navigator.vibrate && navigator.vibrate([45, 120, 40, 80, 45, 100, 60]) // Joyful drumroll pattern
+          }
         });
       }
     } catch (error) {
       // Final fallback with enhanced haptics
-      set({ 
-        hitSound: { play: () => navigator.vibrate && navigator.vibrate(15) },
-        successSound: { play: () => navigator.vibrate && navigator.vibrate([80, 40, 80]) }
+      set({
+        hitSound: { 
+          play: () => navigator.vibrate && navigator.vibrate(50) // Gentle 50ms tap
+        },
+        successSound: { 
+          play: () => navigator.vibrate && navigator.vibrate([45, 120, 40, 80, 45, 100, 60]) // Joyful drumroll pattern
+        }
       });
     }
   },
