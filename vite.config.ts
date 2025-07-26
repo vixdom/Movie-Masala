@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path, { dirname } from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { fileURLToPath } from "url";
 import glsl from "vite-plugin-glsl";
 
@@ -9,9 +8,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
+  server: {
+    hmr: {
+      overlay: false
+    },
+    fs: {
+      strict: false
+    }
+  },
+  css: {
+    devSourcemap: false
+  },
+  clearScreen: false,
+  logLevel: 'warn',
+  optimizeDeps: {
+    include: ['react', 'react-dom'],
+    exclude: ['@react-three/fiber']
+  },
   plugins: [
     react(),
-    runtimeErrorOverlay(),
     glsl(), // Add GLSL shader support
   ],
   resolve: {
@@ -24,6 +39,15 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1600,
+    rollupOptions: {
+      onwarn(warning, warn) {
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+          return;
+        }
+        warn(warning);
+      }
+    }
   },
   // Add support for large models and audio files
   assetsInclude: ["**/*.gltf", "**/*.glb", "**/*.mp3", "**/*.ogg", "**/*.wav"],

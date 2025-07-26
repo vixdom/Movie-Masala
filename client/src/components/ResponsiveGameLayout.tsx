@@ -158,14 +158,7 @@ export const ResponsiveGameLayout: React.FC<ResponsiveGameLayoutProps> = ({
     >
       {children}
       
-      {/* Development viewport info (only in dev mode) */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="fixed top-2 left-2 bg-black/80 text-white text-xs p-2 rounded z-50 pointer-events-none">
-          <div>{viewportInfo.width}×{viewportInfo.height}</div>
-          <div>{viewportInfo.deviceType} | {viewportInfo.orientation}</div>
-          <div>AR: {viewportInfo.aspectRatio.toFixed(2)} | Touch: {viewportInfo.isTouch ? 'Yes' : 'No'}</div>
-        </div>
-      )}
+
     </div>
   );
 };

@@ -52,7 +52,7 @@ export function HomeScreen({ onNavigateToGame, onNavigateToOptions }: HomeScreen
         <div className="flex flex-col gap-8 w-full max-w-lg relative z-20">
           <button
             onClick={handleGameClick}
-            className="w-full h-20 text-2xl font-bold uppercase tracking-wider transition-all duration-300 shadow-2xl min-h-[var(--touch-target-min)] rounded-lg cursor-pointer relative z-30 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-[#0B1F3A] border-4 border-yellow-300 hover:scale-105 active:scale-95 animate-pulse"
+            className="w-full h-20 text-2xl font-bold uppercase tracking-wider transition-all duration-300 shadow-2xl min-h-[var(--touch-target-min)] rounded-lg cursor-pointer relative z-30 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-[#0B1F3A] border-4 border-yellow-300 hover:scale-105 active:scale-95"
             style={{ fontFamily: "'Cinzel', serif" }}
             type="button"
             onMouseDown={(e) => console.log('Play Now mousedown', e)}

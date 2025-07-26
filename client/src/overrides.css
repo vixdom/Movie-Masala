@@ -1,0 +1,16 @@
+/* Hide Vite error overlay */
+.vite-error-overlay {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Hide any error overlays */
+#vite-error-overlay {
+  display: none !important;
+}
+
+/* Hide React error overlay */
+#react-error-overlay {
+  display: none !important;
+}

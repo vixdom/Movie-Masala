@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import ErrorBoundary from "./components/ErrorBoundary";
 import "./index.css";
+import "./overrides.css";
 
 // Suppress cross-origin errors globally
 window.addEventListener('error', (event) => {

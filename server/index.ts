@@ -140,11 +140,12 @@ async function startServer() {
 }
 
 // Start the server if this file is run directly
-if (require.main === module) {
+const isMain = import.meta.url === `file://${process.argv[1]}`;
+if (isMain) {
   startServer().catch(error => {
     console.error('Failed to start server:', error);
     process.exit(1);
   });
 }
 
-export { app, startServer };
+export default { app, startServer };

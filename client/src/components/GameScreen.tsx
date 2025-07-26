@@ -186,8 +186,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       <div className="absolute inset-0 bg-black/40 pointer-events-none" />
       
       {/* Responsive Header */}
-      <header className="app-header">
-        {/* Back Button */}
+      <header className="app-header flex items-center justify-between gap-2 py-2 px-2">
+        {/* Back Button (left) */}
         <Button
           onClick={onBackToHome}
           variant="ghost"
@@ -197,44 +197,25 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
           <span className="hidden sm:inline">Back</span>
         </Button>
 
-        {/* New Game Button */}
-        <button 
-          onClick={startNewGame}
-          className="flex items-center gap-3 bg-gradient-to-r from-[#D4AF37] to-[#F4E17A] text-[#0B1F3A] rounded-lg px-6 py-3 font-bold text-sm transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg min-h-[var(--touch-target-min)] relative overflow-hidden"
-          title="Start New Game"
-          style={{
-            boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-            textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
-          }}
-        >
-          <span className="text-lg">🎬</span>
-          <span className="font-bold uppercase tracking-wide">New Game</span>
-        </button>
-
-        {/* Theme & Score Display */}
-        <div className="flex items-center gap-3">
-          {/* Current Theme Display */}
-          <div 
-            className="bg-gradient-to-r from-[#4A0E4E] to-[#6A1B9A] border border-[#D4AF37] rounded-lg px-4 py-2 text-xs font-medium min-h-[var(--touch-target-min)] flex items-center justify-center text-white"
-            style={{
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
-              backdropFilter: 'blur(8px)'
-            }}
+        {/* Theme Name (center) */}
+        <div className="flex-1 flex justify-center">
+          <div
+            className="text-white text-lg font-bold"
             title={currentTheme.description}
           >
             <span className="text-center leading-tight">{currentTheme.name}</span>
           </div>
-          
-          {/* Score Indicator */}
-          <div 
-            className="bg-gradient-to-r from-[#0B1F3A] to-[#1A2B4A] rounded-full px-6 py-3 text-sm font-bold min-h-[var(--touch-target-min)] flex items-center justify-center text-white"
-            style={{
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
-              backdropFilter: 'blur(8px)'
-            }}
-          >
-            Score: {gameState.score}
-          </div>
+        </div>
+
+        {/* Score (right) */}
+        <div
+          className="bg-gradient-to-r from-[#0B1F3A] to-[#1A2B4A] rounded-full px-6 py-3 text-sm font-bold min-h-[var(--touch-target-min)] flex items-center justify-center text-white"
+          style={{
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
+            backdropFilter: 'blur(8px)'
+          }}
+        >
+          Score: {gameState.score}
         </div>
       </header>
 
@@ -283,8 +264,10 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
               <button
                 key={wordItem.word}
                 className={cn(
-                  "hint-pill bollywood-word-pill transition-all duration-300 cursor-pointer shadow-lg whitespace-nowrap uppercase tracking-wide border-2 border-yellow-400 hover:bg-yellow-400/30 active:bg-yellow-400/50",
-                  isFound && "found"
+                  "hint-pill transition-all duration-300 cursor-pointer whitespace-nowrap uppercase tracking-wide",
+                  "bg-gray-200 text-black border-4 border-black rounded-md shadow-inner",
+                  "hover:bg-gray-300 active:bg-gray-400",
+                  isFound && "found opacity-50 line-through"
                 )}
                 onClick={handleClick}
                 onMouseDown={handleMouseDown}
