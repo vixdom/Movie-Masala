@@ -5,7 +5,7 @@ import { getWordsByTheme, getAllThemes, getRandomTheme, Theme } from '../lib/the
 import { useAudio } from '../lib/stores/useAudio';
 import { Button } from './ui/button';
 import { cn } from '../lib/utils';
-import { WordFoundAnimation } from './WordFoundAnimation';
+
 import { MobileOptimizedWordSearch } from './MobileOptimizedWordSearch';
 import { FoundWordsDisplay } from './FoundWordsDisplay';
 import { ResponsiveGameLayout } from './ResponsiveGameLayout';
@@ -26,7 +26,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   const [currentWords, setCurrentWords] = useState<any[]>([]);
   const [highlightedWord, setHighlightedWord] = useState<string | null>(null);
   const [currentSelection, setCurrentSelection] = useState<string>('');
-  const [wordFoundAnimation, setWordFoundAnimation] = useState<string | null>(null);
+
   const [showHint, setShowHint] = useState<string | null>(null);
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [hintedLetters, setHintedLetters] = useState<Set<string>>(new Set());
@@ -63,7 +63,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     setGameState(game.getGameState());
     setHighlightedWord(null);
     setCurrentSelection('');
-    setWordFoundAnimation(null);
+
     setShowHint(null);
     setHintedLetters(new Set());
     setHintedPositions(new Set());
@@ -166,8 +166,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
     const foundWord = game.endSelection();
     if (foundWord) {
       playSuccess();
-      setWordFoundAnimation('Word Found!');
-      setTimeout(() => setWordFoundAnimation(null), 2000);
+
     } else {
       // Brief flash for wrong selection, then clear
       setTimeout(() => {
@@ -318,8 +317,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         />
       </div>
 
-      {/* Word Found Animation */}
-      <WordFoundAnimation word={wordFoundAnimation} />
+
     </ResponsiveGameLayout>
   );
 }
