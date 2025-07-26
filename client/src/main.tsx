@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import "./index.css";
 import "./overrides.css";
 
@@ -22,6 +23,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 createRoot(document.getElementById("root")!).render(
   <ErrorBoundary>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </ErrorBoundary>
 );

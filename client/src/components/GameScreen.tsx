@@ -180,9 +180,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   }, [game, playSuccess]);
 
   return (
-    <ResponsiveGameLayout className="h-full text-white relative overflow-hidden">
-      {/* Enhanced film-strip background overlay */}
-      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+    <ResponsiveGameLayout className="h-full relative overflow-hidden">
+
       
       {/* Responsive Header */}
       <header className="app-header flex items-center justify-between gap-2 py-2 px-2">
@@ -190,7 +189,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         <Button
           onClick={onBackToHome}
           variant="ghost"
-          className="flex items-center gap-2 hover:bg-yellow-400/20 text-yellow-200 hover:text-white transition-all duration-300 min-h-[var(--touch-target-min)] min-w-[var(--touch-target-min)]"
+          className="flex items-center gap-2 transition-all duration-300 min-h-[var(--touch-target-min)] min-w-[var(--touch-target-min)]"
+          style={{ color: 'var(--color-primary)' }}
         >
           <ChevronLeft size={20} />
           <span className="hidden sm:inline">Back</span>
@@ -199,7 +199,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
         {/* Theme Name (center) */}
         <div className="flex-1 flex justify-center">
           <div
-            className="text-white text-lg font-bold"
+            className="text-lg font-bold"
+            style={{ color: 'var(--color-header-text)' }}
             title={currentTheme.description}
           >
             <span className="text-center leading-tight">{currentTheme.name}</span>
@@ -208,9 +209,11 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
 
         {/* Score (right) */}
         <div
-          className="bg-gradient-to-r from-[#0B1F3A] to-[#1A2B4A] rounded-full px-6 py-3 text-sm font-bold min-h-[var(--touch-target-min)] flex items-center justify-center text-white"
+          className="rounded-full px-6 py-3 text-sm font-bold min-h-[var(--touch-target-min)] flex items-center justify-center"
           style={{
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1)',
+            backgroundColor: 'var(--color-button-bg)',
+            color: 'var(--color-button-text)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
             backdropFilter: 'blur(8px)'
           }}
         >
@@ -263,9 +266,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
               <button
                 key={wordItem.word}
                 className={cn(
-                  "hint-pill transition-all duration-300 cursor-pointer whitespace-nowrap uppercase tracking-wide",
-                  "bg-gray-200 text-black border-4 border-black rounded-md shadow-inner",
-                  "hover:bg-gray-300 active:bg-gray-400",
+                  "hint-pill transition-all duration-300 cursor-pointer whitespace-nowrap uppercase tracking-wide rounded-md shadow-inner",
                   isFound && "found opacity-50 line-through"
                 )}
                 onClick={handleClick}
@@ -291,7 +292,8 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
 
       {/* Hint Display */}
       {showHint && (
-        <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 z-30 bollywood-hint-bubble text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 max-w-xs text-center">
+        <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 z-30 px-6 py-3 rounded-lg shadow-lg transition-all duration-300 max-w-xs text-center"
+          style={{ backgroundColor: 'var(--color-highlight)', color: 'var(--color-text)' }}>
           <span className="text-sm font-medium">{showHint}</span>
         </div>
       )}
@@ -300,7 +302,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
       <div className="grid-wrapper relative">
         {/* Selection Bubble */}
         {gameState.isSelecting && (
-          <div className="fixed top-16 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-2xl transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit rounded-xl px-8 py-4 border-2 border-yellow-400" style={{ zIndex: 9999 }}>
+          <div className="fixed top-16 left-1/2 transform -translate-x-1/2 shadow-2xl transition-all duration-300 whitespace-nowrap max-w-[90vw] min-w-fit rounded-xl px-8 py-4 border-2" style={{ zIndex: 9999, backgroundColor: 'var(--color-highlight)', color: 'var(--color-text)', borderColor: 'var(--color-primary)' }}>
             <span className="text-lg font-bold tracking-widest block">
               {currentSelection || 'SELECTING...'}
             </span>

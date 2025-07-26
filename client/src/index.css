@@ -1,24 +1,55 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 @layer base {
+  /* Anurag Kashyap (Dark Theme) - Default */
+  :root, html[data-theme='anurag-kashyap'] {
+    --color-bg: #141414;
+    --color-grid-bg: #1E1E1E;
+    --color-primary: #FFD700;
+    --color-button-bg: #292929;
+    --color-button-text: #FFD700;
+    --color-highlight: #FF4444;
+    --color-text: #FAFAFA;
+    --color-text-secondary: #B0B0B0;
+    --color-border: #353535;
+    --color-header-text: #FAFAFA;
+  }
+
+  /* Raju Hirani (Light Theme) */
+  html[data-theme='raju-hirani'] body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  html[data-theme='raju-hirani'] {
+    --color-bg: #F4F0E6;
+    --color-grid-bg: #FAF9F6; /* Pale Cream */
+    --color-primary: #1976D2; /* Cinematic Blue */
+    --color-button-bg: #1976D2; /* Cinematic Blue */
+    --color-button-text: #FFFFFF;
+    --color-highlight: #F6E27A; /* Subtle Gold */
+    --color-text: #1A2633; /* Deep Navy/Grey */
+    --color-text-secondary: #6D7588;
+    --color-border: #D0D0D0;
+    --color-header-text: #FAFAFA;
+
+    /* Grid-specific colors */
+    --color-grid-cell-border: #D0D0D0;
+    --color-grid-letter: #1A2633;
+    --color-grid-cell-selected-bg: #53B759; /* Pleasant Green */
+    --color-grid-cell-selected-text: #FFFFFF;
+  }
+
   :root {
-    /* Modern Bollywood Cinema Theme - Portrait Mobile Optimized */
-    --navy-dark: #0B1F3A;
-    --navy-medium: #1A2B4A;
-    --navy-light: #2C3E50;
-    --gold-primary: #D4AF37;
-    --gold-light: #F4E17A;
-    --gold-dark: #B8941F;
-    --white: #FFFFFF;
-    --text-primary: #FFFFFF;
-    --text-secondary: rgba(255, 255, 255, 0.8);
-    --border-gold: rgba(212, 175, 55, 0.6);
-    --shadow-gold: rgba(212, 175, 55, 0.3);
     --radius: 8px;
     
     /* Portrait Mobile Optimized Variables */
@@ -49,9 +80,9 @@
     /* Enhanced touch events for portrait mobile */
     touch-action: none;
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    /* Prevent zoom on double tap */
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
   }
@@ -68,12 +99,14 @@
   /* Portrait Mobile Body */
   body {
     font-family: 'Lato', 'Montserrat', sans-serif;
-    background: linear-gradient(135deg, #0B1F3A 0%, #1A2B4A 50%, #0B1F3A 100%);
+    background-color: var(--color-bg);
+    color: var(--color-text);
     background-attachment: fixed;
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Portrait-Optimized Background Patterns */
@@ -253,9 +286,9 @@
     align-items: center;
     justify-content: center;
     touch-action: manipulation;
-    background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
-    color: var(--navy-dark);
-    border: 1px solid var(--gold-dark);
+    background-color: var(--color-button-bg);
+    color: var(--color-button-text);
+    border: 1px solid var(--color-border);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     position: relative;
@@ -317,13 +350,18 @@
     max-width: 100%;
     max-height: 100%;
     aspect-ratio: 1;
-    background: transparent;
+    background-color: var(--color-grid-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--spacing-sm);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     position: relative;
     z-index: 5;
     animation: fadeInUp 0.8s ease-out 0.2s both;
     /* Enhanced touch properties for portrait mobile */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
+    user-select: none;
     pointer-events: auto;
     touch-action: none;
   }
@@ -341,43 +379,33 @@
 
   /* Portrait Mobile Grid Cells */
   .crossword-cell {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 1;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-family: 'Lato', 'Montserrat', sans-serif;
-    font-weight: 700;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
     font-size: clamp(12px, 3.2vw, 22px);
-    color: var(--text-primary);
-    background: rgba(26, 43, 74, 0.9);
-    border: 1px solid var(--border-gold);
-    border-radius: clamp(1px, 0.2vw, 2px);
-    user-select: none;
-    cursor: pointer;
-    touch-action: none;
-    transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1px;
-    pointer-events: auto;
+    border-radius: 4px;
+    background-color: var(--color-grid-bg);
+    color: var(--color-grid-letter);
+    border: 1px solid var(--color-grid-cell-border);
+    transition: all 0.2s ease-in-out;
     position: relative;
-    z-index: 1;
-    backdrop-filter: blur(2px);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
     overflow: hidden;
-    /* Enhanced touch properties for portrait mobile */
+    cursor: pointer;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    /* Minimum touch target for portrait mobile */
-    min-width: 24px;
-    min-height: 24px;
+    user-select: none;
+    aspect-ratio: 1;
   }
 
-  .crossword-cell:hover,
-  .crossword-cell:active {
-    transform: scale(1.02);
+  .crossword-cell.selected {
+    background-color: var(--color-grid-cell-selected-bg);
+    color: var(--color-grid-cell-selected-text);
+    border-color: var(--color-grid-cell-selected-bg);
+    transform: scale(1.05);
+    z-index: 2;
   }
 
   .crossword-cell:active {

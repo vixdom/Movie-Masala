@@ -18,9 +18,8 @@ export function HomeScreen({ onNavigateToGame, onNavigateToOptions }: HomeScreen
   };
 
   return (
-    <ResponsiveGameLayout className="h-screen text-white relative overflow-hidden">
-      {/* Enhanced film-strip background overlay */}
-      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+    <ResponsiveGameLayout className="h-screen relative overflow-hidden">
+
       
       {/* Responsive Header */}
       <header className="app-header justify-center">
@@ -35,15 +34,15 @@ export function HomeScreen({ onNavigateToGame, onNavigateToOptions }: HomeScreen
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-6 mb-8">
             <span className="text-6xl md:text-7xl">🎬</span>
-            <h1 className="bollywood-title text-4xl md:text-6xl lg:text-7xl font-bold text-yellow-300 drop-shadow-2xl" 
-                style={{ fontFamily: "'Cinzel', serif" }}>
+            <h1 className="bollywood-title text-4xl md:text-6xl lg:text-7xl font-bold drop-shadow-2xl" 
+                style={{ fontFamily: "'Cinzel', serif", color: 'var(--color-primary)' }}>
               Bolly Word
             </h1>
           </div>
           
           {/* Subtitle/Tagline - Responsive */}
-          <p className="text-xl md:text-2xl font-medium text-yellow-200 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-lg" 
-             style={{ fontFamily: "'Playfair Display', serif" }}>
+          <p className="text-xl md:text-2xl font-medium mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-lg" 
+             style={{ fontFamily: "'Playfair Display', serif", color: 'var(--color-text-secondary)' }}>
             Find hidden Bollywood names in this word search puzzle.
           </p>
         </div>
@@ -52,8 +51,8 @@ export function HomeScreen({ onNavigateToGame, onNavigateToOptions }: HomeScreen
         <div className="flex flex-col gap-8 w-full max-w-lg relative z-20">
           <button
             onClick={handleGameClick}
-            className="w-full h-20 text-2xl font-bold uppercase tracking-wider transition-all duration-300 shadow-2xl min-h-[var(--touch-target-min)] rounded-lg cursor-pointer relative z-30 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-[#0B1F3A] border-4 border-yellow-300 hover:scale-105 active:scale-95"
-            style={{ fontFamily: "'Cinzel', serif" }}
+            className="w-full h-20 text-2xl font-bold uppercase tracking-wider transition-all duration-300 shadow-2xl min-h-[var(--touch-target-min)] rounded-lg cursor-pointer relative z-30 hover:scale-105 active:scale-95"
+            style={{ fontFamily: "'Cinzel', serif", backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)', border: '4px solid var(--color-primary)' }}
             type="button"
             onMouseDown={(e) => console.log('Play Now mousedown', e)}
             onMouseUp={(e) => console.log('Play Now mouseup', e)}
@@ -63,8 +62,8 @@ export function HomeScreen({ onNavigateToGame, onNavigateToOptions }: HomeScreen
           
           <button
             onClick={handleOptionsClick}
-            className="w-full h-20 text-2xl font-bold bg-transparent border-2 border-yellow-400/60 text-yellow-200 hover:bg-yellow-400/20 hover:border-yellow-400 hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl min-h-[var(--touch-target-min)] rounded-lg cursor-pointer relative z-30"
-            style={{ fontFamily: "'Cinzel', serif" }}
+            className="w-full h-20 text-2xl font-bold bg-transparent border-2 hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl min-h-[var(--touch-target-min)] rounded-lg cursor-pointer relative z-30"
+            style={{ fontFamily: "'Cinzel', serif", borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
             type="button"
           >
             Options
