@@ -372,7 +372,7 @@ export const useAudio = create<AudioState>((set, get) => ({
         console.warn('Failed to play hint reveal sound:', error);
       }
     }
-  }
+  },
 
   playSuccess: () => {
     const { successSound, isMuted } = get();

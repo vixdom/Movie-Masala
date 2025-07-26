@@ -1,69 +1,150 @@
-import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import 'module-alias/register';
+import express, { type Request, Response, NextFunction } from 'express';
+import http from 'http';
+import { registerRoutes } from './routes';
+import { setupVite, serveStatic, log } from './vite';
+import { config } from './config';
+import { findFreePort, onError, onListening, gracefulShutdown } from './utils/server';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import morgan from 'morgan';
 
+// Initialize Express application
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
-app.use((req, res, next) => {
+// Configure middleware
+app.use(helmet()); // Security headers
+app.use(compression()); // Response compression
+app.use(express.json()); // Parse JSON bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+
+// Configure CORS
+app.use(cors({
+  origin: config.CORS_ORIGIN,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Request logging
+if (config.ENABLE_LOGGING) {
+  app.use(morgan('dev')); // HTTP request logger
+}
+
+// Request timing and logging middleware
+app.use((req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
+  const { path, method } = req;
+  
+  // Capture JSON response for logging
+  let capturedJsonResponse: Record<string, any> | undefined;
+  const originalJson = res.json;
+  
   res.json = function (bodyJson, ...args) {
     capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
+    return originalJson.apply(res, [bodyJson, ...args]);
   };
 
-  res.on("finish", () => {
+  // Log when response finishes
+  res.on('finish', () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+    const logLine = `${method} ${path} ${res.statusCode} ${duration}ms`;
+    
+    if (config.ENABLE_LOGGING) {
+      console.log(logLine);
       if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        console.debug('Response:', JSON.stringify(capturedJsonResponse, null, 2));
       }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      log(logLine);
     }
-  });
 
+  });
+  
   next();
 });
 
-(async () => {
-  const server = await registerRoutes(app);
-
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    res.status(status).json({ message });
-    throw err;
+// Error handling middleware - should be after all other middleware and routes
+app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+  const status = err.status || err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  
+  // Log the error
+  console.error(`[${new Date().toISOString()}] Error:`, {
+    message,
+    status,
+    path: req.path,
+    method: req.method,
+    stack: config.NODE_ENV === 'development' ? err.stack : undefined
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
+  // Don't leak stack traces in production
+  const errorResponse = {
+    status,
+    message,
+    ...(config.NODE_ENV === 'development' && { stack: err.stack })
+  };
+
+  res.status(status).json(errorResponse);
+});
+
+// 404 handler - should be after all other routes
+app.use((_req: Request, res: Response) => {
+  res.status(404).json({
+    status: 404,
+    message: 'Not Found',
+    path: _req.path
+  });
+});
+
+/**
+ * Start the server
+ */
+async function startServer() {
+  try {
+    // Create HTTP server
+    const server = http.createServer(app);
+    
+    // Register application routes
+    await registerRoutes(app);
+
+    // Configure Vite in development or serve static files in production
+    if (config.NODE_ENV === 'development') {
+      await setupVite(app, server);
+    } else {
+      serveStatic(app);
+    }
+
+    // Find an available port and start listening
+    const port = await findFreePort(config.PORT);
+    
+    server.listen(port, config.HOST);
+    server.on('error', (error: NodeJS.ErrnoException) => onError(error, port));
+    server.on('listening', () => onListening(server));
+
+    // Handle graceful shutdown
+    process.on('SIGTERM', () => gracefulShutdown(server, 'SIGTERM'));
+    process.on('SIGINT', () => gracefulShutdown(server, 'SIGINT'));
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    });
+    process.on('uncaughtException', (error) => {
+      console.error('Uncaught Exception:', error);
+      process.exit(1);
+    });
+
+    return server;
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
   }
+}
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+// Start the server if this file is run directly
+if (require.main === module) {
+  startServer().catch(error => {
+    console.error('Failed to start server:', error);
+    process.exit(1);
   });
-})();
+}
+
+export { app, startServer };

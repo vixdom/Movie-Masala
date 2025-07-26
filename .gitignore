@@ -1,7 +1,68 @@
-node_modules
-dist
-.DS_Store
-server/public
-vite.config.ts.*
-*.tar.gz
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+dist-ssr/
+*.local
+
+# Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Vite
+.vite/
+*.tsbuildinfo
+
+# Build files
+build/
+
+# Cache
+.cache/
+.temp/
+.tmp/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Misc
+*.tar.gz
+*.tgz
+
+# Server
+server/public/
+server/logs/
+
+# Local development
+.vscode/launch.json
+
+# Environment specific
+.env.example
+!.env.example
