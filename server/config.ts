@@ -46,7 +46,7 @@ export interface ServerConfig {
 
 // Default configuration values
 const DEFAULT_CONFIG: Partial<ServerConfig> = {
-  PORT: 3000,
+  PORT: 5000,
   HOST: '0.0.0.0',
   NODE_ENV: 'development',
   ENABLE_LOGGING: process.env.NODE_ENV !== 'production',

@@ -11,11 +11,11 @@ const __dirname = dirname(__filename);
 
 export default defineConfig({
   server: {
-    port: 5173,
+    port: 5000,
     strictPort: false,
     hmr: {
       overlay: false,
-      port: 5173,
+      port: 5000,
       host: 'localhost',
       protocol: 'ws'
     },
