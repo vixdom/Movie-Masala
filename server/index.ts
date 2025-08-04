@@ -20,83 +20,6 @@ app.use(compression()); // Response compression
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-// Configure CORS
-app.use(cors({
-  origin: config.CORS_ORIGIN,
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-// Request logging
-if (config.ENABLE_LOGGING) {
-  app.use(morgan('dev')); // HTTP request logger
-}
-
-// Request timing and logging middleware
-app.use((req: Request, res: Response, next: NextFunction) => {
-  const start = Date.now();
-  const { path, method } = req;
-  
-  // Capture JSON response for logging
-  let capturedJsonResponse: Record<string, any> | undefined;
-  const originalJson = res.json;
-  
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalJson.apply(res, [bodyJson, ...args]);
-  };
-
-  // Log when response finishes
-  res.on('finish', () => {
-    const duration = Date.now() - start;
-    const logLine = `${method} ${path} ${res.statusCode} ${duration}ms`;
-    
-    if (config.ENABLE_LOGGING) {
-      console.log(logLine);
-      if (capturedJsonResponse) {
-        console.debug('Response:', JSON.stringify(capturedJsonResponse, null, 2));
-      }
-    }
-
-  });
-  
-  next();
-});
-
-// Error handling middleware - should be after all other middleware and routes
-app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
-  const status = err.status || err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-  
-  // Log the error
-  console.error(`[${new Date().toISOString()}] Error:`, {
-    message,
-    status,
-    path: req.path,
-    method: req.method,
-    stack: config.NODE_ENV === 'development' ? err.stack : undefined
-  });
-
-  // Don't leak stack traces in production
-  const errorResponse = {
-    status,
-    message,
-    ...(config.NODE_ENV === 'development' && { stack: err.stack })
-  };
-
-  res.status(status).json(errorResponse);
-});
-
-// 404 handler - should be after all other routes
-app.use((_req: Request, res: Response) => {
-  res.status(404).json({
-    status: 404,
-    message: 'Not Found',
-    path: _req.path
-  });
-});
-
 /**
  * Start the server
  */
@@ -106,6 +29,50 @@ async function startServer() {
     const config = await getConfig();
     console.log(`🚀 Starting server in ${config.NODE_ENV} mode...`);
     
+    // Configure CORS
+    app.use(cors({
+      origin: config.CORS_ORIGIN,
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization']
+    }));
+
+    // Request logging
+    if (config.ENABLE_LOGGING) {
+      app.use(morgan('dev')); // HTTP request logger
+    }
+
+    // Request timing and logging middleware
+    app.use((req: Request, res: Response, next: NextFunction) => {
+      const start = Date.now();
+      const { path, method } = req;
+      
+      // Capture JSON response for logging
+      let capturedJsonResponse: Record<string, any> | undefined;
+      const originalJson = res.json;
+      
+      res.json = function (bodyJson, ...args) {
+        capturedJsonResponse = bodyJson;
+        return originalJson.apply(res, [bodyJson, ...args]);
+      };
+
+      // Log when response finishes
+      res.on('finish', () => {
+        const duration = Date.now() - start;
+        const logLine = `${method} ${path} ${res.statusCode} ${duration}ms`;
+        
+        if (config.ENABLE_LOGGING) {
+          console.log(logLine);
+          if (capturedJsonResponse) {
+            console.debug('Response:', JSON.stringify(capturedJsonResponse, null, 2));
+          }
+        }
+
+      });
+      
+      next();
+    });
+
     // Allocate ports for all services based on environment
     const portStrategy = createPortStrategy(config.NODE_ENV === 'development');
     const serviceConfigs = [
@@ -134,6 +101,39 @@ async function startServer() {
     } else {
       serveStatic(app);
     }
+
+    // Error handling middleware - should be after all other middleware and routes
+    app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || 'Internal Server Error';
+      
+      // Log the error
+      console.error(`[${new Date().toISOString()}] Error:`, {
+        message,
+        status,
+        path: req.path,
+        method: req.method,
+        stack: config.NODE_ENV === 'development' ? err.stack : undefined
+      });
+
+      // Don't leak stack traces in production
+      const errorResponse = {
+        status,
+        message,
+        ...(config.NODE_ENV === 'development' && { stack: err.stack })
+      };
+
+      res.status(status).json(errorResponse);
+    });
+
+    // 404 handler - should be after all other routes
+    app.use((_req: Request, res: Response) => {
+      res.status(404).json({
+        status: 404,
+        message: 'Not Found',
+        path: _req.path
+      });
+    });
 
     // Use the dynamically allocated port
     const port = webServerPort;
