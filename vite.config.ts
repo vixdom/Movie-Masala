@@ -11,11 +11,13 @@ const __dirname = dirname(__filename);
 
 export default defineConfig({
   server: {
-    port: 5000,
-    strictPort: false,
+    // Remove hardcoded port - will be set dynamically by server
+    port: undefined,
+    strictPort: false, // Allow port flexibility for dynamic allocation
     hmr: {
-      overlay: false,
-      port: 5000,
+      overlay: false, 
+      // HMR port will be set dynamically by server setup
+      port: undefined,
       host: 'localhost',
       protocol: 'ws'
     },
@@ -25,7 +27,8 @@ export default defineConfig({
     middlewareMode: false,
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        // Remove hardcoded target - will be configured dynamically
+        target: process.env.API_TARGET || 'http://localhost:3000',
         changeOrigin: true
       }
     }

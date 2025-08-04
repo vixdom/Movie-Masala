@@ -8,6 +8,7 @@ const __dirname = dirname(__filename);
 import { type Server } from "http";
 import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
+import { getPortFromEnvOrAllocate } from "./utils/portManager";
 
 const viteLogger = createLogger();
 
@@ -22,16 +23,41 @@ export function log(message: string, source = "express") {
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
-export async function setupVite(app: Express, server: Server) {
+export interface ViteSetupOptions {
+  /** HMR port (will be dynamically allocated if not provided) */
+  hmrPort?: number;
+}
+
+export async function setupVite(app: Express, server: Server, options: ViteSetupOptions = {}) {
+  // Dynamically allocate HMR port if not provided
+  const hmrPort = options.hmrPort || await getPortFromEnvOrAllocate(
+    'VITE_HMR_PORT',
+    24678, // Base port for Vite HMR
+    'vite-hmr'
+  );
+  
+  log(`🔥 Setting up Vite with HMR on port ${hmrPort}`, 'vite');
+  
   const serverOptions = {
     middlewareMode: true,
-    hmr: { server },
+    hmr: { 
+      server,
+      port: hmrPort,
+      host: 'localhost'
+    },
     allowedHosts: true,
   };
 
   const vite = await createViteServer({
     ...viteConfig,
     configFile: false,
+    server: {
+      ...viteConfig.server,
+      ...serverOptions,
+      // Override any hardcoded ports in vite config
+      port: undefined, // Let middleware mode handle this
+      strictPort: false // Allow port flexibility
+    },
     customLogger: {
       ...viteLogger,
       error: (msg, options) => {
@@ -39,7 +65,6 @@ export async function setupVite(app: Express, server: Server) {
         process.exit(1);
       },
     },
-    server: serverOptions,
     appType: "custom",
   });
 

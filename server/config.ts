@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { getPortFromEnvOrAllocate } from './utils/portManager';
 
 // Load environment variables from .env file
 dotenv.config({
@@ -9,8 +10,8 @@ dotenv.config({
 // Define configuration interface
 export interface ServerConfig {
   /**
-   * The port on which the server will run
-   * @default 3000
+   * The port on which the server will run (dynamically allocated)
+   * @default Dynamically allocated starting from 5000
    */
   PORT: number;
   
@@ -44,9 +45,14 @@ export interface ServerConfig {
   DATABASE_URL?: string;
 }
 
-// Default configuration values
-const DEFAULT_CONFIG: Partial<ServerConfig> = {
-  PORT: 5000,
+// Default configuration values (base ports for dynamic allocation)
+const DEFAULT_BASE_PORTS = {
+  WEB_SERVER: 5000,
+  API_SERVER: 3000,
+  DEV_SERVER: 24678
+};
+
+const DEFAULT_CONFIG: Partial<Omit<ServerConfig, 'PORT'>> = {
   HOST: '0.0.0.0',
   NODE_ENV: 'development',
   ENABLE_LOGGING: process.env.NODE_ENV !== 'production',
@@ -63,10 +69,17 @@ function validateConfig(config: Partial<ServerConfig>): asserts config is Server
 }
 
 // Build the configuration object
-function buildConfig(): ServerConfig {
+async function buildConfig(): Promise<ServerConfig> {
+  // Dynamically allocate port to prevent conflicts
+  const allocatedPort = await getPortFromEnvOrAllocate(
+    'PORT',
+    DEFAULT_BASE_PORTS.WEB_SERVER,
+    'web-server'
+  );
+  
   const config: Partial<ServerConfig> = {
     ...DEFAULT_CONFIG,
-    PORT: process.env.PORT ? parseInt(process.env.PORT, 10) : DEFAULT_CONFIG.PORT,
+    PORT: allocatedPort,
     HOST: process.env.HOST || DEFAULT_CONFIG.HOST,
     NODE_ENV: (process.env.NODE_ENV as ServerConfig['NODE_ENV']) || 'development',
     ENABLE_LOGGING: process.env.ENABLE_LOGGING
@@ -82,8 +95,55 @@ function buildConfig(): ServerConfig {
   return config as ServerConfig;
 }
 
-// Export the configuration
-export const config = buildConfig();
+// Export the configuration (async initialization)
+let configInstance: ServerConfig | null = null;
+
+export async function getConfig(): Promise<ServerConfig> {
+  if (!configInstance) {
+    configInstance = await buildConfig();
+  }
+  return configInstance;
+}
+
+// Synchronous config getter for backwards compatibility (will use cached value)
+export const config = {
+  get PORT() { 
+    if (!configInstance) {
+      throw new Error('Config not initialized. Call getConfig() first.');
+    }
+    return configInstance.PORT; 
+  },
+  get HOST() { 
+    if (!configInstance) {
+      throw new Error('Config not initialized. Call getConfig() first.');
+    }
+    return configInstance.HOST; 
+  },
+  get NODE_ENV() { 
+    if (!configInstance) {
+      throw new Error('Config not initialized. Call getConfig() first.');
+    }
+    return configInstance.NODE_ENV; 
+  },
+  get ENABLE_LOGGING() { 
+    if (!configInstance) {
+      throw new Error('Config not initialized. Call getConfig() first.');
+    }
+    return configInstance.ENABLE_LOGGING; 
+  },
+  get CORS_ORIGIN() { 
+    if (!configInstance) {
+      throw new Error('Config not initialized. Call getConfig() first.');
+    }
+    return configInstance.CORS_ORIGIN; 
+  },
+  get DATABASE_URL() { 
+    if (!configInstance) {
+      throw new Error('Config not initialized. Call getConfig() first.');
+    }
+    return configInstance.DATABASE_URL; 
+  }
+};
 
 // Helper function to get environment variable or throw if not set
 export function getEnvVar(name: string, defaultValue?: string): string {

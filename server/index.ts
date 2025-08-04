@@ -3,8 +3,9 @@ import express, { type Request, Response, NextFunction } from 'express';
 import http from 'http';
 import { registerRoutes } from './routes';
 import { setupVite, serveStatic, log } from './vite';
-import { config } from './config';
-import { findFreePort, onError, onListening, gracefulShutdown } from './utils/server';
+import { getConfig } from './config';
+import { onError, onListening, gracefulShutdown } from './utils/server';
+import { allocateMultiplePorts, createPortStrategy, validateAndLogAllocations } from './utils/portManager';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -101,6 +102,25 @@ app.use((_req: Request, res: Response) => {
  */
 async function startServer() {
   try {
+    // Initialize configuration with dynamic port allocation
+    const config = await getConfig();
+    console.log(`🚀 Starting server in ${config.NODE_ENV} mode...`);
+    
+    // Allocate ports for all services based on environment
+    const portStrategy = createPortStrategy(config.NODE_ENV === 'development');
+    const serviceConfigs = [
+      { name: 'web-server', ...portStrategy.webServer },
+      ...(config.NODE_ENV === 'development' ? [
+        { name: 'vite-hmr', ...portStrategy.viteHmr }
+      ] : [])
+    ];
+    
+    const portAllocations = await allocateMultiplePorts(serviceConfigs);
+    validateAndLogAllocations(portAllocations);
+    
+    // Get the allocated web server port
+    const webServerPort = portAllocations.get('web-server')?.port || config.PORT;
+    
     // Create HTTP server
     const server = http.createServer(app);
     
@@ -109,13 +129,15 @@ async function startServer() {
 
     // Configure Vite in development or serve static files in production
     if (config.NODE_ENV === 'development') {
-      await setupVite(app, server);
+      const hmrPort = portAllocations.get('vite-hmr')?.port;
+      await setupVite(app, server, { hmrPort });
     } else {
       serveStatic(app);
     }
 
-    // Find an available port and start listening
-    const port = await findFreePort(config.PORT);
+    // Use the dynamically allocated port
+    const port = webServerPort;
+    console.log(`🌐 Starting web server on port ${port}...`);
     
     server.listen(port, config.HOST);
     server.on('error', (error: NodeJS.ErrnoException) => onError(error, port));

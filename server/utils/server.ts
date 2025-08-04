@@ -1,35 +1,10 @@
 import net from 'net';
 import { Server as HttpServer } from 'http';
 import { Server as HttpsServer } from 'https';
-import { config } from '../config';
+import { getConfig } from '../config';
 
-/**
- * Finds an available port starting from the configured port
- * @param preferredPort - The preferred port to start checking from
- * @returns A promise that resolves to an available port number
- */
-export async function findFreePort(preferredPort: number = config.PORT): Promise<number> {
-  return new Promise((resolve, reject) => {
-    const server = net.createServer();
-    
-    server.once('error', (err: NodeJS.ErrnoException) => {
-      if (err.code === 'EADDRINUSE') {
-        // If the preferred port is in use, try the next one
-        server.close(() => resolve(findFreePort(preferredPort + 1)));
-      } else {
-        reject(err);
-      }
-    });
-    
-    server.once('listening', () => {
-      const address = server.address();
-      const port = typeof address === 'string' ? preferredPort : address?.port || preferredPort;
-      server.close(() => resolve(port));
-    });
-    
-    server.listen(preferredPort, '0.0.0.0');
-  });
-}
+// NOTE: findFreePort function moved to portManager.ts for better organization
+// Use allocatePort() from portManager.ts instead of this deprecated function
 
 /**
  * Normalizes the port from a string or number
@@ -78,10 +53,15 @@ export function onError(error: NodeJS.ErrnoException, port: number | string | bo
 /**
  * Event listener for HTTP server "listening" event
  */
-export function onListening(server: HttpServer | HttpsServer) {
+export async function onListening(server: HttpServer | HttpsServer) {
+  const config = await getConfig();
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr?.port}`;
-  console.log(`Server listening on ${bind} in ${config.NODE_ENV} mode`);
+  console.log(`🎉 Server listening on ${bind} in ${config.NODE_ENV} mode`);
+  
+  if (config.NODE_ENV === 'development') {
+    console.log(`🔗 Local development URL: http://localhost:${addr?.port || config.PORT}`);
+  }
 }
 
 /**
