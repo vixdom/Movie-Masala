@@ -272,47 +272,61 @@ export class WordSearchGame {
 
   public generateGrid(words: string[]): string[] {
     const targetWordCount = 10; // Exactly 10 words in the final game
+    const maxDiagonalWords = 3; // Maximum number of diagonal words allowed
     
-    // Create an expanded word pool by shuffling and taking more words than needed
-    const expandedWordPool = [...words].sort(() => Math.random() - 0.5).slice(0, Math.min(words.length, targetWordCount * 2));
+    // Shuffle the words and take exactly 10
+    const selectedWords = [...words]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, targetWordCount);
     
-    let maxRetries = 15; // More retries for guaranteed success
-    let bestResult: { placedWords: WordPlacement[], placedWordsStrings: string[], placedCount: number } = { 
+    let maxRetries = 20; // Increased retries for better success rate
+    let bestResult: { 
+      placedWords: WordPlacement[], 
+      placedWordsStrings: string[], 
+      placedCount: number,
+      diagonalCount: number 
+    } = { 
       placedWords: [], 
       placedWordsStrings: [],
-      placedCount: 0 
+      placedCount: 0,
+      diagonalCount: 0
     };
     
     if (process.env.NODE_ENV === 'development') {
       console.log(`🎯 STARTING GRID GENERATION:`);
-      console.log(`📝 Target words: ${targetWordCount}`);
-      console.log(`🎲 Available word pool: ${expandedWordPool.length} words`);
+      console.log(`📝 Target words: ${targetWordCount} (max ${maxDiagonalWords} diagonal)`);
+      console.log(`🎲 Selected words:`, selectedWords);
     }
     
     for (let retry = 0; retry < maxRetries; retry++) {
       // Reset game state
       this.gameState = this.initializeGame();
       
-      // Track successfully placed words
+      // Track successfully placed words and diagonal count
       const successfullyPlacedWords: string[] = [];
       const placedWordObjects: WordPlacement[] = [];
+      let diagonalWordsCount = 0;
       
       // Create a copy of the word pool for this attempt
-      const availableWords = [...expandedWordPool];
+      const availableWords = [...selectedWords];
       
       // Attempt to place exactly targetWordCount words
       for (let wordIndex = 0; wordIndex < targetWordCount && availableWords.length > 0; wordIndex++) {
         let wordPlaced = false;
         let attempts = 0;
-        const maxWordAttempts = availableWords.length; // Try all available words if needed
+        const maxWordAttempts = availableWords.length * 2; // Try harder to place each word
         
         while (!wordPlaced && attempts < maxWordAttempts && availableWords.length > 0) {
-          // Take the first word from available words
+          // Take the next word from available words
           const currentWordIndex = attempts % availableWords.length;
           const currentWord = availableWords[currentWordIndex];
           
-          // Sort words by length (longer first for better grid utilization)
-          const directionAssignments = this.getBalancedDirections([currentWord]);
+          // Get preferred directions based on current diagonal count
+          const directionAssignments = this.getBalancedDirections(
+            [currentWord], 
+            diagonalWordsCount,
+            maxDiagonalWords
+          );
           const preferredDirections = directionAssignments[0];
           
           // Try to place this word
@@ -327,6 +341,11 @@ export class WordSearchGame {
                 placedWordObjects.push(placement);
                 successfullyPlacedWords.push(currentWord);
                 
+                // Update diagonal count if this was a diagonal placement
+                if (direction.name.includes('diagonal')) {
+                  diagonalWordsCount++;
+                }
+                
                 // Remove this word from available words
                 availableWords.splice(currentWordIndex, 1);
                 wordPlaced = true;
@@ -336,11 +355,6 @@ export class WordSearchGame {
           }
           
           attempts++;
-          
-          // If this word couldn't be placed, try the next available word
-          if (!wordPlaced && attempts < maxWordAttempts) {
-            continue;
-          }
         }
         
         // If we couldn't place any word, this attempt failed
@@ -355,23 +369,37 @@ export class WordSearchGame {
       // Update game state with placed words
       this.gameState.words = placedWordObjects;
       
+      // Calculate score for this attempt (prioritize reaching target word count, then fewer diagonals)
+      const score = (successfullyPlacedWords.length * 100) + 
+                   (diagonalWordsCount <= maxDiagonalWords ? 50 : 0) - 
+                   (Math.abs(diagonalWordsCount - maxDiagonalWords) * 10);
+      
+      const currentBestScore = (bestResult.placedCount * 100) + 
+                             (bestResult.diagonalCount <= maxDiagonalWords ? 50 : 0) - 
+                             (Math.abs(bestResult.diagonalCount - maxDiagonalWords) * 10);
+      
       // Check if this attempt is better
-      if (successfullyPlacedWords.length > bestResult.placedCount) {
+      if (score > currentBestScore || 
+          (score === currentBestScore && successfullyPlacedWords.length > bestResult.placedCount)) {
         bestResult = {
           placedWords: [...placedWordObjects],
           placedWordsStrings: [...successfullyPlacedWords],
-          placedCount: successfullyPlacedWords.length
+          placedCount: successfullyPlacedWords.length,
+          diagonalCount: diagonalWordsCount
         };
         
         if (process.env.NODE_ENV === 'development') {
-          console.log(`✅ Attempt ${retry + 1}: Successfully placed ${successfullyPlacedWords.length} words`);
+          console.log(`✅ Attempt ${retry + 1}: Placed ${successfullyPlacedWords.length} words ` +
+                     `(${diagonalWordsCount} diagonal)`);
         }
       }
       
-      // If we achieved the target, we're done
-      if (successfullyPlacedWords.length === targetWordCount) {
+      // If we achieved the target with correct diagonal count, we're done
+      if (successfullyPlacedWords.length === targetWordCount && 
+          diagonalWordsCount <= maxDiagonalWords) {
         if (process.env.NODE_ENV === 'development') {
-          console.log(`🎉 SUCCESS: Placed all ${targetWordCount} words in attempt ${retry + 1}`);
+          console.log(`🎉 SUCCESS: Placed all ${targetWordCount} words ` +
+                     `with ${diagonalWordsCount} diagonal in attempt ${retry + 1}`);
         }
         break;
       }
@@ -536,45 +564,52 @@ export class WordSearchGame {
     return positions.sort(() => Math.random() - 0.5);
   }
   
-  private getBalancedDirections(words: string[]): typeof DIRECTIONS[number][][] {
+  private getBalancedDirections(
+    words: string[], 
+    currentDiagonalCount: number = 0,
+    maxDiagonalWords: number = 3
+  ): typeof DIRECTIONS[number][][] {
     const assignments: typeof DIRECTIONS[number][][] = [];
     
-    // Define direction categories for guaranteed variety
+    // Define direction categories
     const horizontalDirs = DIRECTIONS.filter(d => d.name.includes('horizontal'));
-    const verticalDirs = DIRECTIONS.filter(d => d.name.includes('vertical'));
+    const verticalDirs = DIRECTIONS.filter(d => d.name.includes('vertical') && !d.name.includes('diagonal'));
     const diagonalDirs = DIRECTIONS.filter(d => d.name.includes('diagonal'));
-    
-    // Ensure we have at least 2-3 diagonal words out of 10 total words
-    const minDiagonals = Math.max(2, Math.floor(words.length * 0.25)); // At least 25% diagonal
-    const minHorizontals = Math.max(2, Math.floor(words.length * 0.3)); // At least 30% horizontal
-    const minVerticals = Math.max(2, Math.floor(words.length * 0.25)); // At least 25% vertical
-    
-    let diagonalCount = 0;
-    let horizontalCount = 0;
-    let verticalCount = 0;
     
     for (let i = 0; i < words.length; i++) {
       let preferredDirections: typeof DIRECTIONS[number][] = [];
       
-      // Force diagonal placement for first few words to guarantee diagonal variety
-      if (diagonalCount < minDiagonals) {
-        preferredDirections = [...diagonalDirs, ...horizontalDirs, ...verticalDirs];
-        diagonalCount++;
-      }
-      // Force horizontal placement
-      else if (horizontalCount < minHorizontals) {
-        preferredDirections = [...horizontalDirs, ...verticalDirs, ...diagonalDirs];
-        horizontalCount++;
-      }
-      // Force vertical placement
-      else if (verticalCount < minVerticals) {
-        preferredDirections = [...verticalDirs, ...horizontalDirs, ...diagonalDirs];
-        verticalCount++;
-      }
-      // For remaining words, use balanced approach
+      // If we've reached the diagonal limit, exclude diagonal directions
+      if (currentDiagonalCount >= maxDiagonalWords) {
+        // Prefer horizontal and vertical directions, shuffled for variety
+        preferredDirections = [
+          ...horizontalDirs.sort(() => Math.random() - 0.5),
+          ...verticalDirs.sort(() => Math.random() - 0.5)
+        ];
+      } 
+      // Otherwise, include all directions but with diagonal less likely
       else {
-        // Shuffle all directions for variety
-        preferredDirections = [...DIRECTIONS].sort(() => Math.random() - 0.5);
+        // 40% horizontal, 40% vertical, 20% diagonal
+        const rand = Math.random();
+        if (rand < 0.4) {
+          preferredDirections = [
+            ...horizontalDirs.sort(() => Math.random() - 0.5),
+            ...verticalDirs.sort(() => Math.random() - 0.5),
+            ...diagonalDirs.sort(() => Math.random() - 0.5)
+          ];
+        } else if (rand < 0.8) {
+          preferredDirections = [
+            ...verticalDirs.sort(() => Math.random() - 0.5),
+            ...horizontalDirs.sort(() => Math.random() - 0.5),
+            ...diagonalDirs.sort(() => Math.random() - 0.5)
+          ];
+        } else {
+          preferredDirections = [
+            ...diagonalDirs.sort(() => Math.random() - 0.5),
+            ...horizontalDirs.sort(() => Math.random() - 0.5),
+            ...verticalDirs.sort(() => Math.random() - 0.5)
+          ];
+        }
       }
       
       assignments.push(preferredDirections);

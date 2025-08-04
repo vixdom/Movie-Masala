@@ -3,21 +3,41 @@ import react from "@vitejs/plugin-react";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import glsl from "vite-plugin-glsl";
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
   server: {
+    port: 5173,
+    strictPort: false,
     hmr: {
-      overlay: false
+      overlay: false,
+      port: 5173,
+      host: 'localhost',
+      protocol: 'ws'
     },
     fs: {
       strict: false
+    },
+    middlewareMode: false,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true
+      }
     }
   },
   css: {
-    devSourcemap: false
+    devSourcemap: true,
+    postcss: {
+      plugins: [
+        tailwindcss(),
+        autoprefixer(),
+      ],
+    }
   },
   clearScreen: false,
   logLevel: 'warn',

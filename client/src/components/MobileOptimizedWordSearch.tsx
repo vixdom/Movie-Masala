@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState, useMemo, memo, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { GridCell as GridCellType, WordPlacement } from '@/lib/wordSearchGame';
+import { cn } from '../lib/utils';
+import { GridCell as GridCellType, WordPlacement } from '../lib/wordSearchGame';
 import { FilmReelOverlay } from './FilmReelOverlay';
 
 interface WordSearchProps {
@@ -10,6 +10,7 @@ interface WordSearchProps {
   onCellMouseUp: () => void;
   highlightedWord?: string | null;
   foundWords?: WordPlacement[];
+  wordColors?: Map<string, number>;
 }
 
 // Crossword-style cell component for sleek grid layout
@@ -39,10 +40,22 @@ const CrosswordGridCell = memo(({
   const cellRef = useRef<HTMLDivElement>(null);
   const lastHapticTime = useRef<number>(0);
 
-  // Check if this cell is currently selected
+  // Check if this cell is currently selected and get its color
   const isCurrentlySelected = selectedCells.some(
     selectedCell => selectedCell.row === rowIndex && selectedCell.col === colIndex
   );
+  
+  const getSelectedColor = useCallback(() => {
+    if (cell.wordId) {
+      const colorIndex = (parseInt(cell.wordId, 36) % 10) + 1;
+      return `var(--word-color-${colorIndex})`;
+    }
+    return 'var(--word-color-1)';
+  }, [cell.wordId]);
+
+  const cellStyle = useMemo(() => ({
+    '--word-color-current': isCurrentlySelected ? getSelectedColor() : 'transparent'
+  } as React.CSSProperties), [isCurrentlySelected, getSelectedColor]);
 
   // Haptic feedback function with throttling
   const triggerHaptic = useCallback((intensity: number = 20) => {
@@ -175,14 +188,14 @@ const CrosswordGridCell = memo(({
       )}
       data-row={rowIndex}
       data-col={colIndex}
+      data-found={cell.isFound}
       
       // Mouse events only (touch events handled by native listeners)
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}
       
       style={{
-        background: cell.isFound && cell.wordId ? `var(--word-found-bg)` : undefined,
-        color: cell.isFound ? `var(--word-found-text)` : undefined,
+        ...cellStyle,
         touchAction: 'none',
         userSelect: 'none',
         WebkitUserSelect: 'none',

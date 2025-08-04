@@ -33,6 +33,7 @@ export function GameScreen({ onBackToHome, isSoundMuted, onToggleSound }: GameSc
   const [hintedPositions, setHintedPositions] = useState<Set<string>>(new Set());
   const [currentTheme, setCurrentTheme] = useState<Theme>(getRandomTheme());
   const [availableThemes] = useState<Theme[]>(getAllThemes());
+  const [wordColors] = useState<Map<string, number>>(new Map());
 
   const startNewGame = useCallback(() => {
     // Select a random theme for each new game
